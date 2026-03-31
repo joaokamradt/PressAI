@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Jornal de Araquari · Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#070B14;--muted:#6B7295;--dim:#9BA3C0;
+  --blue:#1A6EFF;--paper:#F2F4F8;--white:#fff;--border:#E0E4EE;
+  --d:'Syne',sans-serif;
+  --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',monospace;
+  --j:'Playfair Display',Georgia,serif;
+}
+html{font-size:16px;}
+body{
+  font-family:var(--b);background:var(--ink);color:var(--white);
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+nav{
+  padding:0 2.5rem;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+.nav-logo{font-family:var(--d);font-size:1rem;font-weight:800;letter-spacing:-.5px;}
+.nav-logo span{color:var(--blue);}
+.nav-tag{font-family:var(--m);font-size:.62rem;color:rgba(255,255,255,.5);letter-spacing:.08em;}
+
+/* MAIN */
+main{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:4rem 2rem;
+  position:relative;overflow:hidden;
+}
+main::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(26,110,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,110,255,.04) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;
+}
+.glow{
+  position:absolute;pointer-events:none;
+  width:min(60vw,600px);height:min(60vw,600px);border-radius:50%;
+  background:radial-gradient(circle,rgba(26,110,255,.08),transparent 65%);
+  top:-25%;left:50%;transform:translateX(-50%);
+}
+.content{position:relative;z-index:1;width:100%;max-width:800px;}
+
+/* LABEL */
+.section-label{
+  font-family:var(--m);font-size:.62rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.15);}
+
+/* HEADING */
+.heading{
+  font-family:var(--d);font-size:clamp(1.5rem,3.5vw,2.5rem);
+  font-weight:800;letter-spacing:-1.5px;line-height:1;
+  color:var(--white);margin-bottom:.6rem;
+}
+.heading em{font-style:normal;color:var(--blue);}
+.sub{
+  font-size:.92rem;color:rgba(255,255,255,.65);
+  line-height:1.65;margin-bottom:2.75rem;
+}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border-radius:12px;overflow:hidden;}
+
+.card{
+  background:#0F1525;
+  display:flex;flex-direction:column;
+  transition:background .15s;
+  text-decoration:none;color:inherit;
+}
+.card:hover{background:#151d30;}
+.card:hover .c-arrow{color:var(--blue);transform:translateX(4px);}
+.card:hover .c-title{color:var(--blue);}
+.card:first-child{border-radius:12px 0 0 12px;}
+.card:last-child{border-radius:0 12px 12px 0;}
+
+/* MINI PREVIEW */
+.c-preview{
+  height:210px;overflow:hidden;position:relative;
+  background:#080D18;border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+
+/* shared mini elements */
+.mhd{height:24px;background:#fff;display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0;}
+.mhd-logo{display:flex;align-items:center;gap:5px;}
+.mhd-logosvg{width:12px;height:12px;}
+.mhd-name{font-family:'Playfair Display',Georgia,serif;font-size:7.5px;font-weight:700;color:#0D1B2E;letter-spacing:-.2px;}
+.mhd-tag{font-size:4.5px;letter-spacing:1.5px;text-transform:uppercase;color:#8A9BAB;display:block;margin-top:1px;}
+.mticker{height:8px;background:#0057D9;flex-shrink:0;}
+
+/* CAPA preview */
+.mprev-capa{position:absolute;inset:0;display:flex;flex-direction:column;}
+.mprev-capa .mbody{flex:1;margin:8px;display:grid;grid-template-columns:1.5fr 1fr;gap:1px;background:#E5E3DE;border-radius:3px;overflow:hidden;}
+.mbody-main{background:#FAFAF8;padding:7px;display:flex;flex-direction:column;gap:3px;}
+.mbody-catline{width:32px;height:3px;background:#0057D9;border-radius:2px;margin-bottom:2px;}
+.mbody-img{background:linear-gradient(135deg,#D0E3F7,#7BAEE8);border-radius:2px;height:50px;margin-bottom:3px;}
+.mline{height:3.5px;border-radius:2px;background:rgba(13,27,46,.18);}
+.mline.s{width:75%;background:rgba(13,27,46,.11);}
+.mline.xs{width:48%;background:rgba(13,27,46,.07);}
+.mbody-side{display:flex;flex-direction:column;gap:1px;}
+.mside-item{background:#FAFAF8;flex:1;padding:5px;display:flex;flex-direction:column;gap:2px;}
+.mside-img{border-radius:1px;height:26px;}
+.mside-img.amber{background:linear-gradient(135deg,#F5E4C0,#EFA830);}
+.mside-img.blue{background:linear-gradient(135deg,#C8DDF5,#7BAEE8);}
+
+/* MATÉRIA preview */
+.mprev-art{position:absolute;inset:0;display:flex;flex-direction:column;}
+.mprev-art .mbody-art{flex:1;display:grid;grid-template-columns:1fr 200px;gap:6px;padding:7px 9px 7px;background:#FAFAF8;}
+.mart-col{display:flex;flex-direction:column;gap:3px;}
+.mart-hero{background:linear-gradient(135deg,#B8D0F0,#0057D9);border-radius:2px;height:48px;margin-bottom:1px;}
+.mart-p{height:2.5px;border-radius:2px;background:rgba(13,27,46,.1);}
+.mart-p.s{width:78%;}
+.mart-p.xs{width:55%;}
+.mart-aside{background:#fff;border:1px solid #E5E3DE;border-radius:3px;padding:5px;display:flex;flex-direction:column;gap:4px;}
+.mart-aside-hdr{height:3px;width:60%;border-radius:2px;background:rgba(13,27,46,.18);}
+.mart-aside-item{display:flex;gap:4px;align-items:flex-start;}
+.mart-aside-thumb{width:22px;height:16px;border-radius:1px;flex-shrink:0;}
+.mat-1{background:linear-gradient(135deg,#D0E3F7,#7BAEE8);}
+.mat-2{background:linear-gradient(135deg,#D5F0DC,#8AC89A);}
+.mat-3{background:linear-gradient(135deg,#F5EDD0,#E8C060);}
+.mat-4{background:linear-gradient(135deg,#F5D5D0,#E89090);}
+.mart-aside-lines{flex:1;display:flex;flex-direction:column;gap:2px;}
+.mart-aside-t{height:2.5px;border-radius:2px;background:rgba(13,27,46,.13);}
+.mart-aside-t.s{width:70%;}
+
+/* CARD BODY */
+.c-body{padding:1.5rem 1.75rem 1.75rem;flex:1;display:flex;flex-direction:column;}
+.c-num{font-family:var(--m);font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem;}
+.c-title{font-family:var(--d);font-size:1.1rem;font-weight:800;letter-spacing:-.3px;color:var(--white);margin-bottom:.35rem;transition:color .14s;}
+.c-desc{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.6;flex:1;}
+.c-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid rgba(255,255,255,.1);}
+.c-tag{font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.45);letter-spacing:.06em;}
+.c-arrow{font-size:.9rem;color:rgba(255,255,255,.5);transition:all .15s;}
+
+/* FOOTER */
+footer{
+  padding:1.25rem 2.5rem;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.ft-logo{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.5px;color:rgba(255,255,255,.75);}
+.ft-logo span{color:var(--blue);}
+.ft-copy{font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.4);letter-spacing:.04em;}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
+  .card:first-child{border-radius:12px 12px 0 0;}
+  .card:last-child{border-radius:0 0 12px 12px;}
+  nav{padding:0 1.25rem;}
+  main{padding:2.5rem 1.25rem 3rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Press<span>AI</span></div>
+  <div class="nav-tag">Jornal de Araquari · Mockups</div>
+</nav>
+
+<main>
+  <div class="glow"></div>
+  <div class="content">
+    <div class="section-label">PressAI · Araquari, SC</div>
+    <h1 class="heading">Jornal de<br><em>Araquari.</em></h1>
+    <p class="sub">Exemplos de como o jornal vai funcionar na prática. Navegue por cada página para ter uma ideia do produto.</p>
+
+    <div class="grid">
+
+      <!-- CARD CAPA -->
+      <a class="card" href="capa.html">
+        <div class="c-preview">
+          <div class="mprev-capa">
+            <div class="mhd">
+              <div class="mhd-logo">
+                <svg class="mhd-logosvg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="17" cy="18" r="3" fill="#0057D9"/>
+                </svg>
+                <div>
+                  <div class="mhd-name">Jornal de Araquari</div>
+                  <span class="mhd-tag">A cidade em tempo real</span>
+                </div>
+              </div>
+            </div>
+            <div class="mticker"></div>
+            <div class="mbody">
+              <div class="mbody-main">
+                <div class="mbody-catline"></div>
+                <div class="mbody-img"></div>
+                <div class="mline"></div>
+                <div class="mline s"></div>
+                <div class="mline xs"></div>
+              </div>
+              <div class="mbody-side">
+                <div class="mside-item">
+                  <div class="mside-img amber"></div>
+                  <div class="mline" style="height:3px;"></div>
+                  <div class="mline s" style="height:3px;"></div>
+                </div>
+                <div class="mside-item">
+                  <div class="mside-img blue"></div>
+                  <div class="mline" style="height:3px;"></div>
+                  <div class="mline s" style="height:3px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="c-body">
+          <div class="c-num">Página 01</div>
+          <div class="c-title">Capa do jornal</div>
+          <div class="c-desc">Homepage com manchete, grid de destaques e feed com abas entre mais recentes e mais lidas.</div>
+          <div class="c-footer">
+            <span class="c-tag">Responsivo</span>
+            <span class="c-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- CARD MATÉRIA -->
+      <a class="card" href="materia.html">
+        <div class="c-preview">
+          <div class="mprev-art">
+            <div class="mhd">
+              <div class="mhd-logo">
+                <svg class="mhd-logosvg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="17" cy="18" r="3" fill="#0057D9"/>
+                </svg>
+                <div>
+                  <div class="mhd-name">Jornal de Araquari</div>
+                  <span class="mhd-tag">A cidade em tempo real</span>
+                </div>
+              </div>
+            </div>
+            <div class="mticker"></div>
+            <div class="mbody-art">
+              <div class="mart-col">
+                <div class="mline" style="width:55%;height:4px;background:rgba(13,27,46,.2);"></div>
+                <div class="mline" style="width:35%;height:4px;background:rgba(13,27,46,.12);margin-bottom:2px;"></div>
+                <div class="mart-hero"></div>
+                <div class="mart-p"></div>
+                <div class="mart-p s"></div>
+                <div class="mart-p"></div>
+                <div class="mart-p xs"></div>
+                <div class="mart-p"></div>
+              </div>
+              <div class="mart-aside">
+                <div class="mart-aside-hdr"></div>
+                <div class="mart-aside-item">
+                  <div class="mart-aside-thumb mat-1"></div>
+                  <div class="mart-aside-lines"><div class="mart-aside-t"></div><div class="mart-aside-t s"></div></div>
+                </div>
+                <div class="mart-aside-item">
+                  <div class="mart-aside-thumb mat-2"></div>
+                  <div class="mart-aside-lines"><div class="mart-aside-t"></div><div class="mart-aside-t s"></div></div>
+                </div>
+                <div class="mart-aside-item">
+                  <div class="mart-aside-thumb mat-3"></div>
+                  <div class="mart-aside-lines"><div class="mart-aside-t"></div><div class="mart-aside-t s"></div></div>
+                </div>
+                <div class="mart-aside-item">
+                  <div class="mart-aside-thumb mat-4"></div>
+                  <div class="mart-aside-lines"><div class="mart-aside-t"></div><div class="mart-aside-t s"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="c-body">
+          <div class="c-num">Página 02</div>
+          <div class="c-title">Página da matéria</div>
+          <div class="c-desc">Layout editorial com drop cap, blockquote, cards de dados, canais e matérias relacionadas.</div>
+          <div class="c-footer">
+            <span class="c-tag">Responsivo</span>
+            <span class="c-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="ft-logo">Press<span>AI</span></div>
+  <div class="ft-copy">Toda cidade, uma redação.</div>
+</footer>
+
+</body>
+</html>
