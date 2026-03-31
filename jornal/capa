@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jornal de Araquari — A cidade em tempo real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#0057D9;--blue-dark:#003DAD;--blue-light:#EAF1FD;
+  --ink:#0D1B2E;--ink-2:#253345;--ink-3:#546070;--ink-4:#8A9BAB;
+  --paper:#FAFAF8;--paper-2:#F3F1ED;--paper-3:#E5E3DE;
+  --white:#FFFFFF;--red:#C8302A;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Source Serif 4',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --max:1200px;--col:680px;--r:4px;
+}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+
+/* HEADER */
+.hd{background:var(--white);border-bottom:1px solid var(--paper-3);position:sticky;top:0;z-index:200;}
+.hd-top{max-width:var(--max);margin:0 auto;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;}
+.logo{display:flex;align-items:center;gap:.65rem;cursor:pointer;flex-shrink:0;text-decoration:none;}
+.logo-wave{transition:opacity .2s;}
+.logo:hover .logo-wave{opacity:.7;}
+.logo-text{display:flex;flex-direction:column;}
+.logo-name{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--ink);letter-spacing:-.3px;line-height:1;}
+.logo-tag{font-family:var(--sans);font-size:.55rem;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-4);margin-top:3px;}
+.hd-nav{display:flex;align-items:center;gap:1.75rem;}
+.hd-nav a{font-size:.8rem;font-weight:500;color:var(--ink-3);letter-spacing:.1px;transition:color .14s;padding-bottom:2px;border-bottom:2px solid transparent;}
+.hd-nav a:hover,.hd-nav a.on{color:var(--blue);border-color:var(--blue);}
+.btn-wa{display:flex;align-items:center;gap:.4rem;background:#25D366;color:#fff;padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;transition:opacity .14s;flex-shrink:0;}
+.btn-wa:hover{opacity:.88;}
+.btn-wa svg{width:14px;height:14px;}
+.ticker{background:var(--blue);padding:0 1.5rem;height:30px;display:flex;align-items:center;gap:1rem;overflow:hidden;}
+.ticker-lbl{flex-shrink:0;font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:2px 8px;border-radius:2px;display:flex;align-items:center;gap:.4rem;}
+.ticker-lbl::before{content:'';width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ticker-track{flex:1;overflow:hidden;mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.ticker-inner{display:flex;gap:3rem;white-space:nowrap;animation:scroll 40s linear infinite;}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-inner span{font-size:.75rem;color:rgba(255,255,255,.85);font-weight:400;}
+.ticker-inner span+span::before{content:'·';margin-right:3rem;opacity:.4;}
+
+/* SHARED COMPONENTS */
+.cat{display:inline-flex;align-items:center;gap:.4rem;font-size:.62rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--blue);margin-bottom:.9rem;}
+.cat .cd{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.cat.red{color:var(--red);}
+.badge-live{background:var(--red);color:#fff;padding:1px 7px;border-radius:2px;font-size:.6rem;font-weight:700;letter-spacing:1px;}
+.art-meta{display:flex;align-items:center;gap:.6rem;font-size:.68rem;color:var(--ink-4);font-family:var(--sans);}
+.meta-dot{width:3px;height:3px;border-radius:50%;background:var(--paper-3);}
+.img-ph{width:100%;border-radius:2px;margin-bottom:1.1rem;overflow:hidden;position:relative;background:var(--paper-2);}
+.img-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(13,27,46,.08));}
+.img-ph.ratio-16{aspect-ratio:16/9;}
+.img-ph.ratio-3{aspect-ratio:3/2;}
+.img-ph svg{width:100%;height:100%;display:block;}
+.section-hdr{display:flex;align-items:center;gap:.75rem;padding:1.4rem 0 1rem;}
+.section-hdr-title{font-size:.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ink);white-space:nowrap;}
+.section-hdr-rule{flex:1;height:1px;background:var(--paper-3);}
+.section-hdr-link{font-size:.68rem;color:var(--blue);font-weight:500;white-space:nowrap;transition:color .14s;}
+.section-hdr-link:hover{color:var(--blue-dark);}
+
+/* Channel cards */
+.ch-card{border-radius:8px;padding:1rem;margin-bottom:.6rem;cursor:pointer;transition:opacity .14s;}
+.ch-card:hover{opacity:.88;}
+.ch-card.wa{background:#25D366;}
+.ch-card.nl{background:var(--blue);}
+.ch-card.ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%);}
+.ch-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;}
+.ch-top svg{width:18px;height:18px;flex-shrink:0;}
+.ch-name{font-size:.8rem;font-weight:700;color:#fff;}
+.ch-desc{font-size:.7rem;color:rgba(255,255,255,.75);line-height:1.4;margin-bottom:.7rem;}
+.ch-cta{display:inline-flex;font-size:.68rem;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:4px;padding:4px 12px;transition:border-color .14s;}
+.ch-card:hover .ch-cta{border-color:rgba(255,255,255,.9);}
+
+/* Footer */
+.footer{background:var(--ink);color:rgba(255,255,255,.55);padding:3rem 1.5rem 1.75rem;}
+.footer-inner{max-width:var(--max);margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem;}
+.footer-brand .logo-name{color:#fff;font-size:1.1rem;}
+.footer-brand .logo-tag{color:rgba(255,255,255,.3);}
+.footer-brand p{font-size:.78rem;margin-top:.9rem;line-height:1.65;}
+.footer-col h4{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.9rem;}
+.footer-col a{display:block;font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:.5rem;transition:color .14s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;display:flex;align-items:center;justify-content:space-between;font-size:.68rem;}
+.footer-bottom a{color:rgba(255,255,255,.35);margin-left:1.25rem;transition:color .14s;}
+.footer-bottom a:hover{color:rgba(255,255,255,.7);}
+
+@media(max-width:960px){.hd-nav{display:none;}.footer-top{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.footer-top{grid-template-columns:1fr;}.hd-top{padding:0 1rem;}}
+
+
+/* ── HERO GRID ── */
+.hero-wrap{max-width:var(--max);margin:0 auto;padding:1.5rem 1.5rem 0;}
+.hero-grid{display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:auto auto;gap:1px;background:var(--paper-3);border:1px solid var(--paper-3);border-radius:var(--r);overflow:hidden;}
+.hero-main{grid-column:1;grid-row:1/3;background:var(--white);padding:1.75rem;cursor:pointer;transition:background .14s;display:flex;flex-direction:column;}
+.hero-main:hover{background:#FDFCF9;}
+.hero-main .img-ph{flex:1;margin-bottom:1.1rem;}
+.hero-main .img-ph.ratio-16{aspect-ratio:unset;min-height:160px;}
+.hero-main:hover .hl-title{color:var(--blue-dark);}
+.hero-s1,.hero-s2{grid-column:2;background:var(--white);padding:1.25rem;cursor:pointer;transition:background .14s;}
+.hero-s1{grid-row:1;border-bottom:1px solid var(--paper-3);}
+.hero-s2{grid-row:2;}
+.hero-s1:hover,.hero-s2:hover{background:#FDFCF9;}
+.hero-s1:hover .hl-title-sm,.hero-s2:hover .hl-title-sm{color:var(--blue-dark);}
+.hl-title{font-family:var(--serif);font-size:clamp(1.35rem,2.2vw,1.85rem);font-weight:700;line-height:1.18;color:var(--ink);letter-spacing:-.4px;margin-bottom:.75rem;transition:color .14s;}
+.hl-title-sm{font-family:var(--serif);font-size:clamp(.95rem,1.4vw,1.1rem);font-weight:600;line-height:1.28;color:var(--ink);margin-bottom:.5rem;transition:color .14s;}
+.hl-lede{font-family:var(--body);font-size:.9rem;font-weight:300;color:var(--ink-3);line-height:1.65;margin-bottom:.9rem;}
+
+/* ── ÚLTIMAS ── */
+.section-row{max-width:var(--max);margin:0 auto;padding:0 1.5rem;}
+.cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;padding-bottom:1.5rem;}
+.card{cursor:pointer;}
+.card:hover .card-title{color:var(--blue);}
+.card-img{width:100%;aspect-ratio:3/2;border-radius:var(--r);margin-bottom:.8rem;}
+.ci-pol{background:linear-gradient(135deg,#E3EDF9,#B4CEF5);}
+.ci-sau{background:linear-gradient(135deg,#E3F5EC,#A8E4C0);}
+.ci-eco{background:linear-gradient(135deg,#FDF3E3,#F5D08A);}
+.ci-seg{background:linear-gradient(135deg,#FAEAEA,#F0B0B0);}
+.card-title{font-family:var(--serif);font-size:.95rem;font-weight:600;line-height:1.3;color:var(--ink);margin-bottom:.4rem;transition:color .14s;}
+.card-meta{font-size:.67rem;color:var(--ink-4);}
+
+/* ── FEED COM ABAS ── */
+.feed-wrap{max-width:var(--max);margin:0 auto;padding:0 1.5rem 3rem;display:grid;grid-template-columns:1fr 300px;gap:3rem;align-items:start;}
+
+/* Tabs */
+.tabs-hdr{display:flex;align-items:stretch;gap:0;border-bottom:2px solid var(--paper-3);margin-bottom:1.25rem;}
+.tab-btn{
+  font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ink-4);padding:.7rem 1.1rem .6rem;
+  background:none;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .15s;white-space:nowrap;
+}
+.tab-btn.on{color:var(--ink);border-color:var(--ink);}
+.tab-btn:hover:not(.on){color:var(--ink-3);}
+.tab-panel{display:none;}
+.tab-panel.on{display:flex;flex-direction:column;}
+
+/* Feed items */
+.feed-item{display:flex;gap:1.1rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid var(--paper-3);cursor:pointer;}
+.feed-item:first-child{padding-top:0;}
+.feed-item:last-child{border-bottom:none;}
+.feed-item:hover .feed-title{color:var(--blue);}
+.feed-thumb{flex-shrink:0;width:105px;height:72px;border-radius:var(--r);background:var(--paper-2);}
+.ft-1{background:linear-gradient(135deg,#F1EEE7,#CECAB8);}
+.ft-2{background:linear-gradient(135deg,#DAEFD8,#9FCFA0);}
+.ft-3{background:linear-gradient(135deg,#FDECEA,#F4B8B0);}
+.ft-4{background:linear-gradient(135deg,#E7E5F8,#C0BCEE);}
+.ft-5{background:linear-gradient(135deg,#FEF0DD,#F5CA7A);}
+.feed-info{flex:1;min-width:0;}
+.feed-cat{font-size:.6rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--blue);margin-bottom:.3rem;}
+.feed-cat.red{color:var(--red);}
+.feed-title{font-family:var(--serif);font-size:1rem;font-weight:600;line-height:1.32;color:var(--ink);margin-bottom:.3rem;transition:color .14s;}
+.feed-meta{font-size:.67rem;color:var(--ink-4);}
+
+/* Most read numbered */
+.mr-item{display:flex;gap:.75rem;align-items:flex-start;padding:.9rem 0;border-bottom:1px solid var(--paper-3);cursor:pointer;}
+.mr-item:first-child{padding-top:0;}
+.mr-item:last-child{border-bottom:none;}
+.mr-item:hover .mr-title{color:var(--blue);}
+.mr-num{font-family:var(--serif);font-size:1.75rem;font-weight:700;color:var(--paper-3);line-height:1;flex-shrink:0;width:30px;}
+.mr-title{font-family:var(--serif);font-size:.95rem;font-weight:600;line-height:1.32;color:var(--ink);margin-bottom:.25rem;transition:color .14s;}
+.mr-meta{font-size:.67rem;color:var(--ink-4);}
+
+/* Sidebar */
+.sidebar{position:sticky;top:100px;}
+.sb-title{font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink);padding-bottom:.6rem;border-bottom:2px solid var(--ink);margin-bottom:1rem;}
+.trend-item{display:flex;gap:.7rem;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--paper-3);cursor:pointer;}
+.trend-item:last-child{border:none;}
+.trend-item:hover .trend-title{color:var(--blue);}
+.trend-n{font-family:var(--serif);font-size:1.25rem;font-weight:700;color:var(--paper-3);line-height:1;flex-shrink:0;width:22px;}
+.trend-title{font-size:.8rem;font-weight:500;color:var(--ink-2);line-height:1.35;transition:color .14s;}
+.trend-cat{font-size:.65rem;color:var(--ink-4);margin-top:2px;}
+.sb-block{margin-bottom:2rem;}
+
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-s1{grid-column:1;grid-row:2;}
+  .hero-s2{grid-column:1;grid-row:3;}
+  .cards-grid{grid-template-columns:1fr 1fr;}
+  .feed-wrap{grid-template-columns:1fr;}
+  .sidebar{position:static;}
+}
+@media(max-width:600px){
+  .cards-grid{grid-template-columns:1fr;}
+  .hero-wrap,.section-row,.feed-wrap{padding-left:1rem;padding-right:1rem;}
+  .hero-main{padding:1.25rem;}
+  .hero-s1,.hero-s2{padding:1rem;}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <div class="hd-top">
+    <a class="logo" href="index.html">
+      <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M5 18 Q11 4 17 18 Q23 32 29 18" fill="none" stroke="#0057D9" stroke-width="1.2" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="17" cy="18" r="2.8" fill="#0057D9"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-name">Jornal de Araquari</span>
+        <span class="logo-tag">A cidade em tempo real</span>
+      </div>
+    </a>
+    <nav class="hd-nav">
+      <a href="index.html">Início</a>
+      <a href="#">Política</a>
+      <a href="#">Economia</a>
+      <a href="#">Obras</a>
+      <a href="#">Saúde</a>
+      <a href="#">Segurança</a>
+    </nav>
+    <a href="#" class="btn-wa">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+  <div class="ticker">
+    <div class="ticker-lbl">Ao vivo</div>
+    <div class="ticker-track">
+      <div class="ticker-inner">
+        <span>Câmara Municipal vota orçamento de R$ 287 milhões para 2026 às 14h de hoje</span>
+        <span>Secretaria de Saúde confirma 47 casos de dengue e emite alerta para três bairros</span>
+        <span>Licitação de R$ 1,2 mi para reforma da Escola do Morro Grande é aberta</span>
+        <span>BR-280 tem lentidão após acidente na altura do km 47, sentido Joinville</span>
+        <span>BMW anuncia investimento adicional de R$ 2 bilhões na planta de Araquari</span>
+        <span>Câmara Municipal vota orçamento de R$ 287 milhões para 2026 às 14h de hoje</span>
+        <span>Secretaria de Saúde confirma 47 casos de dengue e emite alerta para três bairros</span>
+        <span>Licitação de R$ 1,2 mi para reforma da Escola do Morro Grande é aberta</span>
+        <span>BR-280 tem lentidão após acidente na altura do km 47, sentido Joinville</span>
+        <span>BMW anuncia investimento adicional de R$ 2 bilhões na planta de Araquari</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero-grid">
+    <a class="hero-main" href="materia.html">
+      <div class="cat"><span class="cd"></span>Política</div>
+      <div class="img-ph ratio-16"><svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E3EDF9"/><stop offset="100%" stop-color="#8ABAEF"/></linearGradient></defs>
+            <rect width="640" height="360" fill="url(#g1)"/>
+            <rect x="120" y="180" width="400" height="140" fill="rgba(13,27,46,.1)" rx="2"/>
+            <rect x="160" y="100" width="100" height="240" fill="rgba(13,27,46,.09)" rx="1"/>
+            <rect x="380" y="120" width="100" height="220" fill="rgba(13,27,46,.07)" rx="1"/>
+            <rect x="170" y="115" width="12" height="9" fill="rgba(255,255,255,.6)" rx="1"/>
+            <rect x="190" y="115" width="12" height="9" fill="rgba(255,255,255,.5)" rx="1"/>
+            <rect x="210" y="115" width="12" height="9" fill="rgba(255,255,255,.4)" rx="1"/>
+            <rect x="170" y="134" width="12" height="9" fill="rgba(255,255,255,.5)" rx="1"/>
+            <rect x="190" y="134" width="12" height="9" fill="rgba(0,87,217,.4)" rx="1"/>
+            <rect x="210" y="134" width="12" height="9" fill="rgba(255,255,255,.3)" rx="1"/>
+            <rect x="390" y="132" width="12" height="9" fill="rgba(255,255,255,.55)" rx="1"/>
+            <rect x="410" y="132" width="12" height="9" fill="rgba(255,255,255,.4)" rx="1"/>
+            <line x1="270" y1="60" x2="270" y2="100" stroke="rgba(13,27,46,.35)" stroke-width="2"/>
+            <rect x="270" y="60" width="30" height="18" fill="rgba(0,87,217,.5)" rx="1"/>
+          </svg></div>
+      <h1 class="hl-title">Câmara de Araquari vota orçamento de R$ 287 milhões para 2026 com foco em obras e saúde</h1>
+      <p class="hl-lede">Sessão marcada para hoje às 14h deve ser a mais disputada do ano. Vereadores divergem sobre a destinação de R$ 42 milhões para infraestrutura nos bairros periféricos.</p>
+      <div class="art-meta">
+        <span class="badge-live">Ao vivo</span>
+        <span class="meta-dot"></span>
+        <span>27 de março · 11h04</span>
+        <span class="meta-dot"></span>
+        <span>6 min de leitura</span>
+      </div>
+    </a>
+    <a class="hero-s1" href="materia.html">
+      <div class="cat red"><span class="cd"></span>Saúde</div>
+      <div class="img-ph ratio-3"><svg viewBox="0 0 320 213" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FAEEDA"/><stop offset="100%" stop-color="#F5A830"/></linearGradient></defs>
+            <rect width="320" height="213" fill="url(#g2)"/>
+            <circle cx="160" cy="100" r="55" fill="rgba(200,48,42,.1)" stroke="rgba(200,48,42,.2)" stroke-width="1"/>
+            <circle cx="160" cy="100" r="35" fill="rgba(200,48,42,.12)" stroke="rgba(200,48,42,.25)" stroke-width="1.5"/>
+            <path d="M148 100 h24 M160 88 v24" stroke="rgba(200,48,42,.7)" stroke-width="3" stroke-linecap="round"/>
+          </svg></div>
+      <h2 class="hl-title-sm">Dengue avança: 47 casos confirmados e Secretaria emite alerta para três bairros</h2>
+      <div class="art-meta" style="margin-top:.6rem;">
+        <span>Hoje · 09h30</span><span class="meta-dot"></span><span>4 min</span>
+      </div>
+    </a>
+    <a class="hero-s2" href="materia.html">
+      <div class="cat"><span class="cd"></span>Obras</div>
+      <div class="img-ph ratio-3"><svg viewBox="0 0 320 213" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E3EDF9"/><stop offset="100%" stop-color="#B4CEF5"/></linearGradient></defs>
+            <rect width="320" height="213" fill="url(#g3)"/>
+            <rect x="80" y="110" width="160" height="80" fill="rgba(13,27,46,.1)" rx="2"/>
+            <rect x="100" y="85" width="40" height="105" fill="rgba(13,27,46,.08)" rx="1"/>
+            <rect x="180" y="95" width="40" height="95" fill="rgba(13,27,46,.08)" rx="1"/>
+            <path d="M60 145 h200" stroke="rgba(13,27,46,.15)" stroke-width="2"/>
+            <line x1="240" y1="50" x2="240" y2="145" stroke="rgba(0,87,217,.4)" stroke-width="2.5"/>
+            <line x1="180" y1="55" x2="260" y2="55" stroke="rgba(0,87,217,.35)" stroke-width="2"/>
+            <line x1="240" y1="55" x2="220" y2="100" stroke="rgba(0,87,217,.25)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          </svg></div>
+      <h2 class="hl-title-sm">Prefeitura abre licitação de R$ 1,2 mi para reforma da Escola do Morro Grande</h2>
+      <div class="art-meta" style="margin-top:.6rem;">
+        <span>Hoje · 08h15</span><span class="meta-dot"></span><span>3 min</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ÚLTIMAS 4 CARDS -->
+<div class="section-row">
+  <div class="section-hdr">
+    <span class="section-hdr-title">Últimas notícias</span>
+    <div class="section-hdr-rule"></div>
+    <a href="#" class="section-hdr-link">Ver tudo →</a>
+  </div>
+  <div class="cards-grid">
+    <a class="card" href="materia.html">
+      <div class="card-img ci-pol"></div>
+      <div class="cat" style="margin-bottom:.4rem;"><span class="cd"></span>Política</div>
+      <div class="card-title">Vereadores aprovam aumento do piso salarial dos servidores municipais</div>
+      <div class="card-meta" style="margin-top:.4rem;">Hoje · 10h22</div>
+    </a>
+    <a class="card" href="materia.html">
+      <div class="card-img ci-sau"></div>
+      <div class="cat" style="margin-bottom:.4rem;"><span class="cd"></span>Saúde</div>
+      <div class="card-title">Nova UBS no Jardim Paraíso começa a funcionar na segunda-feira</div>
+      <div class="card-meta" style="margin-top:.4rem;">Ontem · 16h45</div>
+    </a>
+    <a class="card" href="materia.html">
+      <div class="card-img ci-eco"></div>
+      <div class="cat" style="margin-bottom:.4rem;"><span class="cd"></span>Economia</div>
+      <div class="card-title">Porto de Araquari registra recorde de movimentação de cargas em fevereiro</div>
+      <div class="card-meta" style="margin-top:.4rem;">Ontem · 14h10</div>
+    </a>
+    <a class="card" href="materia.html">
+      <div class="card-img ci-seg"></div>
+      <div class="cat red" style="margin-bottom:.4rem;"><span class="cd"></span>Segurança</div>
+      <div class="card-title">PM apreende 40 kg de maconha em abordagem na BR-280 sentido Joinville</div>
+      <div class="card-meta" style="margin-top:.4rem;">Ontem · 22h00</div>
+    </a>
+  </div>
+</div>
+
+<!-- FEED COM ABAS + SIDEBAR -->
+<div class="feed-wrap">
+  <div>
+    <!-- ABAS -->
+    <div class="tabs-hdr">
+      <button class="tab-btn on" onclick="switchTab('recentes',this)">Mais recentes</button>
+      <button class="tab-btn" onclick="switchTab('lidas',this)">Mais lidas hoje</button>
+    </div>
+
+    <!-- Painel: mais recentes -->
+    <div class="tab-panel on" id="tab-recentes">
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb ft-1"></div>
+        <div class="feed-info">
+          <div class="feed-cat">Educação</div>
+          <div class="feed-title">SEDUC anuncia calendário de matrículas 2026 para escolas estaduais de Araquari</div>
+          <div class="feed-meta">27 mar · 07h40 · 3 min de leitura</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb ft-2"></div>
+        <div class="feed-info">
+          <div class="feed-cat">Meio Ambiente</div>
+          <div class="feed-title">Mutirão de limpeza retira 8 toneladas de resíduos do Manguezal do Rio Itapocú</div>
+          <div class="feed-meta">26 mar · 15h20 · 4 min de leitura</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb ft-3"></div>
+        <div class="feed-info">
+          <div class="feed-cat red">Segurança</div>
+          <div class="feed-title">Guarda Municipal registra queda de 18% nos furtos de veículos no primeiro trimestre</div>
+          <div class="feed-meta">26 mar · 11h55 · 3 min de leitura</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb ft-4"></div>
+        <div class="feed-info">
+          <div class="feed-cat">Cultura</div>
+          <div class="feed-title">Festival Náutico de Araquari terá 22 embarcações competindo no fim de semana</div>
+          <div class="feed-meta">25 mar · 18h30 · 2 min de leitura</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb ft-5"></div>
+        <div class="feed-info">
+          <div class="feed-cat">Economia</div>
+          <div class="feed-title">Indústria naval de Araquari anuncia 200 novas vagas para o segundo semestre de 2026</div>
+          <div class="feed-meta">25 mar · 14h00 · 5 min de leitura</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Painel: mais lidas -->
+    <div class="tab-panel" id="tab-lidas">
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb" style="background:linear-gradient(135deg,#E3EDF9,#8ABAEF);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700;color:rgba(13,27,46,.18);">1</div>
+        <div class="feed-info">
+          <div class="feed-cat">Política</div>
+          <div class="feed-title">Câmara vota orçamento de R$ 287 mi para 2026 hoje às 14h</div>
+          <div class="feed-meta">27 mar · 11h04 · 6 min</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb" style="background:linear-gradient(135deg,#FAEEDA,#F5A830);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700;color:rgba(13,27,46,.18);">2</div>
+        <div class="feed-info">
+          <div class="feed-cat red">Saúde</div>
+          <div class="feed-title">Dengue: 47 casos confirmados e alerta da Secretaria de Saúde para três bairros</div>
+          <div class="feed-meta">27 mar · 09h30 · 4 min</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb" style="background:linear-gradient(135deg,#FDF3E3,#F5D08A);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700;color:rgba(13,27,46,.18);">3</div>
+        <div class="feed-info">
+          <div class="feed-cat">Economia</div>
+          <div class="feed-title">Porto de Araquari bate recorde de movimentação de cargas em fevereiro</div>
+          <div class="feed-meta">Ontem · 14h10 · 5 min</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb" style="background:linear-gradient(135deg,#FAEAEA,#F0B0B0);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700;color:rgba(13,27,46,.18);">4</div>
+        <div class="feed-info">
+          <div class="feed-cat red">Segurança</div>
+          <div class="feed-title">PM apreende 40 kg de maconha em abordagem na BR-280 sentido Joinville</div>
+          <div class="feed-meta">Ontem · 22h00 · 3 min</div>
+        </div>
+      </a>
+      <a class="feed-item" href="materia.html">
+        <div class="feed-thumb" style="background:linear-gradient(135deg,#DAEFD8,#9FCFA0);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.75rem;font-weight:700;color:rgba(13,27,46,.18);">5</div>
+        <div class="feed-info">
+          <div class="feed-cat">Meio Ambiente</div>
+          <div class="feed-title">Mutirão retira 8 toneladas de resíduos do Manguezal do Rio Itapocú</div>
+          <div class="feed-meta">26 mar · 15h20 · 4 min</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-block">
+      <div class="sb-title">Receba Araquari</div>
+      <div class="ch-card wa">
+        <div class="ch-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="ch-name">Canal do WhatsApp</span></div>
+        <div class="ch-desc">Notícias direto no celular, sem algoritmo.</div>
+        <span class="ch-cta">Entrar no canal →</span>
+      </div>
+      <div class="ch-card nl">
+        <div class="ch-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span class="ch-name">Newsletter</span></div>
+        <div class="ch-desc">Resumo das principais notícias toda manhã às 7h.</div>
+        <span class="ch-cta">Assinar grátis →</span>
+      </div>
+      <div class="ch-card ig">
+        <div class="ch-top"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span class="ch-name">Instagram</span></div>
+        <div class="ch-desc">Fotos e cobertura ao vivo pelo @jornaldearaquari.</div>
+        <span class="ch-cta">Seguir →</span>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="logo" href="index.html" style="margin-bottom:.75rem;">
+            <svg width="28" height="28" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="17" cy="18" r="2.8" fill="#0057D9"/>
+            </svg>
+            <div class="logo-text">
+              <span class="logo-name">Jornal de Araquari</span>
+              <span class="logo-tag">A cidade em tempo real</span>
+            </div>
+          </a>
+          <p>O primeiro portal de jornalismo digital exclusivo de Araquari, SC. Cobertura local 24h, 7 dias por semana.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Editorias</h4>
+          <a href="#">Política</a><a href="#">Economia</a><a href="#">Saúde</a>
+          <a href="#">Educação</a><a href="#">Obras</a><a href="#">Segurança</a>
+        </div>
+        <div class="footer-col">
+          <h4>Jornal</h4>
+          <a href="#">Sobre nós</a><a href="#">Política editorial</a>
+          <a href="#">Anuncie aqui</a><a href="#">Privacidade</a><a href="#">Contato</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Jornal de Araquari · Araquari, SC</span>
+        <div>
+          <a href="#">Privacidade</a>
+          <a href="#">Termos</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-' + id).classList.add('on');
+}
+</script>
+</body>
+</html>
