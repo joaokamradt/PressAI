@@ -50,6 +50,8 @@ a{color:inherit;text-decoration:none;}
   padding:0 2rem;height:52px;
   display:flex;align-items:center;justify-content:space-between;
 }
+.p-back{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);padding:5px 12px;border-radius:20px;border:1px solid var(--p-border);text-decoration:none;transition:all .14s;}
+.p-back:hover{color:var(--white);border-color:rgba(255,255,255,.2);}
 .p-logo{font-family:var(--p-d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;}
 .p-logo span{color:var(--p-blue);}
 .p-nav-right{display:flex;align-items:center;gap:1.25rem;}
@@ -374,7 +376,7 @@ a{color:inherit;text-decoration:none;}
 
 <!-- NAV PRESSAI -->
 <nav class="p-nav">
-  <div class="p-logo">Press<span>AI</span></div>
+  <a href="index.html" class="p-back">← Início</a><div class="p-logo">Press<span>AI</span></div>
   <div class="p-nav-right">
     <div class="p-pill">Operacional</div>
     <span class="clock-p" id="clock">--:--:--</span>

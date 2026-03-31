@@ -31,6 +31,8 @@ a{color:inherit;text-decoration:none;}
   padding:0 2rem;height:54px;
   display:flex;align-items:center;justify-content:space-between;
 }
+.tn-back{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(13,27,46,.45);padding:5px 12px;border-radius:20px;border:1px solid rgba(13,27,46,.15);text-decoration:none;transition:all .14s;margin-right:auto;}
+.tn-back:hover{color:var(--blue);border-color:var(--blue);}
 .tn-logo{font-family:var(--d);font-size:1rem;font-weight:800;letter-spacing:-.5px;}
 .tn-logo span{color:var(--blue);}
 .tn-links{display:flex;gap:1.75rem;list-style:none;}
@@ -195,7 +197,7 @@ section:last-child{border-bottom:none;}
 
 <!-- NAV -->
 <nav class="top-nav">
-  <div class="tn-logo">Press<span>AI</span></div>
+  <a href="index.html" class="tn-back">← Início</a><div class="tn-logo">Press<span>AI</span></div>
   <ul class="tn-links">
     <li><a href="#logo">Logo</a></li>
     <li><a href="#cores">Cores</a></li>

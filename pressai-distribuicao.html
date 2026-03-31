@@ -36,6 +36,8 @@ html{font-size:15px;scroll-behavior:smooth;}
 body{font-family:var(--b);background:var(--ink);color:var(--t2);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 
 /* ── NAV ── */
+.nav-back{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);padding:5px 12px;border-radius:20px;border:1px solid var(--border);transition:all .14s;text-decoration:none;}
+.nav-back:hover{color:var(--t1);border-color:rgba(255,255,255,.2);}
 nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(7,11,20,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
 .nav-logo{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);}
 .nav-logo span{color:var(--blue);}
@@ -251,6 +253,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;ali
 <body>
 
 <nav>
+  <a href="index.html" class="nav-back">← Início</a>
   <div class="nav-logo">Press<span>AI</span></div>
   <div class="nav-tag">Modelo de distribuição</div>
 </nav>
