@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Arquitetura multi-agente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#070B14; --ink2:#0D1220; --ink3:#141e30;
+  --blue:#1A6EFF; --blue2:#0052CC;
+  --blue-dim:rgba(26,110,255,.14); --blue-glow:rgba(26,110,255,.22);
+  --green:#10B981; --amber:#F59E0B; --red:#EF4444;
+  --white:#fff;
+  --t1:rgba(255,255,255,.88); /* texto principal */
+  --t2:rgba(255,255,255,.80); /* texto secundário */
+  --t3:rgba(255,255,255,.65); /* labels / meta */
+  --t4:rgba(255,255,255,.42); /* muito dim */
+  --border:rgba(255,255,255,.08);
+  --d:'Syne',sans-serif;
+  --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',monospace;
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:var(--b);background:var(--ink);color:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:0 2.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,11,20,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;}
+.nav-logo span{color:var(--blue);}
+.nav-tag{font-family:var(--m);font-size:.6rem;color:var(--t3);letter-spacing:.1em;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2.5rem 5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(26,110,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(26,110,255,.04) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;}
+.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(26,110,255,.07) 0%,transparent 65%);top:-300px;right:-200px;pointer-events:none;}
+.hero-inner{max-width:680px;position:relative;z-index:1;}
+.hero-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem;}
+.hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);}
+.hero-h1{font-family:var(--d);font-size:clamp(2.4rem,5.5vw,4.5rem);font-weight:800;letter-spacing:-3px;line-height:.97;margin-bottom:1.5rem;}
+.hero-h1 em{font-style:normal;color:var(--blue);}
+.hero-sub{font-size:.98rem;color:var(--t2);line-height:1.75;max-width:520px;margin-bottom:2.75rem;}
+.scroll-hint{display:flex;align-items:center;gap:.6rem;font-family:var(--m);font-size:.62rem;color:var(--t3);letter-spacing:.1em;animation:nudge 2.5s ease infinite;}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.scroll-hint svg{flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   SCROLL MACHINE
+   Cada fase ocupa 100vh de scroll.
+   O canvas fica sticky.
+══════════════════════════════════════════ */
+#scroll-machine{position:relative;}
+/* scroll-machine recebe a altura total via JS */
+
+/* Canvas sticky */
+#sticky{
+  position:sticky;top:52px;
+  height:calc(100vh - 52px);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  /* fica por cima do spacer via z-index */
+  z-index:10;
+}
+
+/* ── CANVAS VISUAL ── */
+#canvas{
+  width:min(1000px,96vw);
+  height:min(580px,82vh);
+  position:relative;
+}
+.c-bg{
+  position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(135deg,#0a0f1c 0%,#0d1525 50%,#0a1020 100%);
+  border:1px solid var(--border);overflow:hidden;
+}
+/* Grid subtil */
+.c-bg::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(26,110,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,110,255,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+/* Zona de luz central — indica o "centro da redação" */
+.c-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 40% 50% at 50% 55%, rgba(26,110,255,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 20% 30% at 12% 30%, rgba(26,110,255,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 20% 30% at 88% 65%, rgba(16,185,129,.04) 0%, transparent 60%);
+}
+/* Separadores verticais sutis entre colunas */
+.c-sep{
+  position:absolute;top:10%;bottom:10%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.05) 30%,rgba(255,255,255,.05) 70%,transparent);
+  z-index:1;
+}
+
+/* Fase info */
+.c-phase{position:absolute;top:1.1rem;left:1.4rem;z-index:5;display:flex;align-items:center;gap:.6rem;font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);}
+.c-phase-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+#phase-text{color:var(--t2);}
+.c-pnum{position:absolute;top:1.1rem;right:1.4rem;font-family:var(--m);font-size:.65rem;color:var(--t3);z-index:5;}
+
+/* ── AGENTES ── */
+/* Layout fixo: todos os agentes têm posição definida no canvas.
+   Ficam invisíveis até a fase os ativar. */
+.ag{
+  position:absolute;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  opacity:0;
+  transition:opacity .45s ease, transform .5s cubic-bezier(.16,1,.3,1);
+  z-index:4;
+}
+.ag.show{opacity:1;}
+.ag.pulse .av{
+  border-color:var(--blue)!important;
+  box-shadow:0 0 0 5px rgba(26,110,255,.13), 0 8px 28px rgba(26,110,255,.25)!important;
+  transform:scale(1.1);
+}
+.ag.done .av{border-color:rgba(16,185,129,.5)!important;box-shadow:0 0 0 4px rgba(16,185,129,.1)!important;}
+
+.av{
+  width:54px;height:54px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  background:var(--ink3);border:1px solid var(--border);
+  position:relative;transition:all .4s ease;
+}
+/* Anel pulsante */
+.av-ring{position:absolute;inset:-7px;border-radius:18px;border:1.5px solid transparent;transition:border-color .3s;}
+.ag.pulse .av-ring{border-color:var(--blue);animation:ring-pulse 1.8s ease infinite;}
+@keyframes ring-pulse{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:.2;transform:scale(1.1)}}
+/* Checkmark */
+.av-check{position:absolute;top:-5px;right:-5px;width:17px;height:17px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#fff;font-weight:700;opacity:0;transform:scale(0);transition:opacity .3s, transform .4s cubic-bezier(.16,1,.3,1);}
+.ag.done .av-check{opacity:1;transform:scale(1);}
+
+.ag-name{font-family:var(--m);font-size:.56rem;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:center;line-height:1.45;transition:color .3s;max-width:80px;}
+.ag.show .ag-name{color:rgba(255,255,255,.7);}
+.ag.pulse .ag-name{color:var(--t2);}
+.ag.done .ag-name{color:rgba(16,185,129,.7);}
+.ag-status{font-family:var(--m);font-size:.5rem;letter-spacing:.05em;padding:2px 8px;border-radius:8px;opacity:0;transition:opacity .3s;}
+.ag.pulse .ag-status{opacity:1;background:var(--blue-dim);color:var(--blue);}
+.ag.done .ag-status{opacity:1;background:rgba(16,185,129,.12);color:var(--green);}
+
+/* ── PAINEL CENTRAL DA MATÉRIA ── */
+#art-panel{
+  position:absolute;
+  left:50%;top:50%;transform:translate(-50%,-50%);
+  width:260px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:.9rem 1rem;
+  opacity:0;transition:opacity .5s ease;z-index:4;
+}
+#art-panel.show{opacity:1;}
+.ap-kicker{font-family:var(--m);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;}
+.ap-kicker::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--blue);}
+#ap-title{font-family:var(--d);font-size:.85rem;font-weight:700;letter-spacing:-.3px;color:var(--white);line-height:1.3;margin-bottom:.7rem;min-height:2.2rem;}
+.ap-lines{display:flex;flex-direction:column;gap:5px;margin-bottom:.7rem;}
+.apl{height:4px;border-radius:3px;background:rgba(255,255,255,.08);transform-origin:left;transform:scaleX(0);transition:transform .55s cubic-bezier(.16,1,.3,1);}
+.apl.on{transform:scaleX(1);}
+.apl:nth-child(1){width:100%;transition-delay:.0s;}
+.apl:nth-child(2){width:88%;transition-delay:.08s;}
+.apl:nth-child(3){width:95%;transition-delay:.16s;}
+.apl:nth-child(4){width:72%;transition-delay:.24s;}
+.apl:nth-child(5){width:83%;transition-delay:.32s;}
+.ap-tags{display:flex;gap:.35rem;flex-wrap:wrap;opacity:0;transition:opacity .4s;}
+.ap-tags.on{opacity:1;}
+.ap-tag{font-family:var(--m);font-size:.5rem;padding:2px 7px;border-radius:6px;}
+.apt-f{background:rgba(16,185,129,.12);color:var(--green);}
+.apt-s{background:rgba(26,110,255,.12);color:var(--blue);}
+.apt-p{background:rgba(245,158,11,.12);color:var(--amber);}
+
+/* ── BALÕES DE MENSAGEM ── */
+.msg{
+  position:absolute;z-index:6;
+  background:var(--ink2);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:.4rem .75rem;
+  font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.85);
+  white-space:nowrap;pointer-events:none;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.msg.on{opacity:1;transform:translateY(0);}
+
+/* Painel de pautas identificadas */
+#pautas-panel{
+  position:absolute;left:22%;top:18%;width:220px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .45s ease, transform .45s ease;
+  z-index:5;
+}
+#pautas-panel.on{opacity:1;transform:translateY(0);}
+.pautas-hd{
+  font-family:var(--m);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);margin-bottom:.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pautas-hd span{font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.4);}
+.pauta-item{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.38rem .6rem;border-radius:5px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.025);
+  margin-bottom:.35rem;
+  font-size:.72rem;color:rgba(255,255,255,.65);
+  transition:all .3s;
+}
+.pauta-item.aprovada{
+  border-color:rgba(16,185,129,.3);
+  background:rgba(16,185,129,.07);
+  color:rgba(255,255,255,.88);
+}
+.pauta-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.pd-pend{background:rgba(255,255,255,.2);}
+.pd-ok{background:var(--green);}
+.pauta-badge{
+  margin-left:auto;font-family:var(--m);font-size:.5rem;
+  padding:1px 6px;border-radius:4px;flex-shrink:0;
+}
+.pb-pend{background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);}
+.pb-ok{background:rgba(16,185,129,.15);color:var(--green);}
+
+/* ── CONEXÕES SVG ── */
+#conn-svg{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:visible;}
+
+/* ── PIPELINE BAR ── */
+.pipe-bar{
+  position:absolute;bottom:1rem;left:1.4rem;right:1.4rem;
+  display:flex;align-items:center;gap:7px;z-index:5;
+  background:rgba(7,11,20,.7);border-radius:8px;
+  padding:.55rem .9rem;border:1px solid rgba(255,255,255,.09);
+}
+.pipe-lbl{
+  font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);flex-shrink:0;font-weight:500;
+}
+.pipe-sep{width:1px;height:14px;background:rgba(255,255,255,.12);flex-shrink:0;}
+.ps-wrap{flex:1;display:flex;flex-direction:column;gap:4px;align-items:center;}
+.ps{width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,.1);position:relative;overflow:hidden;transition:background .4s;}
+.ps.done{background:var(--blue);}
+.ps.run{background:rgba(26,110,255,.3);}
+.ps.run::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:sweep 1.1s ease infinite;}
+@keyframes sweep{from{transform:translateX(-200%)}to{transform:translateX(200%)}}
+.ps-name{
+  font-family:var(--m);font-size:.52rem;color:rgba(255,255,255,.55);
+  flex-shrink:0;letter-spacing:.04em;text-align:center;
+  transition:color .3s;
+}
+.ps-name.done-lbl{color:var(--blue);}
+.ps-name.run-lbl{color:rgba(255,255,255,.85);}
+
+/* ── PAINEL LATERAL DE CONTEXTO ── */
+/* Fica do lado direito do canvas, desaparece/aparece por fase */
+/* Faixa de contexto: banner horizontal no TOPO do canvas, dentro dos limites */
+#ctx-panel{
+  position:absolute;
+  top:0;left:0;right:0;
+  background:linear-gradient(180deg,rgba(13,18,32,.97) 80%,transparent 100%);
+  padding:1rem 1.4rem .9rem;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  border-bottom:1px solid rgba(26,110,255,.15);
+  border-radius:16px 16px 0 0;
+  opacity:0;transition:opacity .4s ease;
+  z-index:6;
+}
+#ctx-panel.show{opacity:1;}
+.ctx-num{
+  font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);flex-shrink:0;white-space:nowrap;
+}
+.ctx-divider{width:1px;height:24px;background:rgba(255,255,255,.1);flex-shrink:0;}
+.ctx-h{
+  font-family:var(--d);font-size:1rem;font-weight:800;letter-spacing:-.4px;
+  color:#fff;white-space:nowrap;flex-shrink:0;
+}
+.ctx-p{
+  font-size:.78rem;color:rgba(255,255,255,.72);line-height:1.5;
+  flex:1;min-width:180px;
+}
+.ctx-items{
+  display:flex;gap:.6rem;flex-wrap:wrap;flex-shrink:0;
+}
+.ctx-item{
+  font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.6);
+  background:rgba(26,110,255,.1);border:1px solid rgba(26,110,255,.2);
+  padding:2px 8px;border-radius:4px;white-space:nowrap;
+  display:flex;align-items:center;gap:.35rem;
+}
+.ctx-item::before{content:'·';color:var(--blue);flex-shrink:0;}
+
+/* ── RESULTADO ── */
+.result{padding:6rem 2.5rem;max-width:900px;margin:0 auto;text-align:center;}
+.result-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.result-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
+.result-h{font-family:var(--d);font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-2px;line-height:1;color:var(--white);margin-bottom:1.1rem;}
+.result-h em{font-style:normal;color:var(--blue);}
+.result-sub{font-size:.92rem;color:var(--t2);line-height:1.75;max-width:520px;margin:0 auto 3rem;}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;max-width:640px;margin:0 auto;}
+.rs{background:var(--ink2);padding:1.75rem 1.25rem;text-align:center;}
+.rs-n{font-family:var(--d);font-size:2rem;font-weight:800;letter-spacing:-1.5px;color:var(--blue);line-height:1;margin-bottom:.35rem;}
+.rs-l{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
+.ft-logo{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.5px;color:rgba(255,255,255,.6);}
+.ft-logo span{color:var(--blue);}
+.ft-meta{font-family:var(--m);font-size:.58rem;color:rgba(255,255,255,.45);}
+
+/* Reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════════════
+   SEÇÃO DEPARTAMENTOS
+══════════════════════════════════════ */
+#depts{padding:5rem 2.5rem 4rem;position:relative;overflow:hidden;}
+#depts::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(26,110,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(26,110,255,.03) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;}
+.dept-wrap{max-width:1040px;margin:0 auto;position:relative;}
+.dept-header{text-align:center;margin-bottom:3rem;}
+.dept-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.dept-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);}
+.dept-h{font-family:var(--d);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:800;letter-spacing:-2px;line-height:1;color:#fff;margin-bottom:1rem;}
+.dept-h em{font-style:normal;color:var(--blue);}
+.dept-sub{font-size:.92rem;color:rgba(255,255,255,.82);line-height:1.72;max-width:540px;margin:0 auto;}
+
+.dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:2rem;}
+.dept-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:1.1rem;
+  display:flex;flex-direction:column;gap:.75rem;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s ease var(--delay), transform .5s ease var(--delay), border-color .2s;
+}
+.dept-card.vis{opacity:1;transform:translateY(0);}
+.dept-card:hover{border-color:rgba(26,110,255,.3);background:rgba(26,110,255,.04);}
+.dept-icon{font-size:1.35rem;line-height:1;}
+.dept-info{}
+.dept-name{font-family:var(--d);font-size:.95rem;font-weight:700;letter-spacing:-.3px;color:#fff;margin-bottom:.2rem;}
+.dept-count{font-family:var(--m);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:.4rem;}
+.dept-desc{font-size:.75rem;color:rgba(255,255,255,.82);line-height:1.6;}
+.dept-agents{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.1rem;}
+.da{font-family:var(--m);font-size:.52rem;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);letter-spacing:.03em;}
+.da.active{background:rgba(26,110,255,.12);color:var(--blue);}
+
+.dept-totals{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;overflow:hidden;margin-bottom:2.5rem;
+}
+.dt-item{padding:1.5rem 2.5rem;text-align:center;}
+.dt-n{font-family:var(--d);font-size:2rem;font-weight:800;letter-spacing:-1.5px;color:var(--blue);line-height:1;margin-bottom:.3rem;}
+.dt-l{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.dt-sep{width:1px;background:rgba(255,255,255,.08);align-self:stretch;}
+
+.dept-bridge{display:flex;flex-direction:column;align-items:center;gap:.75rem;padding-bottom:.5rem;}
+.db-rule{width:1px;height:32px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.15));}
+.db-text{font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.db-arrow{color:rgba(255,255,255,.25);animation:nudge 2.5s ease infinite;}
+
+@media(max-width:860px){.dept-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.dept-grid{grid-template-columns:1fr;}.dept-totals{flex-wrap:wrap;}.dt-sep{display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Press<span>AI</span></div>
+  <div class="nav-tag">Arquitetura multi-agente</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Como funciona a redação autônoma</div>
+    <h1 class="hero-h1">Uma matéria do zero.<br><em>Sem um humano</em><br>no caminho.</h1>
+    <p class="hero-sub">Role a página para acompanhar, em tempo real, como os agentes da PressAI transformam um evento público em uma matéria jornalística publicada — do monitoramento à distribuição.</p>
+    <div class="scroll-hint">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Role para ver a redação trabalhando
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL MACHINE -->
+
+<!-- ══════════════════════════════════════════
+     SEÇÃO: 9 DEPARTAMENTOS · 41 AGENTES
+══════════════════════════════════════════ -->
+<section id="depts">
+  <div class="dept-wrap">
+    <!-- Header -->
+    <div class="dept-header">
+      <div class="dept-kicker">A redação completa</div>
+      <h2 class="dept-h">9 departamentos.<br><em>41 agentes.</em></h2>
+      <p class="dept-sub">Cada jornal PressAI opera com uma estrutura editorial completa — monitoramento, decisão, produção, verificação e distribuição. O fluxo abaixo mostra apenas um ciclo de publicação em ação.</p>
+    </div>
+
+    <!-- Grid de departamentos -->
+    <div class="dept-grid">
+
+      <div class="dept-card" style="--delay:.05s">
+        <div class="dept-icon">📡</div>
+        <div class="dept-info">
+          <div class="dept-name">Coleta</div>
+          <div class="dept-count">5 agentes</div>
+          <div class="dept-desc">Monitoram Diário Oficial, Câmara, mídia regional e portais de transparência em tempo real.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Monitor DOM/SC</span>
+          <span class="da">Monitor Câmara</span>
+          <span class="da">Monitor Mídia SC</span>
+          <span class="da">Monitor Redes</span>
+          <span class="da">Coletor Central</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.1s">
+        <div class="dept-icon">⚖️</div>
+        <div class="dept-info">
+          <div class="dept-name">Editorial</div>
+          <div class="dept-count">4 agentes</div>
+          <div class="dept-desc">Triagem, priorização e decisão editorial. Define o que é notícia, o ângulo e a ordem de publicação.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Editor-chefe</span>
+          <span class="da">Gatekeeper</span>
+          <span class="da">Gestor de Pauta</span>
+          <span class="da">Curador de Fontes</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.15s">
+        <div class="dept-icon">✍️</div>
+        <div class="dept-info">
+          <div class="dept-name">Redação</div>
+          <div class="dept-count">7 agentes</div>
+          <div class="dept-desc">Hard news, notas, atualizações e matérias de serviço. Cada gênero tem um redator especializado.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Redator Hard News</span>
+          <span class="da">Redator Notas</span>
+          <span class="da">Redator Serviço</span>
+          <span class="da active">+ 4 mais</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.2s">
+        <div class="dept-icon">🔍</div>
+        <div class="dept-info">
+          <div class="dept-name">Verificação</div>
+          <div class="dept-count">5 agentes</div>
+          <div class="dept-desc">5 camadas anti-alucinação: revisão linguística, fact-check com busca web, validação de entidades e auditoria.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Revisor Linguístico</span>
+          <span class="da">Fact Checker</span>
+          <span class="da">Auditor de Dados</span>
+          <span class="da active">+ 2 mais</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.25s">
+        <div class="dept-icon">🎨</div>
+        <div class="dept-info">
+          <div class="dept-name">Mídia</div>
+          <div class="dept-count">4 agentes</div>
+          <div class="dept-desc">Geração de cards para Instagram, thumbnails e banco de imagens localizado por cidade.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Designer de Cards</span>
+          <span class="da">Gerador de Thumbnails</span>
+          <span class="da">Curador de Imagens</span>
+          <span class="da">Criador de Infográficos</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.3s">
+        <div class="dept-icon">📤</div>
+        <div class="dept-info">
+          <div class="dept-name">Distribuição</div>
+          <div class="dept-count">5 agentes</div>
+          <div class="dept-desc">Publicação no site, WhatsApp, Instagram e newsletter. SEO e schema.org automáticos.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Agente SEO</span>
+          <span class="da">Publicador Ghost</span>
+          <span class="da">Gestor WhatsApp</span>
+          <span class="da active">+ 2 mais</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.35s">
+        <div class="dept-icon">💼</div>
+        <div class="dept-info">
+          <div class="dept-name">Comercial</div>
+          <div class="dept-count">4 agentes</div>
+          <div class="dept-desc">Prospecção de anunciantes, envio de mídia kit e relatórios automáticos de performance para clientes.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Agente de Prospecção</span>
+          <span class="da">Gestor de Contas</span>
+          <span class="da">Relatório Comercial</span>
+          <span class="da">Monitor de Anúncios</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.4s">
+        <div class="dept-icon">🤝</div>
+        <div class="dept-info">
+          <div class="dept-name">Comunidade</div>
+          <div class="dept-count">4 agentes</div>
+          <div class="dept-desc">Moderação de comentários, resposta a leitores e gestão de sugestões de pauta vindas do público.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Moderador</span>
+          <span class="da">Respondedor</span>
+          <span class="da">Curador de Sugestões</span>
+          <span class="da">Gestor de Newsletter</span>
+        </div>
+      </div>
+
+      <div class="dept-card" style="--delay:.45s">
+        <div class="dept-icon">⚙️</div>
+        <div class="dept-info">
+          <div class="dept-name">Infraestrutura</div>
+          <div class="dept-count">3 agentes</div>
+          <div class="dept-desc">Monitoramento de uptime, alertas de falha, backup automático e gerenciamento do pipeline n8n.</div>
+        </div>
+        <div class="dept-agents">
+          <span class="da">Monitor de Infraestrutura</span>
+          <span class="da">Agente de Backup</span>
+          <span class="da">Gerenciador de Erros</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Totais -->
+    <div class="dept-totals">
+      <div class="dt-item">
+        <div class="dt-n">9</div>
+        <div class="dt-l">Departamentos</div>
+      </div>
+      <div class="dt-sep"></div>
+      <div class="dt-item">
+        <div class="dt-n">41</div>
+        <div class="dt-l">Agentes</div>
+      </div>
+      <div class="dt-sep"></div>
+      <div class="dt-item">
+        <div class="dt-n">24/7</div>
+        <div class="dt-l">Operação contínua</div>
+      </div>
+      <div class="dt-sep"></div>
+      <div class="dt-item">
+        <div class="dt-n">&lt;3min</div>
+        <div class="dt-l">Do evento à publicação</div>
+      </div>
+    </div>
+
+    <!-- Transição para o fluxo -->
+    <div class="dept-bridge">
+      <div class="db-rule"></div>
+      <div class="db-text">Veja abaixo como um ciclo de publicação funciona na prática</div>
+      <div class="db-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="scroll-machine">
+  <!-- Canvas sticky PRIMEIRO — fica preso enquanto o spacer é scrollado abaixo -->
+  <div id="sticky">
+    <div id="canvas">
+      <div class="c-bg"></div>
+      <!-- Separadores verticais de colunas -->
+      <div class="c-sep" style="left:22%;"></div>
+      <div class="c-sep" style="left:48%;"></div>
+      <div class="c-sep" style="left:74%;"></div>
+
+      <!-- Fase info -->
+      <div class="c-phase">
+        <div class="c-phase-dot"></div>
+        <span id="phase-text">Inicializando…</span>
+      </div>
+      <div class="c-pnum" id="phase-num">1 / 6</div>
+
+      <!-- SVG de conexões -->
+      <svg id="conn-svg" viewBox="0 0 1000 580" preserveAspectRatio="none">
+        <defs>
+          <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(26,110,255,.7)"/>
+          </marker>
+          <marker id="arr-green" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(16,185,129,.7)"/>
+          </marker>
+        </defs>
+        <g id="lines-g"></g>
+      </svg>
+
+      <!--
+        LAYOUT DO CANVAS (1000×580):
+        Coluna esq (coleta):   x≈80-200
+        Coluna centro-esq:     x≈320-420
+        Painel central:        x≈450-640
+        Coluna direita:        x≈750-900
+
+        Linha 1 (topo):  y≈100
+        Linha 2 (meio):  y≈280
+        Linha 3 (base):  y≈460
+      -->
+
+      <!-- AGENTES — posicionados com left/top em % do canvas -->
+
+      <!-- Monitor DOM/SC — coluna esq, linha 1 -->
+      <div class="ag" id="ag-dom" style="left:3%;top:16%">
+        <div class="av">🗂️<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Monitor<br>DOM/SC</div>
+        <div class="ag-status">rastreando</div>
+      </div>
+
+      <!-- Monitor Câmara — coluna esq, linha 2 -->
+      <div class="ag" id="ag-cam" style="left:3%;top:44%">
+        <div class="av">🏛️<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Monitor<br>Câmara</div>
+        <div class="ag-status">rastreando</div>
+      </div>
+
+      <!-- Monitor Mídia Regional — coluna esq, linha 3 -->
+      <div class="ag" id="ag-mid" style="left:3%;top:76%">
+        <div class="av">📰<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Monitor<br>Mídia SC</div>
+        <div class="ag-status">rastreando</div>
+      </div>
+
+      <!-- Coletor / Gatekeeper — centro-esq, meio -->
+      <div class="ag" id="ag-col" style="left:29%;top:43%">
+        <div class="av">⚡<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Coletor &<br>Gatekeeper</div>
+        <div class="ag-status">triando</div>
+      </div>
+
+      <!-- Editor-chefe — centro-esq, topo -->
+      <div class="ag" id="ag-edi" style="left:29%;top:16%">
+        <div class="av">⚖️<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Editor-<br>chefe</div>
+        <div class="ag-status">decidindo</div>
+      </div>
+
+      <!-- Redator — abaixo do painel central -->
+      <div class="ag" id="ag-red" style="left:55%;top:72%">
+        <div class="av">✍️<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Redator<br>Hard News</div>
+        <div class="ag-status">redigindo</div>
+      </div>
+
+      <!-- Revisor — direita, linha 2 -->
+      <div class="ag" id="ag-rev" style="right:17%;top:16%">
+        <div class="av">🔍<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Revisor<br>Linguístico</div>
+        <div class="ag-status">revisando</div>
+      </div>
+
+      <!-- Fact Checker — direita, linha 1 -->
+      <div class="ag" id="ag-fac" style="right:3%;top:43%">
+        <div class="av">🛡️<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Fact<br>Checker</div>
+        <div class="ag-status">verificando</div>
+      </div>
+
+      <!-- SEO — direita, linha 3 -->
+      <div class="ag" id="ag-seo" style="right:17%;top:72%">
+        <div class="av">📈<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Agente<br>SEO</div>
+        <div class="ag-status">otimizando</div>
+      </div>
+
+      <!-- Publicador — extremo direito, linha 2 -->
+      <div class="ag" id="ag-pub" style="right:1%;top:72%">
+        <div class="av">🚀<div class="av-ring"></div><div class="av-check">✓</div></div>
+        <div class="ag-name">Publi-<br>cador</div>
+        <div class="ag-status">publicando</div>
+      </div>
+
+      <!-- PAINEL CENTRAL DA MATÉRIA -->
+      <div id="art-panel">
+        <div class="ap-kicker">Matéria em construção</div>
+        <div id="ap-title">Aguardando pauta…</div>
+        <div class="ap-lines">
+          <div class="apl" id="apl1"></div>
+          <div class="apl" id="apl2"></div>
+          <div class="apl" id="apl3"></div>
+          <div class="apl" id="apl4"></div>
+          <div class="apl" id="apl5"></div>
+        </div>
+        <div class="ap-tags" id="ap-tags">
+          <span class="ap-tag apt-f">✓ fact-check</span>
+          <span class="ap-tag apt-s">✓ SEO</span>
+          <span class="ap-tag apt-p">✓ publicado</span>
+        </div>
+      </div>
+
+      <!-- PAINEL DE PAUTAS — visível na fase 2/3 -->
+      <div id="pautas-panel">
+        <div class="pautas-hd">Pautas identificadas <span>4 itens</span></div>
+        <div class="pauta-item aprovada" id="pauta1">
+          <div class="pauta-dot pd-ok"></div>
+          Licitação R$1,2M — Morro Grande
+          <span class="pauta-badge pb-ok">aprovada</span>
+        </div>
+        <div class="pauta-item" id="pauta2">
+          <div class="pauta-dot pd-pend"></div>
+          Sessão ordinária — piso servidores
+          <span class="pauta-badge pb-pend">triagem</span>
+        </div>
+        <div class="pauta-item" id="pauta3">
+          <div class="pauta-dot pd-pend"></div>
+          Alerta dengue — 47 casos confirmados
+          <span class="pauta-badge pb-pend">triagem</span>
+        </div>
+        <div class="pauta-item" id="pauta4">
+          <div class="pauta-dot pd-pend"></div>
+          BMW anuncia expansão da planta
+          <span class="pauta-badge pb-pend">triagem</span>
+        </div>
+      </div>
+
+      <!-- BALÕES -->
+      <div class="msg" id="msg-col" style="left:29%;top:38%">4 novas pautas identificadas</div>
+      <div class="msg" id="msg-edi" style="left:29%;top:6%">Pauta aprovada — prioridade alta</div>
+      <div class="msg" id="msg-red" style="left:50%;top:88%">Rascunho em 14s</div>
+      <div class="msg" id="msg-fac" style="right:1%;top:38%">Todas as fontes confirmadas</div>
+      <div class="msg" id="msg-pub" style="right:0%;top:88%">No ar: site + WA + IG</div>
+
+      <!-- PIPELINE BAR -->
+      <div class="pipe-bar">
+        <span class="pipe-lbl">Pipeline</span>
+        <div class="pipe-sep"></div>
+        <div class="ps-wrap"><div class="ps" id="ps0"></div><span class="ps-name" id="pn0">Coleta</span></div>
+        <div class="ps-wrap"><div class="ps" id="ps1"></div><span class="ps-name" id="pn1">Triagem</span></div>
+        <div class="ps-wrap"><div class="ps" id="ps2"></div><span class="ps-name" id="pn2">Redação</span></div>
+        <div class="ps-wrap"><div class="ps" id="ps3"></div><span class="ps-name" id="pn3">Revisão</span></div>
+        <div class="ps-wrap"><div class="ps" id="ps4"></div><span class="ps-name" id="pn4">SEO</span></div>
+        <div class="ps-wrap"><div class="ps" id="ps5"></div><span class="ps-name" id="pn5">Publicação</span></div>
+      </div>
+
+      <!-- CONTEXTO LATERAL -->
+      <div id="ctx-panel">
+        <div class="ctx-num" id="ctx-num">Fase 01</div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-h" id="ctx-h">—</div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-p" id="ctx-p">—</div>
+        <div class="ctx-items" id="ctx-items"></div>
+      </div>
+
+    </div><!-- /canvas -->
+  </div><!-- /sticky -->
+
+  <!-- Spacer DEPOIS do sticky — empurra o conteúdo e mantém o sticky ativo -->
+</div><!-- /scroll-machine -->
+
+<!-- RESULTADO -->
+<section class="result">
+  <div class="result-kicker">Pipeline completo</div>
+  <h2 class="result-h rv">Uma redação que nunca<br><em>fecha o turno.</em></h2>
+  <p class="result-sub rv">41 agentes em 9 departamentos. Cada um com uma função editorial específica, trabalhando em sequência, gerando jornalismo local verificável a um custo impossível para uma redação humana.</p>
+  <div class="rstats rv">
+    <div class="rs"><div class="rs-n">41</div><div class="rs-l">Agentes ativos</div></div>
+    <div class="rs"><div class="rs-n">&lt;3min</div><div class="rs-l">Do evento à publicação</div></div>
+    <div class="rs"><div class="rs-n">R$450</div><div class="rs-l">Custo mensal total</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-logo">Press<span>AI</span></div>
+  <div class="ft-meta">Toda cidade, uma redação. · 2026</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ═══════════════════════════════════════════════════════════
+const N_PHASES = 6;
+const VH_PER_PHASE = 120; // vh por fase — dá tempo de ler
+const TOTAL_VH = N_PHASES * VH_PER_PHASE;
+
+// Definir altura do spacer
+document.getElementById('scroll-machine').style.height = TOTAL_VH + 'vh';
+
+// ── IDs para seleção rápida ─────────────────────────────
+const ALL_AGS = ['dom','cam','mid','col','edi','red','rev','fac','seo','pub'];
+
+// ── Posições dos centros no viewBox 1000×580 ────────────
+// Espelham o CSS (left/top %) convertidos para o SVG
+const PX = {
+  dom: {x:80,  y:148},
+  cam: {x:80,  y:284},
+  mid: {x:80,  y:467},
+  col: {x:322, y:284},
+  edi: {x:322, y:148},
+  red: {x:578, y:451},
+  rev: {x:790, y:148},
+  fac: {x:936, y:284},
+  seo: {x:790, y:451},
+  pub: {x:936, y:451},
+};
+
+// ── Fases ───────────────────────────────────────────────
+const PHASES = [
+  {
+    label:'Monitoramento contínuo · 3 coletores ativos',
+    ctx:{ num:'Fase 01', h:'Monitoramento', p:'Três agentes rastreiam fontes públicas em paralelo, 24h por dia, sem parar.', items:['DOM/SC · atos oficiais e licitações','Câmara · atas, votações e pautas','Mídia SC · portais e agências regionais'] },
+    show:['dom','cam','mid'],
+    pulse:['dom','cam','mid'],
+    done:[],
+    conns:[],
+    panel:false, panelTitle:'',
+    lines:[], tags:false,
+    msgs:[],
+    pipe:{ run:[], done:[] },
+  },
+  {
+    label:'Coleta e triagem de pautas',
+    ctx:{ num:'Fase 02', h:'Coletor & Gatekeeper', p:'Os itens chegam ao Coletor, que os organiza. O Gatekeeper aplica critérios jornalísticos: relevância local, interesse público, novidade.', items:['Prioridade: alta / média / baixa','Deduplicação automática de pautas','Descarte de ruído e conteúdo irrelevante'] },
+    show:['dom','cam','mid','col'],
+    pulse:['col'],
+    done:['dom','cam','mid'],
+    conns:[ {f:'dom',t:'col',c:'blue'}, {f:'cam',t:'col',c:'blue'}, {f:'mid',t:'col',c:'blue'} ],
+    panel:true, panelTitle:'Licitação R$1,2M — Escola do Morro Grande',
+    lines:[], tags:false,
+    msgs:['msg-col'],
+    pipe:{ run:['ps0'], done:[] },
+  },
+  {
+    label:'Decisão editorial — Editor-chefe',
+    ctx:{ num:'Fase 03', h:'Editor-chefe', p:'O Editor-chefe recebe as pautas triadas e decide o que entra na fila de redação, com que ângulo e com qual prioridade.', items:['Ângulo jornalístico definido','Ordem de publicação estabelecida','Pauta encaminhada ao Redator'] },
+    show:['dom','cam','mid','col','edi'],
+    pulse:['edi'],
+    done:['dom','cam','mid','col'],
+    conns:[ {f:'col',t:'edi',c:'blue'} ],
+    panel:true, panelTitle:'Pauta aprovada — prioridade alta',
+    lines:[], tags:false,
+    msgs:['msg-edi'],
+    pipe:{ run:['ps1'], done:['ps0'] },
+  },
+  {
+    label:'Redação — Marcos Vidal (Claude Sonnet 4)',
+    ctx:{ num:'Fase 04', h:'Redator Hard News', p:'O Redator produz a matéria ancorado nas fontes primárias. Estilo jornalístico direto, lide no primeiro parágrafo, nenhuma afirmação sem referência documental.', items:['Rascunho gerado em menos de 20s','Todas as fontes citadas no corpo','Escrita jornalística — não genérica'] },
+    show:['dom','cam','mid','col','edi','red'],
+    pulse:['red'],
+    done:['dom','cam','mid','col','edi'],
+    conns:[ {f:'edi',t:'red',c:'blue'} ],
+    panel:true, panelTitle:'Prefeitura abre licitação de R$1,2 mi para reforma da Escola do Morro Grande',
+    lines:[1,2,3,4,5], tags:false,
+    msgs:['msg-red'],
+    pipe:{ run:['ps2'], done:['ps0','ps1'] },
+  },
+  {
+    label:'Revisão linguística + Fact-check',
+    ctx:{ num:'Fase 05', h:'Revisão e verificação', p:'Dois agentes em sequência: o Revisor corrige gramática e estilo. O Fact Checker (Opus 4 + busca web) valida cada dado contra fontes externas.', items:['5 camadas anti-alucinação','Threshold de confiança obrigatório','Flag automático se dado não verificável'] },
+    show:['dom','cam','mid','col','edi','red','rev','fac'],
+    pulse:['rev','fac'],
+    done:['dom','cam','mid','col','edi','red'],
+    conns:[ {f:'red',t:'rev',c:'blue'}, {f:'rev',t:'fac',c:'blue'} ],
+    panel:true, panelTitle:'Prefeitura abre licitação de R$1,2 mi para reforma da Escola do Morro Grande',
+    lines:[1,2,3,4,5], tags:false,
+    msgs:['msg-fac'],
+    pipe:{ run:['ps3'], done:['ps0','ps1','ps2'] },
+  },
+  {
+    label:'SEO · publicação · distribuição',
+    ctx:{ num:'Fase 06', h:'No ar.', p:'O Agente SEO gera slug, meta description e schema.org. O Publicador entrega a matéria simultaneamente ao site, WhatsApp e Instagram.', items:['Ghost Admin API v3','WhatsApp Canal + Instagram card','Schema.org NewsArticle automático'] },
+    show:['dom','cam','mid','col','edi','red','rev','fac','seo','pub'],
+    pulse:['seo','pub'],
+    done:['dom','cam','mid','col','edi','red','rev','fac'],
+    conns:[ {f:'fac',t:'seo',c:'green'}, {f:'seo',t:'pub',c:'green'} ],
+    panel:true, panelTitle:'Prefeitura abre licitação de R$1,2 mi para reforma da Escola do Morro Grande',
+    lines:[1,2,3,4,5], tags:true,
+    msgs:['msg-pub'],
+    pipe:{ run:[], done:['ps0','ps1','ps2','ps3','ps4','ps5'] },
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+//  MOTOR DE ANIMAÇÃO
+// ═══════════════════════════════════════════════════════════
+let curPhase = -1;
+
+function ag(id){ return document.getElementById('ag-'+id); }
+function el(id){ return document.getElementById(id); }
+
+function drawConns(conns){
+  const g = el('lines-g');
+  g.innerHTML = '';
+  conns.forEach(({f,t,c},i) => {
+    const a = PX[f], b = PX[t];
+    if(!a||!b) return;
+    const dx = b.x-a.x, dy = b.y-a.y;
+    const len = Math.sqrt(dx*dx+dy*dy);
+    // Bezier de curvatura suave
+    const cx = (a.x+b.x)/2 + (dy*0.25);
+    const cy = (a.y+b.y)/2 - (dx*0.25);
+    const markerId = c==='green' ? 'arr-green' : 'arr-blue';
+    const color = c==='green'
+      ? `rgba(16,185,129,.65)` : `rgba(26,110,255,.6)`;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    const totalLen = Math.round(len*1.15)+10;
+    path.setAttribute('d',`M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',color);
+    path.setAttribute('stroke-width','1.8');
+    path.setAttribute('marker-end',`url(#${markerId})`);
+    path.setAttribute('stroke-dasharray', totalLen);
+    path.setAttribute('stroke-dashoffset', totalLen);
+    path.style.transition = `stroke-dashoffset 0.55s cubic-bezier(.16,1,.3,1) ${i*0.18}s`;
+    g.appendChild(path);
+    // Trigger animação
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      path.style.strokeDashoffset = '0';
+    }));
+  });
+}
+
+function applyPhase(idx){
+  if(idx === curPhase) return;
+  curPhase = idx;
+  const ph = PHASES[idx];
+
+  // Phase label
+  el('phase-text').textContent = ph.label;
+  el('phase-num').textContent = (idx+1)+' / '+N_PHASES;
+
+  // Agentes
+  ALL_AGS.forEach(id => {
+    const a = ag(id);
+    if(!a) return;
+    a.classList.remove('show','pulse','done');
+  });
+  ph.show.forEach(id  => ag(id)?.classList.add('show'));
+  ph.pulse.forEach(id => ag(id)?.classList.add('pulse'));
+  ph.done.forEach(id  => ag(id)?.classList.add('done'));
+
+  // Conexões SVG
+  drawConns(ph.conns);
+
+  // Mensagens — esconder todas, mostrar as da fase
+  document.querySelectorAll('.msg').forEach(m=>m.classList.remove('on'));
+  ph.msgs.forEach(id => {
+    const m = el(id);
+    if(m) setTimeout(()=>m.classList.add('on'), 350);
+  });
+
+  // Painel de pautas: mostrar na fase 2 e 3 (triagem e decisão editorial)
+  const pp = el('pautas-panel');
+  if(pp) pp.classList.toggle('on', idx >= 1 && idx <= 2);
+
+  // Painel da matéria
+  const panel = el('art-panel');
+  panel.classList.toggle('show', !!ph.panel);
+  if(ph.panelTitle) el('ap-title').textContent = ph.panelTitle;
+  // Linhas de texto
+  for(let i=1;i<=5;i++){
+    el('apl'+i)?.classList.toggle('on', ph.lines.includes(i));
+  }
+  el('ap-tags')?.classList.toggle('on', !!ph.tags);
+
+  // Pipeline
+  ['ps0','ps1','ps2','ps3','ps4','ps5'].forEach((id,i)=>{
+    const p  = el(id);
+    const pn = el('pn'+i);
+    if(!p) return;
+    p.className  = 'ps';
+    if(pn) pn.className = 'ps-name';
+    if(ph.pipe.done.includes(id)){
+      p.classList.add('done');
+      if(pn) pn.classList.add('done-lbl');
+    } else if(ph.pipe.run.includes(id)){
+      p.classList.add('run');
+      if(pn) pn.classList.add('run-lbl');
+    }
+  });
+
+  // Contexto lateral
+  const ctx = el('ctx-panel');
+  el('ctx-num').textContent = ph.ctx.num;
+  el('ctx-h').textContent   = ph.ctx.h;
+  el('ctx-p').textContent   = ph.ctx.p;
+  const items = el('ctx-items');
+  items.innerHTML = ph.ctx.items.map(i=>`<div class="ctx-item">${i}</div>`).join('');
+  ctx.classList.remove('show');
+  requestAnimationFrame(()=>ctx.classList.add('show'));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SCROLL HANDLER
+// ═══════════════════════════════════════════════════════════
+function onScroll(){
+  const machine = el('scroll-machine');
+  if(!machine) return;
+  const rect    = machine.getBoundingClientRect();
+  const total   = machine.offsetHeight - window.innerHeight;
+  if(total <= 0) return;
+
+  const scrolled = -rect.top;
+  if(scrolled <= 0){ applyPhase(0); return; }
+  if(scrolled >= total){ applyPhase(N_PHASES-1); return; }
+
+  const progress = scrolled / total;
+  const phaseIdx = Math.min(N_PHASES-1, Math.floor(progress * N_PHASES));
+  applyPhase(phaseIdx);
+}
+
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+// ═══════════════════════════════════════════════════════════
+//  REVEAL GERAL
+// ═══════════════════════════════════════════════════════════
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// Cards de departamento
+const obsD = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:.1});
+document.querySelectorAll('.dept-card').forEach(el=>obsD.observe(el));
+</script>
+</body>
+</html>

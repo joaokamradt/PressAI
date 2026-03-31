@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Dashboard de Operação</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   LAYER 1 — PRESSAI (empresa)
+   Fundo escuro, Syne, IBM Plex, azul #1A6EFF
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* PressAI */
+  --p-ink:#070B14; --p-ink2:#0D1220; --p-ink3:#141926;
+  --p-blue:#1A6EFF; --p-blue2:#0052CC;
+  --p-blue-d:rgba(26,110,255,.1); --p-blue-b:rgba(26,110,255,.22);
+  --p-border:rgba(255,255,255,.07); --p-border2:rgba(255,255,255,.12);
+  --p-dim:rgba(255,255,255,.75); --p-muted:rgba(255,255,255,.52);
+  --p-d:'Syne',sans-serif;
+  --p-b:'IBM Plex Sans',system-ui,sans-serif;
+  --p-m:'IBM Plex Mono',monospace;
+  /* Jornal */
+  --j-blue:#0057D9; --j-blue-dark:#003DAD; --j-blue-light:#EAF1FD;
+  --j-ink:#0D1B2E; --j-ink2:#253345; --j-ink3:#546070; --j-ink4:#8A9BAB;
+  --j-paper:#FAFAF8; --j-paper2:#F3F1ED; --j-paper3:#E5E3DE;
+  --j-white:#FFFFFF; --j-red:#C8302A; --j-green:#10B981; --j-amber:#F59E0B;
+  --j-serif:'Playfair Display',Georgia,serif;
+  --j-sans:'DM Sans',system-ui,sans-serif;
+  --j-mono:'IBM Plex Mono',monospace;
+}
+html{font-size:14px; scroll-behavior:smooth;}
+body{
+  font-family:var(--p-b);
+  background:var(--p-ink);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none;}
+
+/* ── NAV PRESSAI ── */
+.p-nav{
+  position:sticky;top:0;z-index:300;
+  background:rgba(7,11,20,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--p-border);
+  padding:0 2rem;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.p-logo{font-family:var(--p-d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;}
+.p-logo span{color:var(--p-blue);}
+.p-nav-right{display:flex;align-items:center;gap:1.25rem;}
+.p-pill{
+  font-family:var(--p-m);font-size:.58rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;padding:4px 12px;border-radius:20px;
+  background:var(--p-blue-d);color:var(--p-blue);border:1px solid var(--p-blue-b);
+  display:flex;align-items:center;gap:.35rem;
+}
+.p-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--j-green);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.clock-p{font-family:var(--p-m);font-size:.72rem;color:var(--p-dim);letter-spacing:.08em;}
+.p-btn{
+  font-family:var(--p-m);font-size:.6rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px;border:1px solid var(--p-border2);
+  background:transparent;color:var(--p-dim);cursor:pointer;transition:all .14s;
+}
+.p-btn:hover{border-color:rgba(255,255,255,.3);color:#fff;}
+
+/* ── HERO PRESSAI — acima do card ── */
+.p-hero{
+  max-width:1100px;margin:0 auto;
+  padding:2.5rem 2rem 1.75rem;
+  display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end;
+}
+.p-hero-eyebrow{
+  font-family:var(--p-m);font-size:.6rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--p-dim);margin-bottom:.75rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.p-hero-eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--p-blue);}
+.p-hero-h1{
+  font-family:var(--p-d);font-size:clamp(1.4rem,2.5vw,2.1rem);
+  font-weight:800;letter-spacing:-1.5px;line-height:1.05;color:#fff;
+  margin-bottom:.5rem;
+}
+.p-hero-h1 em{font-style:normal;color:var(--p-blue);}
+.p-hero-sub{
+  font-size:.88rem;font-weight:400;
+  color:var(--p-dim);line-height:1.65;max-width:480px;
+}
+.p-meta-pills{
+  display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;
+}
+.p-meta-pill{
+  font-family:var(--p-m);font-size:.58rem;letter-spacing:.08em;
+  color:var(--p-muted);background:rgba(255,255,255,.04);
+  border:1px solid var(--p-border);border-radius:20px;
+  padding:4px 12px;white-space:nowrap;
+}
+.p-meta-pill strong{color:var(--p-dim);font-weight:500;}
+
+/* ── WRAPPER DO CARD JORNAL ── */
+.journal-frame{
+  max-width:1100px;margin:0 auto;
+  padding:0 2rem 1.5rem;
+}
+.journal-card{
+  background:var(--j-paper);
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* ── CAPTION ABAIXO DO CARD ── */
+.p-caption{
+  max-width:1100px;margin:0 auto;
+  padding:1rem 2rem 3rem;
+  display:flex;align-items:center;gap:2.5rem;
+  flex-wrap:wrap;
+}
+.p-caption-item{display:flex;align-items:flex-start;gap:.5rem;}
+.p-caption-dot{width:5px;height:5px;border-radius:50%;background:var(--p-blue);flex-shrink:0;margin-top:.3rem;}
+.p-caption-text{font-size:.8rem;color:var(--p-dim);line-height:1.5;}
+.p-caption-text strong{display:block;font-weight:500;color:rgba(255,255,255,.65);font-size:.8rem;}
+
+/* ══════════════════════════════════════════════
+   LAYER 2 — JORNAL (produto)
+   Fundo creme, Playfair, DM Sans, azul #0057D9
+══════════════════════════════════════════════ */
+
+/* TOPBAR DO JORNAL */
+.j-topbar{
+  background:var(--j-ink);
+  padding:0 1.25rem;height:46px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.j-logo{display:flex;align-items:center;gap:.6rem;}
+.j-logo svg{flex-shrink:0;}
+.j-logo-name{font-family:var(--j-serif);font-size:.9rem;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1;}
+.j-logo-tag{font-family:var(--j-sans);font-size:.48rem;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:2px;}
+.j-topbar-right{display:flex;align-items:center;gap:.75rem;}
+.j-live{
+  display:flex;align-items:center;gap:.35rem;
+  font-family:var(--j-sans);font-size:.62rem;font-weight:600;
+  color:var(--j-green);
+}
+.j-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--j-green);animation:blink 2s ease infinite;}
+.j-clock{font-family:var(--j-mono);font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.06em;}
+.j-refresh{
+  font-family:var(--j-sans);font-size:.62rem;font-weight:500;
+  padding:4px 12px;border-radius:20px;
+  border:1px solid rgba(255,255,255,.15);background:transparent;
+  color:rgba(255,255,255,.5);cursor:pointer;transition:all .14s;
+}
+.j-refresh:hover{border-color:rgba(255,255,255,.35);color:#fff;}
+
+/* TICKER */
+.j-ticker{
+  background:var(--j-blue);padding:0 1.25rem;height:28px;
+  display:flex;align-items:center;gap:.75rem;overflow:hidden;
+}
+.j-ticker-lbl{
+  flex-shrink:0;font-family:var(--j-sans);font-size:.58rem;font-weight:700;
+  letter-spacing:1.8px;text-transform:uppercase;
+  color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);
+  padding:2px 7px;border-radius:2px;
+  display:flex;align-items:center;gap:.35rem;
+}
+.j-ticker-lbl::before{content:'';width:4px;height:4px;border-radius:50%;background:#fff;animation:blink 2s ease infinite;}
+.j-ticker-track{flex:1;overflow:hidden;mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);}
+.j-ticker-inner{display:flex;gap:2.5rem;white-space:nowrap;animation:scroll 35s linear infinite;}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.j-ticker-inner span{font-family:var(--j-sans);font-size:.7rem;color:rgba(255,255,255,.85);}
+.j-ticker-inner span+span::before{content:'·';margin-right:2.5rem;opacity:.4;}
+
+/* BODY DO DASHBOARD */
+.j-body{
+  background:var(--j-paper);
+  padding:1.1rem 1.25rem;
+  display:flex;flex-direction:column;gap:.85rem;
+}
+
+/* KPIs */
+.j-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
+.j-kpi{
+  background:var(--j-white);border:1px solid var(--j-paper3);
+  border-radius:6px;padding:.75rem .85rem;
+  position:relative;overflow:hidden;
+}
+.j-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.j-kpi.blue::before{background:var(--j-blue);}
+.j-kpi.green::before{background:var(--j-green);}
+.j-kpi.amber::before{background:var(--j-amber);}
+.j-kpi.neutral::before{background:var(--j-ink4);}
+.j-kpi-label{
+  font-family:var(--j-sans);font-size:.58rem;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--j-ink4);margin-bottom:.4rem;
+}
+.j-kpi-val{
+  font-family:var(--j-serif);font-size:1.6rem;font-weight:700;
+  letter-spacing:-1px;line-height:1;margin-bottom:.3rem;
+}
+.j-kpi.blue  .j-kpi-val{color:var(--j-blue);}
+.j-kpi.green .j-kpi-val{color:var(--j-green);}
+.j-kpi.amber .j-kpi-val{color:var(--j-amber);}
+.j-kpi.neutral .j-kpi-val{color:var(--j-ink);}
+.j-kpi-delta{font-family:var(--j-sans);font-size:.65rem;color:var(--j-ink4);}
+.j-kpi-delta.up{color:var(--j-green);}
+.j-kpi-delta.warn{color:var(--j-amber);}
+
+/* GRID CENTRAL */
+.j-grid-main{display:grid;grid-template-columns:1fr 280px;gap:.6rem;}
+.j-grid-bot{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+
+/* CARDS DO JORNAL */
+.j-card{
+  background:var(--j-white);border:1px solid var(--j-paper3);
+  border-radius:6px;overflow:hidden;
+}
+.j-card-hd{
+  padding:.6rem .85rem .55rem;border-bottom:1px solid var(--j-paper3);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.j-card-title{
+  font-family:var(--j-sans);font-size:.58rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--j-ink4);
+}
+.j-badge{
+  font-family:var(--j-sans);font-size:.55rem;font-weight:600;
+  padding:2px 8px;border-radius:10px;
+}
+.jb-green{background:#E1F5EE;color:#0F6E56;}
+.jb-blue {background:#EAF1FD;color:#003DAD;}
+.jb-amber{background:#FEF3E0;color:#854F0B;}
+.j-card-body{padding:.7rem .85rem;}
+
+/* AGENTES */
+.j-agent-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.45rem .6rem;border-radius:4px;
+  border:1px solid var(--j-paper3);background:var(--j-paper);
+  margin-bottom:.35rem;transition:background .12s;
+}
+.j-agent-row:last-child{margin-bottom:0;}
+.j-agent-row:hover{background:var(--j-paper2);}
+.j-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.jd-ok  {background:var(--j-green);}
+.jd-busy{background:var(--j-amber);animation:blink 1.5s ease infinite;}
+.jd-idle{background:#C8D0DC;}
+.jd-err {background:var(--j-red);animation:blink .8s ease infinite;}
+.j-agent-name{font-family:var(--j-sans);font-size:.75rem;font-weight:500;color:var(--j-ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.j-agent-sub{font-family:var(--j-sans);font-size:.62rem;color:var(--j-ink4);flex-shrink:0;}
+.j-badge-sm{font-family:var(--j-sans);font-size:.52rem;font-weight:600;padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.jbs-ok  {background:#E1F5EE;color:#0F6E56;}
+.jbs-busy{background:#FEF3E0;color:#854F0B;}
+.jbs-idle{background:#F1EFE8;color:#8A9BAB;}
+.jbs-err {background:#FCEBEB;color:#791F1F;}
+
+/* FILA */
+.j-queue-item{
+  display:flex;gap:.6rem;align-items:flex-start;
+  padding:.45rem .6rem;border-radius:4px;
+  border:1px solid var(--j-paper3);background:var(--j-paper);
+  margin-bottom:.35rem;
+}
+.j-queue-item:last-child{margin-bottom:0;}
+.j-q-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:28px;}
+.jq-high{background:var(--j-red);}
+.jq-med {background:var(--j-amber);}
+.jq-low {background:var(--j-blue);}
+.j-q-title{font-family:var(--j-sans);font-size:.73rem;font-weight:500;color:var(--j-ink);line-height:1.3;margin-bottom:2px;}
+.j-q-meta{font-family:var(--j-mono);font-size:.58rem;color:var(--j-ink4);}
+
+/* LOG */
+.j-log-item{
+  display:flex;align-items:flex-start;gap:.5rem;
+  padding:.38rem 0;border-bottom:1px solid var(--j-paper3);
+}
+.j-log-item:last-child{border:none;}
+.j-log-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:.18rem;}
+.jld-ok  {background:var(--j-green);}
+.jld-warn{background:var(--j-amber);}
+.jld-err {background:var(--j-red);}
+.jld-info{background:var(--j-blue);}
+.j-log-time{font-family:var(--j-mono);font-size:.58rem;color:var(--j-ink4);min-width:34px;flex-shrink:0;}
+.j-log-msg{font-family:var(--j-sans);font-size:.7rem;color:var(--j-ink3);line-height:1.4;flex:1;}
+.j-log-msg strong{color:var(--j-ink);font-weight:600;}
+
+/* CUSTO */
+.j-cost-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.38rem 0;border-bottom:1px solid var(--j-paper3);
+}
+.j-cost-row:last-child{border:none;}
+.j-cost-name{font-family:var(--j-sans);font-size:.7rem;color:var(--j-ink2);min-width:140px;}
+.j-cost-bar-wrap{flex:1;height:3px;background:var(--j-paper3);border-radius:2px;overflow:hidden;}
+.j-cost-bar{height:100%;background:var(--j-blue);border-radius:2px;transition:width .5s;}
+.j-cost-val{font-family:var(--j-mono);font-size:.65rem;color:var(--j-ink4);min-width:42px;text-align:right;}
+
+/* ALERTAS */
+.j-alert-item{
+  display:flex;gap:.6rem;padding:.55rem .7rem;border-radius:4px;
+  margin-bottom:.35rem;border-left:2px solid;
+}
+.j-alert-item:last-child{margin-bottom:0;}
+.ja-ok  {background:#E1F5EE;border-color:var(--j-green);}
+.ja-warn{background:#FEF3E0;border-color:var(--j-amber);}
+.ja-err {background:#FCEBEB;border-color:var(--j-red);}
+.j-alert-msg{font-family:var(--j-sans);font-size:.7rem;line-height:1.5;}
+.ja-ok   .j-alert-msg{color:#0F6E56;}
+.ja-warn .j-alert-msg{color:#854F0B;}
+.ja-err  .j-alert-msg{color:#791F1F;}
+.j-alert-msg strong{font-weight:600;}
+
+/* SEV */
+.j-sev-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
+.j-sev-card{
+  background:var(--j-white);border:1px solid var(--j-paper3);
+  border-radius:6px;padding:.7rem .85rem;text-align:center;
+}
+.j-sev-n{font-family:var(--j-serif);font-size:1.5rem;font-weight:700;letter-spacing:-1px;line-height:1;margin-bottom:.2rem;}
+.j-sev-lbl{font-family:var(--j-sans);font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.15rem;}
+.j-sev-desc{font-family:var(--j-sans);font-size:.6rem;color:var(--j-ink4);}
+.jsev-1 .j-sev-lbl,.jsev-1 .j-sev-n{color:var(--j-red);}
+.jsev-2 .j-sev-lbl,.jsev-2 .j-sev-n{color:var(--j-amber);}
+.jsev-3 .j-sev-lbl,.jsev-3 .j-sev-n{color:var(--j-blue);}
+.jsev-4 .j-sev-lbl,.jsev-4 .j-sev-n{color:var(--j-green);}
+
+/* CHART */
+.j-chart-wrap{padding:0 .85rem .85rem;}
+.j-chart-inner{position:relative;height:110px;}
+
+/* FOOTER DO JORNAL */
+.j-footer{
+  background:var(--j-paper2);border-top:1px solid var(--j-paper3);
+  padding:.6rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.j-footer-left{font-family:var(--j-mono);font-size:.58rem;color:var(--j-ink4);}
+.j-footer-right{font-family:var(--j-sans);font-size:.6rem;color:var(--j-ink4);}
+
+/* ── PRESSAI FOOTER ── */
+.p-footer{
+  border-top:1px solid var(--p-border);
+  padding:1.25rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.75rem;
+}
+.p-footer-logo{font-family:var(--p-d);font-size:.82rem;font-weight:800;letter-spacing:-.5px;}
+.p-footer-logo span{color:var(--p-blue);}
+.p-footer-meta{font-family:var(--p-m);font-size:.58rem;color:var(--p-muted);letter-spacing:.04em;}
+
+@media(max-width:900px){
+  .j-kpis{grid-template-columns:1fr 1fr;}
+  .j-grid-main,.j-grid-bot{grid-template-columns:1fr;}
+  .j-sev-row{grid-template-columns:1fr 1fr;}
+  .p-hero{grid-template-columns:1fr;}
+  .p-meta-pills{align-items:flex-start;}
+}
+@media(max-width:600px){
+  .journal-frame{padding:0 1rem 1.25rem;}
+  .p-hero{padding:1.75rem 1rem 1.25rem;}
+  .p-caption{padding:.75rem 1rem 2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV PRESSAI -->
+<nav class="p-nav">
+  <div class="p-logo">Press<span>AI</span></div>
+  <div class="p-nav-right">
+    <div class="p-pill">Operacional</div>
+    <span class="clock-p" id="clock">--:--:--</span>
+    <button class="p-btn" onclick="refreshAll()">↻ Atualizar</button>
+  </div>
+</nav>
+
+<!-- HERO PRESSAI -->
+<div class="p-hero">
+  <div>
+    <div class="p-hero-eyebrow">Dashboard de operação · Produto em exibição</div>
+    <h1 class="p-hero-h1">Como a <em>redação autônoma</em><br>funciona por dentro.</h1>
+    <p class="p-hero-sub">Cada jornal operado pela PressAI tem um painel de controle em tempo real. Abaixo, o dashboard do Jornal de Araquari — o piloto em operação.</p>
+  </div>
+  <div class="p-meta-pills">
+    <div class="p-meta-pill"><strong>Cidade-piloto</strong> Araquari, SC</div>
+    <div class="p-meta-pill"><strong>Agentes ativos</strong> 8 de 9</div>
+    <div class="p-meta-pill"><strong>Custo operacional</strong> R$ 450/mês</div>
+    <div class="p-meta-pill"><strong>Publicações</strong> ~120/mês</div>
+  </div>
+</div>
+
+<!-- CARD DO JORNAL (o "produto em exibição") -->
+<div class="journal-frame">
+  <div class="journal-card">
+
+    <!-- Topbar do jornal -->
+    <div class="j-topbar">
+      <div class="j-logo">
+        <svg width="28" height="28" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M5 18 Q11 4 17 18 Q23 32 29 18" fill="none" stroke="#0057D9" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>
+          <circle cx="17" cy="18" r="2.8" fill="#0057D9"/>
+        </svg>
+        <div>
+          <div class="j-logo-name">Jornal de Araquari</div>
+          <div class="j-logo-tag">Dashboard de operação</div>
+        </div>
+      </div>
+      <div class="j-topbar-right">
+        <div class="j-live">Ao vivo</div>
+        <span class="j-clock" id="j-clock">--:--:--</span>
+        <button class="j-refresh" onclick="refreshAll()">↻ Atualizar</button>
+      </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="j-ticker">
+      <div class="j-ticker-lbl">Pipeline</div>
+      <div class="j-ticker-track">
+        <div class="j-ticker-inner">
+          <span>Câmara vota orçamento 2026 → Fact Check em andamento</span>
+          <span>Acidente na BR-280 → Redação concluída, aguardando revisão</span>
+          <span>Dengue: 47 casos confirmados → Publicado às 09h30</span>
+          <span>Licitação Escola Morro Grande → SEO e publicador em fila</span>
+          <span>BMW anuncia expansão → Coletado, aguardando triagem</span>
+          <span>Câmara vota orçamento 2026 → Fact Check em andamento</span>
+          <span>Acidente na BR-280 → Redação concluída, aguardando revisão</span>
+          <span>Dengue: 47 casos confirmados → Publicado às 09h30</span>
+          <span>Licitação Escola Morro Grande → SEO e publicador em fila</span>
+          <span>BMW anuncia expansão → Coletado, aguardando triagem</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body do dashboard -->
+    <div class="j-body">
+
+      <!-- KPIs -->
+      <div class="j-kpis">
+        <div class="j-kpi blue">
+          <div class="j-kpi-label">Publicadas hoje</div>
+          <div class="j-kpi-val" id="m-total">—</div>
+          <div class="j-kpi-delta up" id="m-total-d">—</div>
+        </div>
+        <div class="j-kpi green">
+          <div class="j-kpi-label">Em pipeline</div>
+          <div class="j-kpi-val" id="m-pipe">—</div>
+          <div class="j-kpi-delta" id="m-pipe-d">—</div>
+        </div>
+        <div class="j-kpi amber">
+          <div class="j-kpi-label">Custo API hoje</div>
+          <div class="j-kpi-val" id="m-cost">—</div>
+          <div class="j-kpi-delta warn" id="m-cost-d">—</div>
+        </div>
+        <div class="j-kpi neutral">
+          <div class="j-kpi-label">Uptime do sistema</div>
+          <div class="j-kpi-val" id="m-uptime">—</div>
+          <div class="j-kpi-delta up" id="m-uptime-d">—</div>
+        </div>
+      </div>
+
+      <!-- AGENTES + ALERTAS -->
+      <div class="j-grid-main">
+        <div class="j-card">
+          <div class="j-card-hd">
+            <span class="j-card-title">Status dos agentes</span>
+            <span class="j-badge jb-green" id="agents-badge">—</span>
+          </div>
+          <div class="j-card-body" id="agents-list"></div>
+        </div>
+        <div class="j-card">
+          <div class="j-card-hd"><span class="j-card-title">Alertas do sistema</span></div>
+          <div class="j-card-body" id="alerts-list"></div>
+        </div>
+      </div>
+
+      <!-- FILA + LOG -->
+      <div class="j-grid-bot">
+        <div class="j-card">
+          <div class="j-card-hd">
+            <span class="j-card-title">Fila editorial</span>
+            <span class="j-badge jb-amber" id="queue-badge">—</span>
+          </div>
+          <div class="j-card-body" id="queue-list"></div>
+        </div>
+        <div class="j-card">
+          <div class="j-card-hd"><span class="j-card-title">Log de atividade</span></div>
+          <div class="j-card-body" id="log-list"></div>
+        </div>
+      </div>
+
+      <!-- CUSTO + GRÁFICO -->
+      <div class="j-grid-bot">
+        <div class="j-card">
+          <div class="j-card-hd"><span class="j-card-title">Custo por agente · hoje</span></div>
+          <div class="j-card-body" id="cost-list"></div>
+        </div>
+        <div class="j-card">
+          <div class="j-card-hd"><span class="j-card-title">Publicações por hora · últimas 8h</span></div>
+          <div class="j-chart-wrap"><div class="j-chart-inner"><canvas id="hourChart"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- SEV -->
+      <div class="j-sev-row">
+        <div class="j-sev-card jsev-1">
+          <div class="j-sev-n">0</div>
+          <div class="j-sev-lbl">SEV-1 Crítico</div>
+          <div class="j-sev-desc">Este mês</div>
+        </div>
+        <div class="j-sev-card jsev-2">
+          <div class="j-sev-n">1</div>
+          <div class="j-sev-lbl">SEV-2 Grave</div>
+          <div class="j-sev-desc">Este mês</div>
+        </div>
+        <div class="j-sev-card jsev-3">
+          <div class="j-sev-n">4</div>
+          <div class="j-sev-lbl">SEV-3 Leve</div>
+          <div class="j-sev-desc">Esta semana</div>
+        </div>
+        <div class="j-sev-card jsev-4">
+          <div class="j-sev-n">23</div>
+          <div class="j-sev-lbl">Sem incidente</div>
+          <div class="j-sev-desc">Dias consecutivos</div>
+        </div>
+      </div>
+
+    </div><!-- /j-body -->
+
+    <!-- Footer do jornal -->
+    <div class="j-footer">
+      <div class="j-footer-left">Jornal de Araquari · v1.0 · Dados simulados — Supabase em produção</div>
+      <div class="j-footer-right">27 de março de 2026 · Araquari, SC</div>
+    </div>
+
+  </div><!-- /journal-card -->
+</div><!-- /journal-frame -->
+
+<!-- CAPTION PRESSAI -->
+<div class="p-caption">
+  <div class="p-caption-item">
+    <div class="p-caption-dot"></div>
+    <div class="p-caption-text">
+      <strong>Custo real do piloto</strong>
+      R$ 281–450/mês operando 1 jornal. Cai ~45% em 50 jornais.
+    </div>
+  </div>
+  <div class="p-caption-item">
+    <div class="p-caption-dot"></div>
+    <div class="p-caption-text">
+      <strong>Volume editorial</strong>
+      ~120 matérias/mês no cenário conservador, sem intervenção humana no pipeline.
+    </div>
+  </div>
+  <div class="p-caption-item">
+    <div class="p-caption-dot"></div>
+    <div class="p-caption-text">
+      <strong>Replicabilidade</strong>
+      Trocar de cidade = substituir 1 arquivo de configuração. Setup: 2–3 dias.
+    </div>
+  </div>
+  <div class="p-caption-item">
+    <div class="p-caption-dot"></div>
+    <div class="p-caption-text">
+      <strong>Breakeven por jornal</strong>
+      Mês 9 no cenário conservador. Investimento total até lá: ~R$ 2.500.
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER PRESSAI -->
+<footer class="p-footer">
+  <div class="p-footer-logo">Press<span>AI</span></div>
+  <div class="p-footer-meta">Toda cidade, uma redação. · 2026</div>
+</footer>
+
+<script>
+// ── DATA (números coerentes com planilha) ──────────────────────────────────
+// Custo total real: R$ 281–631/mês → ~R$ 450/mês médio
+// Custo API/dia: R$ 450 / 30 = R$ 15/dia total; Anthropic = ~R$ 220/mês = ~R$ 7,30/dia
+// Matérias: ~4/dia no cenário conservador (120/mês)
+// Fact Checker (Opus 4): 42% do custo Anthropic → ~R$ 3,07/dia
+// Editor-chefe (Opus 4): 28% → ~R$ 2,04/dia
+// Redator (Sonnet 4): 16% → ~R$ 1,17/dia
+// Revisor (Sonnet 4): 8% → ~R$ 0,58/dia
+// SEO + Publicador (Sonnet): 6% → ~R$ 0,44/dia
+// Total API ~R$ 7,30/dia → meta: R$ 8/dia (margem segura)
+
+const AGENTS = [
+  { name:'Editor-chefe',           sub:'Gatekeeper editorial · Opus 4',      cycle:'contínuo'  },
+  { name:'Coletor',                sub:'DOM/SC · Prefeitura · Câmara',        cycle:'a cada 1h' },
+  { name:'Gatekeeper Editorial',   sub:'Triagem de pautas',                   cycle:'contínuo'  },
+  { name:'Redator Hard News',      sub:'Marcos Vidal · Sonnet 4',             cycle:'por pauta' },
+  { name:'Revisor Linguístico',    sub:'Carla Fontana · Sonnet 4',            cycle:'por rascunho'},
+  { name:'Fact Checker',           sub:'Rafael Andrade · Opus 4 + web search',cycle:'por rascunho'},
+  { name:'Agente SEO',             sub:'Diego Matos · Sonnet 4',              cycle:'pós fact-check'},
+  { name:'Agente Publicador',      sub:'Ghost Admin API v3',                  cycle:'pós SEO'   },
+  { name:'Monitor Infraestrutura', sub:'UptimeRobot · Sentry · n8n',          cycle:'a cada 5min'},
+];
+const STATUS_POOL = ['ok','ok','ok','ok','ok','busy','busy','idle'];
+const BADGE_MAP = {ok:['jbs-ok','operando'],busy:['jbs-busy','processando'],idle:['jbs-idle','aguardando'],err:['jbs-err','erro']};
+const DOT_MAP   = {ok:'jd-ok',busy:'jd-busy',idle:'jd-idle',err:'jd-err'};
+
+const QUEUE = [
+  {p:'high',title:'Câmara de Araquari vota orçamento 2026 às 14h hoje',   stage:'Fact Check', age:'3min'},
+  {p:'high',title:'Acidente na BR-280 interdita pista sentido norte',       stage:'Redação',    age:'7min'},
+  {p:'med', title:'Licitação R$1,2M para reforma da Escola do Morro Grande',stage:'Revisão',    age:'12min'},
+  {p:'med', title:'Secretaria de Saúde emite alerta de dengue — 47 casos', stage:'SEO',        age:'18min'},
+  {p:'low', title:'ACIAI promove rodada de negócios para PMEs locais',      stage:'Publicador', age:'22min'},
+];
+const LOGS = [
+  {t:'ok',  time:'agora',m:'<strong>Publicado</strong> — Prefeitura inaugura UBS no Morro Grande'},
+  {t:'info',time:'2min', m:'<strong>Fact Check</strong> — Licitação pavimentação Rua XV aprovada'},
+  {t:'warn',time:'5min', m:'<strong>Flag ativo</strong> — acusação implícita, aguarda revisão humana'},
+  {t:'ok',  time:'8min', m:'<strong>Coletor</strong> — 4 novos itens do DOM/SC processados'},
+  {t:'info',time:'14min',m:'<strong>SEO</strong> — slug e schema.org gerados para matéria de obras'},
+  {t:'ok',  time:'21min',m:'<strong>Publicado</strong> — Câmara aprova projeto de saneamento'},
+  {t:'warn',time:'34min',m:'<strong>Retry</strong> — Ghost API timeout 12s (resolvido na 2ª tentativa)'},
+  {t:'ok',  time:'41min',m:'<strong>Backup</strong> — Supabase dump diário concluído às 03h00'},
+];
+// Custo diário real por agente (Anthropic ~R$7,30/dia)
+const COSTS = [
+  {n:'Fact Checker (Opus 4)',     p:42, v:'R$ 3,07'},
+  {n:'Editor-chefe (Opus 4)',     p:28, v:'R$ 2,04'},
+  {n:'Redator (Sonnet 4)',        p:16, v:'R$ 1,17'},
+  {n:'Revisor (Sonnet 4)',        p:8,  v:'R$ 0,58'},
+  {n:'SEO + Publicador (Sonnet)', p:6,  v:'R$ 0,44'},
+];
+const ALERTS = [
+  {cls:'ja-warn',msg:'<strong>Flag pendente</strong> — matéria policial aguarda revisão humana há 5min.'},
+  {cls:'ja-ok',  msg:'<strong>Google News</strong> — 3 matérias indexadas nas últimas 6h. SEO operando.'},
+  {cls:'ja-ok',  msg:'<strong>API Anthropic</strong> — latência média 1,4s. Dentro do normal.'},
+];
+
+// ── UTILS ──────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
+const pad = n => String(n).padStart(2,'0');
+
+function tick(){
+  const n = new Date();
+  const s = pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  [$('clock'),$('j-clock')].forEach(el=>{ if(el) el.textContent=s; });
+}
+setInterval(tick,1000); tick();
+
+// ── REFRESH ────────────────────────────────────────────────────────────────
+function refreshAll(){
+  // Publicadas hoje: 3–7/dia realista (conservador: ~4/dia = 120/mês)
+  const total = Math.floor(Math.random()*5)+3;
+  if($('m-total')){
+    $('m-total').textContent = total;
+    $('m-total-d').textContent = `+${Math.floor(Math.random()*2)+1} na última hora`;
+  }
+  // Pipeline: 2–5 pautas
+  const pipe = Math.floor(Math.random()*4)+2;
+  if($('m-pipe')){
+    $('m-pipe').textContent = pipe;
+    $('m-pipe-d').textContent = `${pipe} em processamento`;
+  }
+  // Custo API hoje: R$ 6,50–8,50 (R$ ~7,30 médio real)
+  const cost = (Math.random()*2 + 6.5).toFixed(2);
+  const pct  = Math.round((parseFloat(cost)/8)*100); // meta R$ 8/dia
+  if($('m-cost')){
+    $('m-cost').textContent = 'R$ '+cost;
+    $('m-cost-d').textContent = `${pct}% da meta diária (R$ 8,00)`;
+  }
+  if($('m-uptime')){
+    $('m-uptime').textContent = '99,9%';
+    $('m-uptime-d').textContent = 'Último incidente há 23 dias';
+  }
+
+  // AGENTES
+  const al = $('agents-list');
+  if(al){
+    al.innerHTML='';
+    let operando=0;
+    AGENTS.forEach(a=>{
+      const st = (a.name==='Fact Checker'&&Math.random()>.5)?'busy':rnd(STATUS_POOL);
+      if(st==='ok'||st==='busy') operando++;
+      const d=document.createElement('div');
+      d.className='j-agent-row';
+      d.innerHTML=`<div class="j-dot ${DOT_MAP[st]}"></div>
+        <div class="j-agent-name">${a.name}</div>
+        <div class="j-agent-sub">${a.cycle}</div>
+        <span class="j-badge-sm ${BADGE_MAP[st][0]}">${BADGE_MAP[st][1]}</span>`;
+      al.appendChild(d);
+    });
+    if($('agents-badge')) $('agents-badge').textContent=`${operando} de ${AGENTS.length} ativos`;
+  }
+
+  // FILA
+  const ql=$('queue-list');
+  if(ql){
+    ql.innerHTML='';
+    QUEUE.forEach(q=>{
+      const d=document.createElement('div');
+      d.className='j-queue-item';
+      d.innerHTML=`<div class="j-q-bar jq-${q.p}"></div>
+        <div><div class="j-q-title">${q.title}</div>
+        <div class="j-q-meta">Etapa: <strong>${q.stage}</strong> · há ${q.age}</div></div>`;
+      ql.appendChild(d);
+    });
+    if($('queue-badge')) $('queue-badge').textContent=`${QUEUE.length} pautas`;
+  }
+
+  // LOG
+  const ll=$('log-list');
+  if(ll){
+    ll.innerHTML='';
+    LOGS.forEach(l=>{
+      const d=document.createElement('div');
+      d.className='j-log-item';
+      d.innerHTML=`<div class="j-log-dot jld-${l.t}"></div>
+        <div class="j-log-time">${l.time}</div>
+        <div class="j-log-msg">${l.m}</div>`;
+      ll.appendChild(d);
+    });
+  }
+
+  // CUSTO
+  const cl=$('cost-list');
+  if(cl){
+    cl.innerHTML='';
+    COSTS.forEach(c=>{
+      const d=document.createElement('div');
+      d.className='j-cost-row';
+      d.innerHTML=`<div class="j-cost-name">${c.n}</div>
+        <div class="j-cost-bar-wrap"><div class="j-cost-bar" style="width:${c.p}%"></div></div>
+        <div class="j-cost-val">${c.v}</div>`;
+      cl.appendChild(d);
+    });
+  }
+
+  // ALERTAS
+  const als=$('alerts-list');
+  if(als){
+    als.innerHTML='';
+    ALERTS.forEach(a=>{
+      const d=document.createElement('div');
+      d.className='j-alert-item '+a.cls;
+      d.innerHTML=`<div class="j-alert-msg">${a.msg}</div>`;
+      als.appendChild(d);
+    });
+  }
+
+  // CHART
+  hData=hData.map(v=>Math.max(1,Math.min(8,v+Math.floor(Math.random()*3)-1)));
+  if(hChart){ hChart.data.datasets[0].data=[...hData]; hChart.update('none'); }
+}
+
+// ── CHART ──────────────────────────────────────────────────────────────────
+// ~4 matérias/dia → pico de 1–2/hora nas horas de maior atividade
+let hData=[0,1,1,2,1,2,1,1], hChart=null;
+setInterval(()=>{
+  hData=hData.map(v=>Math.max(0,Math.min(4,v+Math.floor(Math.random()*3)-1)));
+  if(hChart){ hChart.data.datasets[0].data=[...hData]; hChart.update('none'); }
+},3500);
+
+refreshAll();
+
+const ctx=$('hourChart');
+if(ctx){
+  hChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['06h','07h','08h','09h','10h','11h','12h','13h'],
+      datasets:[{
+        data:hData,
+        backgroundColor:'rgba(0,87,217,.18)',
+        borderColor:'#0057D9',
+        borderWidth:1.5,
+        borderRadius:3,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false,drawBorder:false},ticks:{font:{size:10,family:'IBM Plex Mono'},color:'#8A9BAB'}},
+        y:{grid:{color:'rgba(13,27,46,.06)',drawBorder:false},ticks:{font:{size:10,family:'IBM Plex Mono'},color:'#8A9BAB',stepSize:1,precision:0},min:0,max:5,border:{display:false}}
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

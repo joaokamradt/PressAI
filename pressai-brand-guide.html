@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Brand Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0A0C10;--ink2:#1e2030;--ink3:#3a3f55;
+  --muted:#6b7295;--dim:#9ba3c0;--faint:#c8cfe0;
+  --blue:#1A6EFF;--blue2:#0052CC;--blue-bg:#eaf1ff;--blue-dim:#c8d9ff;
+  --paper:#F2F4F8;--white:#fff;--border:#e0e4ee;
+  --d:'Syne',sans-serif;
+  --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',monospace;
+  --j-serif:'Playfair Display',Georgia,serif;
+  --j-body:'Source Serif 4',Georgia,serif;
+}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:var(--b);background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.top-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.tn-logo{font-family:var(--d);font-size:1rem;font-weight:800;letter-spacing:-.5px;}
+.tn-logo span{color:var(--blue);}
+.tn-links{display:flex;gap:1.75rem;list-style:none;}
+.tn-links a{font-family:var(--m);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .14s;}
+.tn-links a:hover{color:var(--ink);}
+.tn-switch{display:flex;gap:.5rem;}
+.sw-btn{font-family:var(--m);font-size:.65rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;border:.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .14s;}
+.sw-btn.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* SECTIONS */
+.brand{display:none;}
+.brand.active{display:block;}
+section{padding:5rem 0;border-bottom:1px solid var(--border);}
+section:last-child{border-bottom:none;}
+.wrap{max-width:900px;margin:0 auto;padding:0 2rem;}
+
+/* HERO */
+.hero{padding:5rem 0 4rem;background:var(--ink);}
+.hero-wrap{max-width:900px;margin:0 auto;padding:0 2rem;}
+.hero-tag{font-family:var(--m);font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;}
+.hero-h1{font-family:var(--d);font-size:clamp(2rem,5vw,4rem);font-weight:800;letter-spacing:-2px;line-height:1;color:#fff;margin-bottom:.75rem;}
+.hero-h1 span{color:var(--blue);}
+.hero-desc{font-size:1rem;font-weight:400;color:rgba(255,255,255,.45);max-width:500px;line-height:1.65;}
+
+/* SECTION HEADERS */
+.sec-label{font-family:var(--m);font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec-h2{font-family:var(--d);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-1px;color:var(--ink);margin-bottom:.5rem;}
+.sec-sub{font-size:.95rem;font-weight:400;color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:2.5rem;}
+
+/* LOGO SECTION */
+.logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+.logo-swatch{padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:flex-start;gap:.75rem;}
+.ls-dark{background:var(--ink);}
+.ls-mid{background:#1a2040;}
+.ls-light{background:var(--paper);}
+.logo-display{font-family:var(--d);font-size:1.75rem;font-weight:800;letter-spacing:-1px;}
+.logo-display.dark{color:#fff;}
+.logo-display.dark span{color:var(--blue);}
+.logo-display.light{color:var(--ink);}
+.logo-display.light span{color:var(--blue);}
+.ls-tag{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+.ls-tag.dark{color:rgba(255,255,255,.25);}
+.ls-tag.light{color:var(--dim);}
+
+.logo-anatomy{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.anat-card{background:var(--paper);border-radius:10px;padding:1.5rem;}
+.anat-card .logo-display{font-size:2.2rem;margin-bottom:.75rem;}
+.anat-label{font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.3rem;}
+.anat-val{font-size:.88rem;color:var(--ink2);line-height:1.5;}
+
+.dont-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.dont-card{background:var(--paper);border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;}
+.dont-card::before{content:'✗';position:absolute;top:.75rem;right:.75rem;font-size:.75rem;font-weight:700;color:var(--muted);}
+.dont-example{font-family:var(--d);font-size:1.4rem;font-weight:800;letter-spacing:-1px;color:var(--ink);margin-bottom:.5rem;}
+.dont-desc{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);}
+
+/* COLOR SECTION */
+.color-row{margin-bottom:2rem;}
+.color-row-label{font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.75rem;}
+.color-swatches{display:flex;gap:1px;border-radius:10px;overflow:hidden;}
+.cswatch{flex:1;display:flex;flex-direction:column;}
+.cs-block{height:80px;}
+.cs-info{padding:.6rem .75rem;background:var(--paper);}
+.cs-name{font-family:var(--d);font-size:.78rem;font-weight:700;color:var(--ink);letter-spacing:-.2px;}
+.cs-hex{font-family:var(--m);font-size:.62rem;color:var(--muted);}
+.cs-role{font-size:.68rem;color:var(--dim);margin-top:2px;}
+
+/* TYPOGRAPHY */
+.type-row{padding:1.75rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:2rem;align-items:start;}
+.type-row:last-child{border-bottom:none;}
+.type-meta .tl{font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.25rem;}
+.type-meta .ts{font-size:.78rem;color:var(--muted);line-height:1.5;}
+.type-sample{}
+
+/* SPACING */
+.space-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;}
+.sp-item{display:flex;flex-direction:column;gap:.5rem;}
+.sp-block{border-radius:4px;background:var(--blue-bg);border:1px solid var(--blue-dim);}
+.sp-label{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.sp-val{font-size:.68rem;color:var(--blue);font-weight:500;}
+
+/* USAGE */
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.usage-card{border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.usage-preview{padding:1.5rem;min-height:140px;display:flex;flex-direction:column;justify-content:center;}
+.usage-footer{padding:.75rem 1rem;background:var(--paper);border-top:1px solid var(--border);}
+.uf-title{font-size:.78rem;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.uf-sub{font-size:.7rem;color:var(--muted);}
+
+/* ─────────────────────────────
+   BRAND B — JORNAIS
+───────────────────────────── */
+.hero-j{padding:5rem 0 4rem;background:#0D1B2E;}
+.hero-j .hero-h1{color:#fff;}
+.hero-j .hero-h1 span{color:#0057D9;}
+.hero-j .hero-desc{color:rgba(255,255,255,.4);}
+.hero-j .hero-tag{color:rgba(255,255,255,.3);}
+
+.j-logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+.j-ls{padding:2rem 1.75rem;display:flex;flex-direction:column;gap:.6rem;}
+.j-ls-dark{background:#0D1B2E;}
+.j-ls-paper{background:#FAFAF8;}
+.j-ls-blue{background:#0057D9;}
+.j-logo-d{font-family:'Playfair Display',Georgia,serif;font-size:1.4rem;font-weight:700;letter-spacing:-.3px;line-height:1.2;}
+.j-logo-d.on-dark{color:#fff;}
+.j-logo-d.on-paper{color:#0D1B2E;}
+.j-logo-d.on-blue{color:#fff;}
+.j-logo-sub{font-family:'DM Sans',system-ui,sans-serif;font-size:.65rem;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;margin-top:2px;}
+.j-logo-sub.on-dark{color:rgba(255,255,255,.3);}
+.j-logo-sub.on-paper{color:#8A9BAB;}
+.j-logo-sub.on-blue{color:rgba(255,255,255,.5);}
+
+/* MOCKUP JORNAL */
+.mockup-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.m-header{background:#fff;border-bottom:1px solid #E8E7E3;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.m-logo-name{font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:#0D1B2E;letter-spacing:-.3px;}
+.m-logo-tag{font-family:'DM Sans',system-ui,sans-serif;font-size:8px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:#8A9BAB;margin-top:2px;}
+.m-ticker{background:#0057D9;padding:0 1.5rem;height:28px;display:flex;align-items:center;gap:12px;}
+.m-ticker-lbl{font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:2px 7px;border-radius:2px;}
+.m-ticker-txt{font-size:11px;color:rgba(255,255,255,.8);}
+.m-body{background:#FAFAF8;padding:1.25rem 1.5rem;display:grid;grid-template-columns:2fr 1fr;gap:1px;background-color:#E8E7E3;}
+.m-main{background:#fff;padding:1.25rem;}
+.m-side{background:#fff;padding:1rem;}
+.m-cat{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0057D9;margin-bottom:.5rem;}
+.m-title{font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;line-height:1.25;color:#0D1B2E;letter-spacing:-.3px;margin-bottom:.5rem;}
+.m-title-sm{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:600;line-height:1.3;color:#0D1B2E;margin-bottom:.4rem;}
+.m-lede{font-family:'Source Serif 4',Georgia,serif;font-size:12px;font-weight:300;color:#5A6A7A;line-height:1.6;}
+.m-img{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#E8F1FD,#B8D4F8);border-radius:2px;margin-bottom:.75rem;}
+.m-img-sm{width:100%;aspect-ratio:3/2;background:linear-gradient(135deg,#EAF3DE,#C8E09A);border-radius:2px;margin-bottom:.6rem;}
+
+/* MOCKUP ARTIGO */
+.mockup-article{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.ma-header{background:#fff;border-bottom:1px solid #E8E7E3;padding:0 1.5rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+.ma-body{background:#FAFAF8;padding:2rem 1.5rem;}
+.ma-inner{max-width:600px;margin:0 auto;}
+.ma-cat{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0057D9;margin-bottom:.6rem;}
+.ma-h1{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;line-height:1.2;color:#0D1B2E;letter-spacing:-.5px;margin-bottom:.75rem;}
+.ma-meta{font-family:'DM Sans',system-ui,sans-serif;font-size:10px;color:#8A9BAB;margin-bottom:1rem;display:flex;gap:1rem;align-items:center;}
+.ma-img{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#E8F1FD,#B8D4F8);border-radius:3px;margin-bottom:1rem;}
+.ma-p{font-family:'Source Serif 4',Georgia,serif;font-size:13px;font-weight:300;color:#2C3E50;line-height:1.75;margin-bottom:.75rem;}
+.ma-p .dropcap{font-family:'Playfair Display',Georgia,serif;font-size:3em;font-weight:700;float:left;line-height:.8;margin-right:.1em;color:#0057D9;}
+.ma-bq{border-left:3px solid #0057D9;padding:.5rem 1rem;margin:.75rem 0;background:#E8F1FD;border-radius:0 4px 4px 0;}
+.ma-bq p{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-style:italic;color:#0D1B2E;line-height:1.5;}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:2.5rem 0;}
+.tag-pill{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--m);font-size:.6rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;}
+.tp-blue{background:var(--blue-bg);color:var(--blue2);border:1px solid var(--blue-dim);}
+.tp-dark{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
+.tp-neutral{background:var(--paper);color:var(--muted);border:1px solid var(--border);}
+.note{font-size:.82rem;color:var(--muted);line-height:1.6;padding:.75rem 1rem;background:var(--paper);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;margin-top:1.5rem;}
+
+@media(max-width:600px){
+  .logo-grid,.dont-grid,.color-swatches,.logo-anatomy,.usage-grid{grid-template-columns:1fr!important;}
+  .type-row{grid-template-columns:1fr;}
+  .m-body{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="tn-logo">Press<span>AI</span></div>
+  <ul class="tn-links">
+    <li><a href="#logo">Logo</a></li>
+    <li><a href="#cores">Cores</a></li>
+    <li><a href="#tipo">Tipografia</a></li>
+    <li><a href="#uso">Aplicações</a></li>
+  </ul>
+  <div class="tn-switch">
+    <button class="sw-btn on" onclick="showBrand('pressai',this)">PressAI</button>
+    <button class="sw-btn" onclick="showBrand('jornais',this)">Jornais</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     BRAND A — PRESSAI
+═══════════════════════════════════════ -->
+<div class="brand active" id="brand-pressai">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-wrap">
+      <div class="hero-tag">Sistema oficial de marca · 2026</div>
+      <h1 class="hero-h1">Press<span>AI</span></h1>
+      <p class="hero-desc">Guia de identidade visual da PressAI. Define logo, cores, tipografia e aplicações da marca da empresa — não dos jornais que ela opera.</p>
+    </div>
+  </div>
+
+  <!-- LOGO -->
+  <section id="logo">
+    <div class="wrap">
+      <div class="sec-label">Logo</div>
+      <h2 class="sec-h2">Assinatura e versões</h2>
+      <p class="sec-sub">O logotipo PressAI é tipográfico: wordmark em Syne 800, com "AI" em azul elétrico #1A6EFF. Não há símbolo separado — a palavra é a marca.</p>
+
+      <div class="logo-grid">
+        <div class="logo-swatch ls-dark">
+          <div class="logo-display dark">Press<span>AI</span></div>
+          <div class="ls-tag dark">Fundo escuro · preferencial</div>
+        </div>
+        <div class="logo-swatch ls-mid">
+          <div class="logo-display dark">Press<span>AI</span></div>
+          <div class="ls-tag dark">Fundo médio</div>
+        </div>
+        <div class="logo-swatch ls-light">
+          <div class="logo-display light">Press<span>AI</span></div>
+          <div class="ls-tag light">Fundo claro</div>
+        </div>
+      </div>
+
+      <div class="logo-anatomy">
+        <div class="anat-card">
+          <div class="logo-display light" style="font-size:2.5rem;margin-bottom:1rem;">Press<span style="color:var(--blue);">AI</span></div>
+          <div class="anat-label">Composição</div>
+          <div class="anat-val">"Press" em preto (#0A0C10) · "AI" em azul (#1A6EFF)<br>Syne 800 · tracking −1.5px<br>Sempre numa linha, nunca empilhado</div>
+        </div>
+        <div class="anat-card">
+          <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem;">
+            <div class="logo-display light" style="font-size:2.2rem;">Press<span style="color:var(--blue);">AI</span></div>
+            <div class="logo-display light" style="font-size:1.4rem;">Press<span style="color:var(--blue);">AI</span></div>
+            <div class="logo-display light" style="font-size:.95rem;">Press<span style="color:var(--blue);">AI</span></div>
+          </div>
+          <div class="anat-label">Tamanho mínimo</div>
+          <div class="anat-val">Nunca abaixo de 14px de altura. Em contextos pequenos (favicon, app icon) usar só "P<span style="color:var(--blue);">A</span>".</div>
+        </div>
+      </div>
+
+      <div class="sec-label" style="margin-bottom:1rem;">O que evitar</div>
+      <div class="dont-grid">
+        <div class="dont-card">
+          <div class="dont-example" style="letter-spacing:2px;">PressAI</div>
+          <div class="dont-desc">Não usar tracking positivo</div>
+        </div>
+        <div class="dont-card">
+          <div class="dont-example" style="font-weight:400;">PressAI</div>
+          <div class="dont-desc">Não usar pesos leves</div>
+        </div>
+        <div class="dont-card">
+          <div class="dont-example" style="color:var(--muted);">Press<span style="color:#FF0000;">AI</span></div>
+          <div class="dont-desc">Não alterar cores do "AI"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORES -->
+  <section id="cores">
+    <div class="wrap">
+      <div class="sec-label">Cores</div>
+      <h2 class="sec-h2">Paleta oficial</h2>
+      <p class="sec-sub">Sistema de quatro grupos: Ink (fundos e textos), Blue (accent e ação), Paper (superfícies claras), Mono (estados e interfaces).</p>
+
+      <div class="color-row">
+        <div class="color-row-label">Ink — fundos e textos principais</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#070B14;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 950</div><div class="cs-hex">#070B14</div><div class="cs-role">Hero / fundo principal escuro</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#0A0C10;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 900</div><div class="cs-hex">#0A0C10</div><div class="cs-role">Texto principal</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#1A2035;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 700</div><div class="cs-hex">#1A2035</div><div class="cs-role">Fundo escuro secundário</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#6B7295;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 400</div><div class="cs-hex">#6B7295</div><div class="cs-role">Texto muted</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#B0B8CC;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 200</div><div class="cs-hex">#B0B8CC</div><div class="cs-role">Texto dim / labels</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-row-label">Blue — accent e ação</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#1A6EFF;"></div>
+            <div class="cs-info"><div class="cs-name">Blue 500</div><div class="cs-hex">#1A6EFF</div><div class="cs-role">Accent principal · "AI" no logo</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#0052CC;"></div>
+            <div class="cs-info"><div class="cs-name">Blue 600</div><div class="cs-hex">#0052CC</div><div class="cs-role">Hover / pressed</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#4D8FFF;"></div>
+            <div class="cs-info"><div class="cs-name">Blue 400</div><div class="cs-hex">#4D8FFF</div><div class="cs-role">Accent em fundo escuro</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#C8D9FF;border:1px solid #e0e8ff;"></div>
+            <div class="cs-info"><div class="cs-name">Blue 100</div><div class="cs-hex">#C8D9FF</div><div class="cs-role">Border accent</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#EAF1FF;border:1px solid #e0e8ff;"></div>
+            <div class="cs-info"><div class="cs-name">Blue 50</div><div class="cs-hex">#EAF1FF</div><div class="cs-role">Superfície accent claro</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-row-label">Paper — superfícies claras</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#F2F4F8;border:1px solid #e0e4ee;"></div>
+            <div class="cs-info"><div class="cs-name">Paper 200</div><div class="cs-hex">#F2F4F8</div><div class="cs-role">Fundo da página claro</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#F8F9FC;border:1px solid #e0e4ee;"></div>
+            <div class="cs-info"><div class="cs-name">Paper 100</div><div class="cs-hex">#F8F9FC</div><div class="cs-role">Superfície de card</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#FFFFFF;border:1px solid #e0e4ee;"></div>
+            <div class="cs-info"><div class="cs-name">White</div><div class="cs-hex">#FFFFFF</div><div class="cs-role">Fundo principal claro</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#E0E4EE;"></div>
+            <div class="cs-info"><div class="cs-name">Border</div><div class="cs-hex">#E0E4EE</div><div class="cs-role">Bordas e divisores</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">A PressAI usa uma única cor de accent: azul #1A6EFF. Não há cor secundária de destaque. Vermelho, verde e âmbar são reservados para dados e métricas (ex: mapas, gráficos).</div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFIA -->
+  <section id="tipo">
+    <div class="wrap">
+      <div class="sec-label">Tipografia</div>
+      <h2 class="sec-h2">Sistema tipográfico</h2>
+      <p class="sec-sub">Três famílias com funções distintas. Nunca misturar fora dos papéis definidos.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">Display</div>
+          <div class="ts">Syne 700 / 800<br>Títulos e headings<br>Logo e seções</div>
+        </div>
+        <div class="type-sample">
+          <div style="font-family:var(--d);font-size:clamp(1.8rem,4vw,3.5rem);font-weight:800;letter-spacing:-2px;line-height:1;color:var(--ink);margin-bottom:.5rem;">Toda cidade,<br>uma redação.</div>
+          <div style="font-family:var(--d);font-size:1.2rem;font-weight:700;letter-spacing:-.5px;color:var(--ink2);">Jornalismo local, em escala nacional.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">Body</div>
+          <div class="ts">IBM Plex Sans 300–600<br>Corpo de texto<br>Parágrafos e descrições</div>
+        </div>
+        <div class="type-sample">
+          <div style="font-family:var(--b);font-size:1rem;font-weight:400;color:var(--ink2);line-height:1.7;max-width:480px;">A PressAI opera redações jornalísticas autônomas em municípios que hoje são desertos de notícia. Jornalismo local, em escala nacional.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">Mono</div>
+          <div class="ts">IBM Plex Mono 400–500<br>Labels, tags, badges<br>Dados e código</div>
+        </div>
+        <div class="type-sample">
+          <div style="display:flex;flex-direction:column;gap:.6rem;">
+            <div style="font-family:var(--m);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);">Tecnologia · Jornalismo · Escala</div>
+            <div class="tag-pill tp-blue">demo</div>
+            <div style="font-family:var(--m);font-size:.75rem;color:var(--muted);">// toda cidade, uma redação.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">IBM Plex Mono é usada exclusivamente para labels, badges e elementos de interface. Nunca como corpo de texto em parágrafos longos.</div>
+    </div>
+  </section>
+
+  <!-- APLICAÇÕES -->
+  <section id="uso">
+    <div class="wrap">
+      <div class="sec-label">Aplicações</div>
+      <h2 class="sec-h2">Exemplos em contexto real</h2>
+      <p class="sec-sub">Como a identidade se comporta em diferentes superfícies e formatos.</p>
+
+      <div class="usage-grid">
+
+        <!-- Hero dark -->
+        <div class="usage-card">
+          <div class="usage-preview" style="background:var(--ink);padding:1.75rem;">
+            <div style="font-family:var(--m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;">PressAI · Pitch confidencial · 2026</div>
+            <div style="font-family:var(--d);font-size:1.8rem;font-weight:800;letter-spacing:-1.5px;line-height:.97;color:#fff;margin-bottom:.75rem;">O Brasil tem<br><span style="color:var(--blue);">4.312 cidades</span><br>sem jornal.</div>
+            <div style="font-size:.82rem;color:rgba(255,255,255,.4);line-height:1.6;">Estamos construindo a infraestrutura para ocupar cada uma delas.</div>
+          </div>
+          <div class="usage-footer">
+            <div class="uf-title">Hero escuro</div>
+            <div class="uf-sub">Pitch deck · Slides · Landing page principal</div>
+          </div>
+        </div>
+
+        <!-- Site claro -->
+        <div class="usage-card">
+          <div class="usage-preview" style="background:var(--paper);padding:1.75rem;">
+            <div style="font-family:var(--d);font-size:1.5rem;font-weight:800;letter-spacing:-1px;color:var(--ink);margin-bottom:.4rem;">Press<span style="color:var(--blue);">AI</span></div>
+            <div style="font-family:var(--m);font-size:.65rem;letter-spacing:.06em;color:var(--muted);margin-bottom:1rem;">// toda cidade, uma redação.</div>
+            <div style="font-size:.85rem;color:var(--ink2);line-height:1.65;">Jornalismo local autônomo, cidade a cidade. Presença editorial permanente nos municípios brasileiros sem cobertura.</div>
+          </div>
+          <div class="usage-footer">
+            <div class="uf-title">Fundo claro</div>
+            <div class="uf-sub">Site institucional · Brand guide · Documentos</div>
+          </div>
+        </div>
+
+        <!-- Links page -->
+        <div class="usage-card">
+          <div class="usage-preview" style="background:#EDEEF2;padding:1.5rem;display:flex;flex-direction:column;gap:.5rem;">
+            <div style="font-family:var(--d);font-size:1.2rem;font-weight:800;letter-spacing:-.8px;color:var(--ink);margin-bottom:.25rem;">Press<span style="color:var(--blue);">AI</span></div>
+            <div style="background:#fff;border:1px solid rgba(160,168,190,.25);border-radius:7px;padding:.7rem .9rem;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-family:var(--d);font-size:.82rem;font-weight:700;color:var(--ink);">Site</div>
+                <div style="font-family:var(--m);font-size:.62rem;color:var(--dim);">negócio · oportunidade</div>
+              </div>
+              <div style="color:var(--dim);font-size:.8rem;">→</div>
+            </div>
+            <div style="background:#fff;border:1px solid rgba(160,168,190,.25);border-radius:7px;padding:.7rem .9rem;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-family:var(--d);font-size:.82rem;font-weight:700;color:var(--ink);">Pitch deck</div>
+                <div style="font-family:var(--m);font-size:.62rem;color:var(--dim);">modelo de negócio · escala</div>
+              </div>
+              <div style="color:var(--dim);font-size:.8rem;">→</div>
+            </div>
+          </div>
+          <div class="usage-footer">
+            <div class="uf-title">Página de links</div>
+            <div class="uf-sub">Hub de materiais · Compartilhamento</div>
+          </div>
+        </div>
+
+        <!-- Badge / tag system -->
+        <div class="usage-card">
+          <div class="usage-preview" style="background:var(--white);padding:1.75rem;display:flex;flex-direction:column;gap:.75rem;">
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+              <span class="tag-pill tp-blue">demo</span>
+              <span class="tag-pill tp-blue">ao vivo</span>
+              <span class="tag-pill tp-neutral">doc</span>
+              <span class="tag-pill tp-neutral">pdf</span>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;padding:.75rem;background:var(--ink);border-radius:6px;">
+              <span class="tag-pill tp-dark">editorial</span>
+              <span class="tag-pill tp-dark">inteligência</span>
+              <span class="tag-pill tp-dark">escala</span>
+            </div>
+            <div style="font-family:var(--m);font-size:.68rem;color:var(--muted);">// 01 / 11 · Pitch confidencial</div>
+          </div>
+          <div class="usage-footer">
+            <div class="uf-title">Badges e labels</div>
+            <div class="uf-sub">Sempre em IBM Plex Mono · minúsculas</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- /brand-pressai -->
+
+
+<!-- ═══════════════════════════════════════
+     BRAND B — JORNAIS
+═══════════════════════════════════════ -->
+<div class="brand" id="brand-jornais">
+
+  <!-- HERO -->
+  <div class="hero hero-j">
+    <div class="hero-wrap">
+      <div class="hero-tag">Sistema visual dos jornais locais · PressAI · 2026</div>
+      <h1 class="hero-h1" style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;letter-spacing:-.5px;">Jornais <span style="color:#0057D9;font-style:normal;">PressAI</span></h1>
+      <p class="hero-desc">Identidade visual dos jornais locais operados pela PressAI. Cada jornal tem nome próprio e é adaptado para sua cidade, mas compartilha o mesmo sistema visual editorial.</p>
+    </div>
+  </div>
+
+  <!-- LOGO DOS JORNAIS -->
+  <section id="logo">
+    <div class="wrap">
+      <div class="sec-label">Identidade editorial</div>
+      <h2 class="sec-h2">Anatomia do logotipo dos jornais</h2>
+      <p class="sec-sub">Cada jornal usa o nome da cidade como nome do veículo. Tipografia Playfair Display — sofisticada, jornalística, com autoridade editorial. Subtítulo em DM Sans uppercase.</p>
+
+      <div class="j-logo-grid">
+        <div class="j-ls j-ls-dark">
+          <div>
+            <div class="j-logo-d on-dark">Jornal de<br>Araquari</div>
+            <div class="j-logo-sub on-dark">A cidade em tempo real</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:.5rem;">Fundo escuro</div>
+        </div>
+        <div class="j-ls j-ls-paper" style="border:1px solid #E8E7E3;">
+          <div>
+            <div class="j-logo-d on-paper">Jornal de<br>Araquari</div>
+            <div class="j-logo-sub on-paper">A cidade em tempo real</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:#8A9BAB;margin-top:.5rem;">Fundo claro · preferencial</div>
+        </div>
+        <div class="j-ls j-ls-blue">
+          <div>
+            <div class="j-logo-d on-blue">Jornal de<br>Araquari</div>
+            <div class="j-logo-sub on-blue">A cidade em tempo real</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.5rem;">Sobre azul · ticker e destaques</div>
+        </div>
+      </div>
+
+      <div class="note">O nome do jornal é sempre o nome da cidade. O subtítulo é definido por jornal ("A cidade em tempo real", "Notícias de [Cidade]"). A família Playfair Display é exclusiva dos jornais — a PressAI usa Syne.</div>
+    </div>
+  </section>
+
+  <!-- CORES DOS JORNAIS -->
+  <section id="cores">
+    <div class="wrap">
+      <div class="sec-label">Cores</div>
+      <h2 class="sec-h2">Paleta editorial</h2>
+      <p class="sec-sub">Paleta jornalística com credibilidade. Azul de imprensa como accent, papel creme como superfície, tinta profunda como texto.</p>
+
+      <div class="color-row">
+        <div class="color-row-label">Tinta — textos e fundos</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#0D1B2E;"></div>
+            <div class="cs-info"><div class="cs-name">Ink</div><div class="cs-hex">#0D1B2E</div><div class="cs-role">Texto principal · fundo dark</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#2C3E50;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 2</div><div class="cs-hex">#2C3E50</div><div class="cs-role">Lede / texto secundário</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#5A6A7A;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 3</div><div class="cs-hex">#5A6A7A</div><div class="cs-role">Metadados · byline</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#8A9BAB;"></div>
+            <div class="cs-info"><div class="cs-name">Ink 4</div><div class="cs-hex">#8A9BAB</div><div class="cs-role">Labels · tagline</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-row-label">Azul de imprensa — accent e ação</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#0057D9;"></div>
+            <div class="cs-info"><div class="cs-name">Press Blue</div><div class="cs-hex">#0057D9</div><div class="cs-role">Accent · ticker · categorias</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#0040A8;"></div>
+            <div class="cs-info"><div class="cs-name">Press Blue Dark</div><div class="cs-hex">#0040A8</div><div class="cs-role">Hover / active</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#E8F1FD;border:1px solid #D0E4FA;"></div>
+            <div class="cs-info"><div class="cs-name">Blue Light</div><div class="cs-hex">#E8F1FD</div><div class="cs-role">Fundo de destaque / blockquote</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-row-label">Papel — superfícies</div>
+        <div class="color-swatches">
+          <div class="cswatch">
+            <div class="cs-block" style="background:#FAFAF8;border:1px solid #E8E7E3;"></div>
+            <div class="cs-info"><div class="cs-name">Paper</div><div class="cs-hex">#FAFAF8</div><div class="cs-role">Fundo da página</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#F2F1EE;border:1px solid #E8E7E3;"></div>
+            <div class="cs-info"><div class="cs-name">Paper 2</div><div class="cs-hex">#F2F1EE</div><div class="cs-role">Cards / sidebar</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#E8E7E3;"></div>
+            <div class="cs-info"><div class="cs-name">Paper 3</div><div class="cs-hex">#E8E7E3</div><div class="cs-role">Bordas e divisores</div></div>
+          </div>
+          <div class="cswatch">
+            <div class="cs-block" style="background:#D63B2F;"></div>
+            <div class="cs-info"><div class="cs-name">Breaking Red</div><div class="cs-hex">#D63B2F</div><div class="cs-role">Breaking news apenas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFIA DOS JORNAIS -->
+  <section id="tipo">
+    <div class="wrap">
+      <div class="sec-label">Tipografia</div>
+      <h2 class="sec-h2">Hierarquia editorial</h2>
+      <p class="sec-sub">Três famílias com papéis editoriais claros. A escolha reflete a tradição do jornalismo impresso de qualidade, adaptada ao digital.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">Display</div>
+          <div class="ts">Playfair Display 600–900<br>Manchetes e títulos<br>Logo do jornal</div>
+        </div>
+        <div class="type-sample">
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;line-height:1.2;color:#0D1B2E;letter-spacing:-.5px;margin-bottom:.35rem;">Câmara aprova projeto de mobilidade e amplia acesso ao transporte coletivo</div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:.95rem;font-weight:400;font-style:italic;color:#5A6A7A;">Votação unânime marca sessão histórica para cidade</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">Body</div>
+          <div class="ts">Source Serif 4 300–600<br>Corpo da matéria<br>Lede e parágrafos</div>
+        </div>
+        <div class="type-sample">
+          <div style="font-family:'Source Serif 4',Georgia,serif;font-size:1rem;font-weight:300;color:#2C3E50;line-height:1.75;max-width:480px;">A Câmara Municipal aprovou por unanimidade, na sessão de terça-feira, o projeto de lei que amplia a frota de ônibus no horário de pico e cria novas linhas para os bairros periféricos da cidade.</div>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tl">UI / Nav</div>
+          <div class="ts">DM Sans 400–600<br>Interface e navegação<br>Categorias e metadados</div>
+        </div>
+        <div class="type-sample">
+          <div style="display:flex;flex-direction:column;gap:.5rem;">
+            <div style="display:flex;gap:1.5rem;">
+              <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:500;color:#5A6A7A;">Política</span>
+              <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:500;color:#5A6A7A;">Economia</span>
+              <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:500;color:#0057D9;border-bottom:2px solid #0057D9;padding-bottom:2px;">Segurança</span>
+            </div>
+            <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0057D9;">Política · 12 min atrás</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOCKUP SITE -->
+  <section id="uso">
+    <div class="wrap">
+      <div class="sec-label">Aplicações</div>
+      <h2 class="sec-h2">Mockup — Página inicial do jornal</h2>
+      <p class="sec-sub">Interface do jornal local. Header com logo + ticker + navegação. Grid editorial com manchete principal e destaques secundários.</p>
+
+      <div class="mockup-wrap">
+        <!-- Header -->
+        <div class="m-header">
+          <div>
+            <div class="m-logo-name">Jornal de Araquari</div>
+            <div class="m-logo-tag">A cidade em tempo real</div>
+          </div>
+          <div style="display:flex;gap:1rem;align-items:center;">
+            <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:500;color:#5A6A7A;">Política</span>
+            <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:500;color:#5A6A7A;">Economia</span>
+            <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:500;color:#5A6A7A;">Segurança</span>
+            <div style="background:#25D366;color:#fff;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:600;">WhatsApp</div>
+          </div>
+        </div>
+        <!-- Ticker -->
+        <div class="m-ticker">
+          <div class="m-ticker-lbl">AO VIVO</div>
+          <div class="m-ticker-txt">Câmara vota projeto de transporte · BMW anuncia expansão da planta · Prefeitura abre vagas para concurso público · Chuvas provocam alagamentos no centro</div>
+        </div>
+        <!-- Body -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1px;background:#E8E7E3;">
+          <!-- Main -->
+          <div class="m-main">
+            <div class="m-cat">· Política</div>
+            <div class="m-img"></div>
+            <div class="m-title">Câmara aprova projeto histórico e amplia transporte coletivo na cidade</div>
+            <div class="m-lede">Votação unânime marca sessão desta terça-feira. Nova frota deve começar a circular em 60 dias, segundo a secretaria municipal.</div>
+            <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:10px;color:#8A9BAB;margin-top:.75rem;">12 min atrás · 3 min de leitura</div>
+          </div>
+          <!-- Side -->
+          <div style="display:flex;flex-direction:column;gap:1px;background:#E8E7E3;">
+            <div class="m-side">
+              <div class="m-cat">· Economia</div>
+              <div class="m-img-sm blue"></div>
+              <div class="m-title-sm">BMW anuncia ampliação com investimento de R$ 2 bilhões</div>
+              <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:10px;color:#8A9BAB;margin-top:.4rem;">45 min atrás</div>
+            </div>
+            <div class="m-side">
+              <div class="m-cat">· Segurança</div>
+              <div class="m-img-sm amber"></div>
+              <div class="m-title-sm">Acidentes na BR-280 aumentam 18% no primeiro trimestre</div>
+              <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:10px;color:#8A9BAB;margin-top:.4rem;">2h atrás</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2 class="sec-h2" style="margin-bottom:.5rem;">Mockup — Página de matéria</h2>
+      <p class="sec-sub">Layout da matéria individual. Drop cap na abertura, blockquote azul, tipografia editorial com Source Serif 4 no corpo.</p>
+
+      <div class="mockup-article">
+        <div class="ma-header">
+          <div>
+            <div class="m-logo-name" style="font-size:14px;">Jornal de Araquari</div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:center;">
+            <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:500;color:#5A6A7A;">Política</span>
+            <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:500;color:#5A6A7A;">Economia</span>
+          </div>
+        </div>
+        <div class="ma-body">
+          <div class="ma-inner">
+            <div class="ma-cat">· Política · Câmara Municipal</div>
+            <div class="ma-h1">Câmara aprova projeto histórico e amplia transporte coletivo na cidade</div>
+            <div class="ma-meta">
+              <span>Publicado às 14h32 · 27 de março de 2026</span>
+              <span>·</span>
+              <span>3 min de leitura</span>
+            </div>
+            <div class="ma-img"></div>
+            <p class="ma-p"><span class="dropcap">A</span> Câmara Municipal de Araquari aprovou por unanimidade, na sessão de terça-feira, o projeto de lei que amplia a frota de ônibus no horário de pico e cria novas linhas para os bairros periféricos da cidade.</p>
+            <div class="ma-bq">
+              <p>"A aprovação representa uma vitória para os trabalhadores que dependem do transporte público para chegar ao trabalho nas áreas industriais."</p>
+            </div>
+            <p class="ma-p">A nova frota deve começar a circular em 60 dias, segundo a Secretaria Municipal de Mobilidade. O investimento total é de R$ 4,2 milhões, financiados com recursos do Fundo de Mobilidade Urbana.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+<!-- /brand-jornais -->
+
+<script>
+function showBrand(id, btn) {
+  document.querySelectorAll('.brand').forEach(b => b.classList.remove('active'));
+  document.getElementById('brand-' + id).classList.add('active');
+  document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

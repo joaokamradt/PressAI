@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Modelo de Distribuição</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#070B14;
+  --ink2:#0D1220;
+  --ink3:#111827;
+  --blue:#1A6EFF;
+  --blue2:#0052CC;
+  --blue-d:rgba(26,110,255,.1);
+  --blue-b:rgba(26,110,255,.2);
+  --green:#25D366;
+  --green2:#1aad54;
+  --pink:#E1306C;
+  --pink2:#b02456;
+  --amber:#F59E0B;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.04);
+  --t1:#fff;
+  --t2:rgba(255,255,255,.88);
+  --t3:rgba(255,255,255,.72);
+  --t4:rgba(255,255,255,.52);
+  --t5:rgba(255,255,255,.32);
+  --d:'Syne',sans-serif;
+  --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',monospace;
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:var(--b);background:var(--ink);color:var(--t2);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(7,11,20,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);}
+.nav-logo span{color:var(--blue);}
+.nav-tag{font-family:var(--m);font-size:.6rem;color:var(--t5);letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8rem 2.5rem 5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(26,110,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(26,110,255,.035) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+/* Três glows — uma cor por canal */
+.hero-glow{position:absolute;border-radius:50%;pointer-events:none;}
+.glow-blue{width:600px;height:600px;background:radial-gradient(circle,rgba(26,110,255,.07),transparent 65%);top:-15%;right:-5%;}
+.glow-green{width:400px;height:400px;background:radial-gradient(circle,rgba(37,211,102,.05),transparent 65%);bottom:5%;left:-5%;}
+.glow-pink{width:350px;height:350px;background:radial-gradient(circle,rgba(225,48,108,.04),transparent 65%);bottom:20%;right:15%;}
+.hero-inner{max-width:720px;width:100%;position:relative;z-index:1;}
+.hero-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem;}
+.hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);}
+.hero-h1{font-family:var(--d);font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:800;letter-spacing:-3px;line-height:.97;color:var(--t1);margin-bottom:1.25rem;}
+.hero-h1 em{font-style:normal;}
+.hero-h1 .w-site{color:var(--blue);}
+.hero-h1 .w-wa{color:var(--green);}
+.hero-h1 .w-ig{color:var(--pink);}
+.hero-sub{font-size:.98rem;color:rgba(255,255,255,.82);line-height:1.75;max-width:540px;margin-bottom:2.5rem;}
+/* Stats trio */
+.hero-trio{display:flex;gap:1px;background:var(--border);border-radius:10px;overflow:hidden;max-width:520px;}
+.trio-item{flex:1;background:var(--ink2);padding:.9rem 1.1rem;text-align:center;}
+.trio-n{font-family:var(--d);font-size:1.5rem;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:.25rem;}
+.trio-item:nth-child(1) .trio-n{color:var(--blue);}
+.trio-item:nth-child(2) .trio-n{color:var(--green);}
+.trio-item:nth-child(3) .trio-n{color:var(--pink);}
+.trio-l{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-top:.2rem;}
+
+/* ── SECTION WRAPPER ── */
+.section{padding:5rem 2.5rem;max-width:1040px;margin:0 auto;}
+.section.full{max-width:none;padding-left:0;padding-right:0;}
+.sec-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:.9rem;display:flex;align-items:center;gap:.6rem;}
+.sec-kicker::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.sec-kicker.green{color:var(--green);}
+.sec-kicker.pink{color:var(--pink);}
+.sec-kicker.amber{color:var(--amber);}
+.sec-h{font-family:var(--d);font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-2px;line-height:1.04;color:var(--t1);margin-bottom:1rem;}
+.sec-h em{font-style:normal;color:var(--blue);}
+.sec-sub{font-size:.95rem;color:rgba(255,255,255,.82);line-height:1.75;max-width:600px;margin-bottom:3rem;}
+.sec-rule{height:1px;background:var(--border2);margin:0 2.5rem 3rem;}
+
+/* ── CANAL CARDS (Site, WA, IG) ── */
+.canal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;margin-bottom:4rem;}
+.canal-card{background:var(--ink2);padding:2rem 1.75rem;position:relative;overflow:hidden;}
+.canal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.canal-site::before{background:var(--blue);}
+.canal-wa::before{background:var(--green);}
+.canal-ig::before{background:linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.canal-icon{font-size:2rem;margin-bottom:1.1rem;display:block;}
+.canal-role{font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+.canal-site .canal-role{color:var(--blue);}
+.canal-wa .canal-role{color:var(--green);}
+.canal-ig .canal-role{color:var(--pink);}
+.canal-name{font-family:var(--d);font-size:1.3rem;font-weight:800;letter-spacing:-.5px;color:#fff;margin-bottom:.6rem;}
+.canal-desc{font-size:.85rem;color:rgba(255,255,255,.82);line-height:1.7;margin-bottom:1.25rem;}
+.canal-stat{display:flex;flex-direction:column;gap:.5rem;}
+.cstat{display:flex;align-items:flex-start;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,.72);}
+.cstat::before{content:'→';flex-shrink:0;font-size:.75rem;}
+.canal-site .cstat::before{color:var(--blue);}
+.canal-wa .cstat::before{color:var(--green);}
+.canal-ig .cstat::before{color:var(--pink);}
+.cstat strong{color:#fff;font-weight:600;}
+
+/* ── COMPLEMENTARIDADE ── */
+.compl-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-bottom:3rem;}
+.compl-visual{position:relative;height:300px;}
+/* Circles animados */
+.cv-ring{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--d);font-weight:800;letter-spacing:-.5px;color:var(--t1);}
+.cv-site{width:140px;height:140px;background:rgba(26,110,255,.15);border:2px solid rgba(26,110,255,.4);font-size:.9rem;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;animation:pulse-blue 3s ease infinite;}
+.cv-wa{width:110px;height:110px;background:rgba(37,211,102,.12);border:2px solid rgba(37,211,102,.35);font-size:.8rem;top:20%;left:10%;z-index:2;animation:pulse-green 3.5s ease infinite;}
+.cv-ig{width:100px;height:100px;background:rgba(225,48,108,.12);border:2px solid rgba(225,48,108,.35);font-size:.75rem;top:55%;right:5%;z-index:2;animation:pulse-pink 4s ease infinite;}
+@keyframes pulse-blue{0%,100%{box-shadow:0 0 0 0 rgba(26,110,255,.2)}50%{box-shadow:0 0 0 14px rgba(26,110,255,0)}}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.2)}50%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
+@keyframes pulse-pink{0%,100%{box-shadow:0 0 0 0 rgba(225,48,108,.2)}50%{box-shadow:0 0 0 10px rgba(225,48,108,0)}}
+/* Linhas de conexão */
+.cv-line{position:absolute;width:90px;height:1px;z-index:1;}
+.cvl-1{background:linear-gradient(90deg,rgba(37,211,102,.4),rgba(26,110,255,.4));top:37%;left:22%;transform:rotate(22deg);}
+.cvl-2{background:linear-gradient(90deg,rgba(26,110,255,.4),rgba(225,48,108,.4));top:58%;left:55%;transform:rotate(12deg);}
+/* Label de multiplicador */
+.cv-multiplier{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-family:var(--m);font-size:.6rem;color:var(--t5);letter-spacing:.1em;text-align:center;white-space:nowrap;}
+.compl-text{}
+.compl-text h3{font-family:var(--d);font-size:1.3rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);margin-bottom:.75rem;}
+.compl-text p{font-size:.88rem;color:var(--t3);line-height:1.75;margin-bottom:1rem;}
+.compl-points{display:flex;flex-direction:column;gap:.6rem;margin-top:1.25rem;}
+.cp{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .85rem;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,.02);}
+.cp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.25rem;}
+.cp-blue{background:var(--blue);}
+.cp-green{background:var(--green);}
+.cp-pink{background:var(--pink);}
+.cp-text{font-size:.82rem;color:var(--t3);line-height:1.55;}
+.cp-text strong{color:var(--t2);}
+
+/* ── FLUXO DE ALCANCE ── */
+.alcance-intro{max-width:640px;margin-bottom:3rem;}
+/* Timeline visual de alcance */
+.alcance-phases{display:flex;flex-direction:column;gap:0;}
+/* Timeline — 3 colunas: período | trilho+nó | conteúdo */
+.ap{
+  display:grid;
+  grid-template-columns:130px 32px 1fr;
+  gap:0 1.25rem;
+  padding:2rem 0;
+  border-bottom:1px solid var(--border2);
+}
+.ap:last-child{border-bottom:none;}
+
+/* Coluna esquerda: período */
+.ap-left{display:flex;flex-direction:column;align-items:flex-end;padding-top:.15rem;}
+.ap-period{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.3px;color:var(--t1);text-align:right;line-height:1.25;}
+.ap-label{font-family:var(--m);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);text-align:right;margin-top:.3rem;}
+
+/* Coluna do meio: nó + linha vertical */
+.ap-track{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+}
+.ap-node{
+  width:12px;height:12px;border-radius:50%;
+  flex-shrink:0;margin-top:.2rem;
+  border:2px solid var(--border);
+  z-index:1;
+}
+.ap.digital  .ap-node{background:var(--blue);border-color:var(--blue);}
+.ap.organico .ap-node{background:var(--green);border-color:var(--green);}
+.ap.pago     .ap-node{background:var(--amber);border-color:var(--amber);}
+.ap.presencial .ap-node{background:var(--pink);border-color:var(--pink);}
+.ap.consolidado .ap-node{background:rgba(255,255,255,.7);border-color:rgba(255,255,255,.4);}
+.ap-track-line{flex:1;width:1px;background:var(--border);margin-top:6px;}
+.ap:last-child .ap-track-line{display:none;}
+
+/* Coluna direita: conteúdo */
+.ap-right{padding-bottom:.5rem;}
+.ap-type{
+  font-family:var(--m);font-size:.65rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem;
+}
+.ap.digital   .ap-type{color:#6ba5ff;}
+.ap.organico  .ap-type{color:#5dd68c;}
+.ap.pago      .ap-type{color:#fbbf24;}
+.ap.presencial .ap-type{color:#f472b6;}
+.ap.consolidado .ap-type{color:rgba(255,255,255,.55);}
+.ap-title{font-family:var(--d);font-size:1rem;font-weight:700;letter-spacing:-.3px;color:var(--t1);margin-bottom:.45rem;}
+.ap-desc{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.72;margin-bottom:.85rem;}
+.ap-tactics{display:flex;flex-wrap:wrap;gap:.4rem;}
+.tactic{
+  font-family:var(--m);font-size:.62rem;padding:4px 11px;
+  border-radius:5px;border:1px solid;font-weight:400;
+}
+.ap.digital   .tactic{border-color:rgba(26,110,255,.35);color:#7ab5ff;background:rgba(26,110,255,.06);}
+.ap.organico  .tactic{border-color:rgba(37,211,102,.35);color:#5dd68c;background:rgba(37,211,102,.06);}
+.ap.pago      .tactic{border-color:rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.06);}
+.ap.presencial .tactic{border-color:rgba(225,48,108,.35);color:#f472b6;background:rgba(225,48,108,.06);}
+.ap.consolidado .tactic{border-color:var(--border);color:rgba(255,255,255,.55);background:rgba(255,255,255,.03);}
+
+/* ── FORMATOS DE CONTEÚDO ── */
+.formatos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;}
+.formato-card{background:var(--ink2);padding:1.4rem 1.5rem;display:flex;gap:1.1rem;align-items:flex-start;transition:background .15s;}
+.formato-card:hover{background:rgba(26,110,255,.04);}
+.fc-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem;}
+.fc-body{}
+.fc-tag{font-family:var(--m);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t5);margin-bottom:.3rem;}
+.fc-title{font-size:.9rem;font-weight:600;color:var(--t1);margin-bottom:.3rem;}
+.fc-desc{font-size:.78rem;color:var(--t4);line-height:1.6;}
+
+/* ── CALLOUT DESTAQUE ── */
+.callout-destaque{
+  background:var(--ink2);border:1px solid rgba(26,110,255,.2);
+  border-radius:12px;padding:2rem 2.25rem;
+  display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;
+  margin:2rem 0;
+}
+.cd-text{}
+.cd-label{font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem;}
+.cd-h{font-family:var(--d);font-size:1.2rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);margin-bottom:.4rem;}
+.cd-p{font-size:.85rem;color:var(--t3);line-height:1.65;}
+.cd-stat{text-align:right;flex-shrink:0;}
+.cd-n{font-family:var(--d);font-size:2.2rem;font-weight:800;letter-spacing:-2px;color:var(--blue);line-height:1;}
+.cd-nl{font-family:var(--m);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t5);margin-top:.3rem;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
+.ft-logo{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.5px;color:var(--t4);}
+.ft-logo span{color:var(--blue);}
+.ft-meta{font-family:var(--m);font-size:.58rem;color:var(--t5);}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.rv-d1{transition-delay:.08s;}
+.rv-d2{transition-delay:.16s;}
+.rv-d3{transition-delay:.24s;}
+
+@media(max-width:860px){
+  .canal-grid{grid-template-columns:1fr;}
+  .compl-wrap{grid-template-columns:1fr;}
+  .compl-visual{height:220px;}
+  .formatos-grid{grid-template-columns:1fr;}
+  .callout-destaque{grid-template-columns:1fr;}
+  .cd-stat{text-align:left;}
+  .ap{grid-template-columns:90px 28px 1fr;}
+}
+@media(max-width:600px){
+  nav{padding:0 1.25rem;}
+  .hero{padding:7rem 1.25rem 4rem;}
+  .section{padding:3.5rem 1.25rem;}
+  .sec-rule{margin:0 1.25rem 2.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Press<span>AI</span></div>
+  <div class="nav-tag">Modelo de distribuição</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow glow-blue"></div>
+  <div class="hero-glow glow-green"></div>
+  <div class="hero-glow glow-pink"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Como cada jornal chega ao leitor</div>
+    <h1 class="hero-h1">
+      <span class="w-site">Site.</span>&nbsp;
+      <span class="w-wa">WhatsApp.</span><br>
+      <span class="w-ig">Instagram.</span>
+    </h1>
+    <p class="hero-sub">Cada jornal operado pela PressAI distribui seu jornalismo por três canais simultâneos e complementares. Não são alternativas — são três papéis editoriais distintos que se reforçam.</p>
+    <div class="hero-trio">
+      <div class="trio-item">
+        <div class="trio-n">🌐</div>
+        <div class="trio-l">Arquivo e SEO</div>
+      </div>
+      <div class="trio-item">
+        <div class="trio-n">💬</div>
+        <div class="trio-l">Alcance direto</div>
+      </div>
+      <div class="trio-item">
+        <div class="trio-n">📸</div>
+        <div class="trio-l">Descoberta</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-rule rv"></div>
+
+<!-- OS TRÊS CANAIS -->
+<div class="section">
+  <div class="sec-kicker">Os três canais</div>
+  <h2 class="sec-h rv">Cada canal tem<br><em>um papel.</em></h2>
+  <p class="sec-sub rv">O site é o jornalismo completo. O WhatsApp é a entrega direta. O Instagram é a descoberta. Juntos, constroem uma presença local sem precedentes em cidades que até então não tinham nenhuma cobertura jornalística.</p>
+
+  <div class="canal-grid">
+    <div class="canal-card canal-site rv">
+      <span class="canal-icon">🌐</span>
+      <div class="canal-role">Canal principal</div>
+      <div class="canal-name">Site do jornal</div>
+      <div class="canal-desc">O site é o centro de gravidade — onde a matéria completa vive, onde o SEO funciona, onde o arquivo de cobertura local cresce. Toda notícia publicada começa e existe permanentemente no site.</div>
+      <div class="canal-stat">
+        <div class="cstat"><strong>Arquivo permanente</strong> de toda a cobertura da cidade</div>
+        <div class="cstat"><strong>SEO local</strong> — aparece no Google para quem busca notícias da cidade</div>
+        <div class="cstat"><strong>Referência editorial</strong> — matéria completa, contexto, fontes</div>
+        <div class="cstat"><strong>Base de toda a distribuição</strong> — WA e IG sempre apontam para cá</div>
+      </div>
+    </div>
+    <div class="canal-card canal-wa rv rv-d1">
+      <span class="canal-icon">💬</span>
+      <div class="canal-role">Canal de fidelização</div>
+      <div class="canal-name">Canal do WhatsApp</div>
+      <div class="canal-desc">52% dos brasileiros recebem notícias pelo WhatsApp — à frente do Instagram e Facebook. O Canal do WhatsApp entrega a manchete diretamente no celular do leitor, sem algoritmo intermediário, com taxas de abertura de 60–80%.</div>
+      <div class="canal-stat">
+        <div class="cstat"><strong>Entrega direta</strong> — chega sem depender de feed ou algoritmo</div>
+        <div class="cstat"><strong>Breaking news exclusivo</strong> — inscritos sabem antes de qualquer um</div>
+        <div class="cstat"><strong>Alta fidelização</strong> — leitor do canal visita o site 4–6x mais</div>
+        <div class="cstat"><strong>Gratuito para o leitor</strong> — sem conta, sem cadastro, sem clique</div>
+      </div>
+    </div>
+    <div class="canal-card canal-ig rv rv-d2">
+      <span class="canal-icon">📸</span>
+      <div class="canal-role">Canal de descoberta</div>
+      <div class="canal-name">Instagram</div>
+      <div class="canal-desc">O Instagram cumpre o papel que o WhatsApp não consegue: alcançar quem ainda não conhece o jornal. Um card sobre a BMW ou o resultado de uma votação na Câmara pode ser compartilhado e viralizar entre moradores da cidade.</div>
+      <div class="canal-stat">
+        <div class="cstat"><strong>Alcance orgânico</strong> — notícias locais têm engajamento acima da média</div>
+        <div class="cstat"><strong>Conteúdo visual</strong> — cards gerados automaticamente para cada matéria</div>
+        <div class="cstat"><strong>Crescimento passivo</strong> — shares orgânicos constroem audiência</div>
+        <div class="cstat"><strong>Menor barreira de entrada</strong> — basta seguir, sem inscrição</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLEMENTARIDADE -->
+  <div class="compl-wrap rv">
+    <div class="compl-visual">
+      <div class="cv-ring cv-site">Site</div>
+      <div class="cv-ring cv-wa">WA</div>
+      <div class="cv-ring cv-ig">IG</div>
+      <div class="cv-line cvl-1"></div>
+      <div class="cv-line cvl-2"></div>
+      <div class="cv-multiplier">Os canais se reforçam — não competem</div>
+    </div>
+    <div class="compl-text">
+      <h3>1 + 1 + 1 &gt; 3</h3>
+      <p>Os três canais criam um efeito de audiência cruzada: o leitor que segue o jornal nos três lugares visita o site com muito mais frequência. Para a cidade, isso significa cobertura local que realmente chega às pessoas.</p>
+      <div class="compl-points">
+        <div class="cp"><div class="cp-dot cp-green"></div><div class="cp-text"><strong>WhatsApp traz de volta ao site.</strong> Cada mensagem enviada tem link para a matéria completa — o canal de maior abertura vira gerador de tráfego fidelizado.</div></div>
+        <div class="cp"><div class="cp-dot cp-pink"></div><div class="cp-text"><strong>Instagram traz gente nova.</strong> O share orgânico de um card bem feito alcança pessoas que nunca acessaram o site — e as converte em leitoras regulares.</div></div>
+        <div class="cp"><div class="cp-dot cp-blue"></div><div class="cp-text"><strong>Site alimenta os dois.</strong> Todo conteúdo começa no site — WA e IG distribuem o que o site produz, sem esforço editorial adicional.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-rule rv"></div>
+
+<!-- FLUXO DE ALCANCE -->
+<div class="section">
+  <div class="sec-kicker amber">Como o jornal chega ao seu público</div>
+  <h2 class="sec-h rv">De zero leitores<br>à referência local.</h2>
+  <div class="alcance-intro rv">
+    <p style="font-size:.92rem;color:rgba(255,255,255,.78);line-height:1.75;">Cada jornal começa do zero na sua cidade. A estratégia de crescimento de audiência é faseada: começar com o que custa zero, escalar com o que funciona e só depois investir em alcance pago.</p>
+  </div>
+
+  <div class="alcance-phases">
+
+    <div class="ap digital rv">
+      <div class="ap-left">
+        <div class="ap-period">Meses<br>1–2</div>
+        <div class="ap-label">Lançamento</div>
+      </div>
+      <div class="ap-track">
+        <div class="ap-node"></div>
+        <div class="ap-track-line"></div>
+      </div>
+      <div class="ap-right">
+        <div class="ap-type">Presença digital orgânica</div>
+        <div class="ap-title">Aparecer onde o leitor já está</div>
+        <div class="ap-desc">O primeiro passo é existir. O site entra no ar, o perfil do Instagram é criado, o Canal do WhatsApp é aberto. Nenhum custo de aquisição — o foco é configurar os canais, garantir qualidade editorial consistente e deixar o SEO trabalhar.</div>
+        <div class="ap-tactics">
+          <span class="tactic">Site no ar com domínio da cidade</span>
+          <span class="tactic">Perfil no Instagram criado</span>
+          <span class="tactic">Canal do WhatsApp aberto</span>
+          <span class="tactic">SEO local configurado</span>
+          <span class="tactic">Publicação diária desde o dia 1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ap organico rv">
+      <div class="ap-left">
+        <div class="ap-period">Meses<br>2–4</div>
+        <div class="ap-label">Crescimento orgânico</div>
+      </div>
+      <div class="ap-track">
+        <div class="ap-node"></div>
+        <div class="ap-track-line"></div>
+      </div>
+      <div class="ap-right">
+        <div class="ap-type">Crescimento gratuito</div>
+        <div class="ap-title">Conteúdo que as pessoas compartilham</div>
+        <div class="ap-desc">Notícias sobre temas de alto interesse local — vagas de emprego, resultados de votações na Câmara, licitações, alertas de clima — têm engajamento orgânico acima da média. Um card bem feito sobre a BMW ou sobre o resultado de uma licitação é compartilhado espontaneamente por moradores.</div>
+        <div class="ap-tactics">
+          <span class="tactic">Cards de vagas de emprego</span>
+          <span class="tactic">Votações da Câmara em formato visual</span>
+          <span class="tactic">Alertas de clima e Defesa Civil</span>
+          <span class="tactic">Breaking news exclusivo para inscritos do WA</span>
+          <span class="tactic">Conteúdo que responde perguntas locais</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ap presencial rv">
+      <div class="ap-left">
+        <div class="ap-period">Meses<br>3–5</div>
+        <div class="ap-label">Presença local</div>
+      </div>
+      <div class="ap-track">
+        <div class="ap-node"></div>
+        <div class="ap-track-line"></div>
+      </div>
+      <div class="ap-right">
+        <div class="ap-type">Materiais físicos pontuais</div>
+        <div class="ap-title">QR codes nos pontos certos</div>
+        <div class="ap-desc">Em poucos casos específicos e de alto impacto, materiais físicos simples aceleram a inscrição no Canal do WhatsApp. Não é uma estratégia de massa — é pontual, nos lugares onde o público-alvo já está.</div>
+        <div class="ap-tactics">
+          <span class="tactic">QR code para o Canal do WA em UBSs</span>
+          <span class="tactic">QR code na Câmara Municipal</span>
+          <span class="tactic">QR code em supermercados locais</span>
+          <span class="tactic">Cartão impresso para comércio local</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ap pago rv">
+      <div class="ap-left">
+        <div class="ap-period">Meses<br>4–6</div>
+        <div class="ap-label">Alcance pago</div>
+      </div>
+      <div class="ap-track">
+        <div class="ap-node"></div>
+        <div class="ap-track-line"></div>
+      </div>
+      <div class="ap-right">
+        <div class="ap-type">Impulsionamento seletivo</div>
+        <div class="ap-title">Pago apenas onde o orgânico não alcança</div>
+        <div class="ap-desc">A mídia paga entra de forma cirúrgica: impulsionar os posts de maior engajamento orgânico para ampliar o alcance sem desperdício. Meta Ads com segmentação geográfica precisa para a cidade é o principal veículo — orçamentos pequenos têm impacto alto em cidades com população concentrada.</div>
+        <div class="ap-tactics">
+          <span class="tactic">Meta Ads com segmentação geográfica da cidade</span>
+          <span class="tactic">Impulsionar posts de alto engajamento orgânico</span>
+          <span class="tactic">Stories patrocinados com link para o Canal WA</span>
+          <span class="tactic">Google Ads local para termos da cidade</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ap consolidado rv">
+      <div class="ap-left">
+        <div class="ap-period">Mês 6<br>em diante</div>
+        <div class="ap-label">Consolidação</div>
+      </div>
+      <div class="ap-track">
+        <div class="ap-node"></div>
+        <div class="ap-track-line"></div>
+      </div>
+      <div class="ap-right">
+        <div class="ap-type">Referência local estabelecida</div>
+        <div class="ap-title">O jornal vira hábito da cidade</div>
+        <div class="ap-desc">A partir do sexto mês, a audiência cresce por inércia: leitores indicam para conhecidos, o Google começa a posicionar o site para buscas locais, o Canal do WhatsApp cresce via compartilhamento espontâneo. A estratégia de aquisição se torna progressivamente menos necessária.</div>
+        <div class="ap-tactics">
+          <span class="tactic">SEO orgânico consolidado no Google</span>
+          <span class="tactic">Crescimento via indicação de leitores</span>
+          <span class="tactic">Newsletter semanal com resumo editorial</span>
+          <span class="tactic">Parcerias com associações locais</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sec-rule rv"></div>
+
+<!-- FORMATOS DE CONTEÚDO -->
+<div class="section">
+  <div class="sec-kicker">O que é distribuído</div>
+  <h2 class="sec-h rv">Conteúdo certo<br>no canal certo.</h2>
+  <p class="sec-sub rv">Cada canal recebe um formato específico de conteúdo, produzido automaticamente pelo sistema de agentes — sem esforço editorial adicional por canal.</p>
+
+  <div class="formatos-grid rv">
+    <div class="formato-card">
+      <div class="fc-icon">📰</div>
+      <div class="fc-body">
+        <div class="fc-tag">Site</div>
+        <div class="fc-title">Matéria completa</div>
+        <div class="fc-desc">Texto jornalístico completo com contexto, fontes citadas e links. Permanece no arquivo do site indefinidamente.</div>
+      </div>
+    </div>
+    <div class="formato-card">
+      <div class="fc-icon">⚡</div>
+      <div class="fc-body">
+        <div class="fc-tag">WhatsApp</div>
+        <div class="fc-title">Alerta de breaking news</div>
+        <div class="fc-desc">Mensagem curta com a manchete, o essencial e o link para a matéria completa. Entregue em minutos após o evento.</div>
+      </div>
+    </div>
+    <div class="formato-card">
+      <div class="fc-icon">🃏</div>
+      <div class="fc-body">
+        <div class="fc-tag">Instagram</div>
+        <div class="fc-title">Card visual da notícia</div>
+        <div class="fc-desc">Arte gerada automaticamente com manchete, categoria e identidade visual do jornal. Formatada para feed e stories.</div>
+      </div>
+    </div>
+    <div class="formato-card">
+      <div class="fc-icon">📊</div>
+      <div class="fc-body">
+        <div class="fc-tag">Instagram</div>
+        <div class="fc-title">Carrossel de dados</div>
+        <div class="fc-desc">Para matérias com dados públicos relevantes — votações, licitações, indicadores — carrossel visual com múltiplos slides.</div>
+      </div>
+    </div>
+    <div class="formato-card">
+      <div class="fc-icon">📋</div>
+      <div class="fc-body">
+        <div class="fc-tag">WhatsApp · Site</div>
+        <div class="fc-title">Resumo diário</div>
+        <div class="fc-desc">Compilação das principais notícias do dia, enviada à noite pelo WhatsApp com link para a versão completa no site.</div>
+      </div>
+    </div>
+    <div class="formato-card">
+      <div class="fc-icon">✉️</div>
+      <div class="fc-body">
+        <div class="fc-tag">Newsletter</div>
+        <div class="fc-title">Resumo semanal</div>
+        <div class="fc-desc">Newsletter semanal com as matérias mais relevantes da semana. Enviada toda segunda-feira às 7h para assinantes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout-destaque rv">
+    <div class="cd-text">
+      <div class="cd-label">Automação total</div>
+      <div class="cd-h">Publicado no site. Enviado no WA. Postado no IG. Ao mesmo tempo.</div>
+      <div class="cd-p">Quando uma matéria é aprovada pelo pipeline editorial, o sistema distribui simultaneamente nos três canais — sem intervenção humana. O Agente Publicador usa a Ghost API para o site, o WhatsApp Business API para o canal e o Bannerbear para gerar o card do Instagram via Instagram Graph API.</div>
+    </div>
+    <div class="cd-stat">
+      <div class="cd-n">&lt;3min</div>
+      <div class="cd-nl">Do evento à<br>publicação nos<br>3 canais</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-rule rv"></div>
+
+<!-- DADOS DE CONTEXTO -->
+<div class="section">
+  <div class="sec-kicker">Por que esses canais</div>
+  <h2 class="sec-h rv">O Brasil lê<br><em>pelo celular.</em></h2>
+  <p class="sec-sub rv">A escolha dos três canais não é arbitrária. É baseada em dados do Reuters Institute Digital News Report 2025, o maior levantamento global sobre hábitos de consumo de notícias.</p>
+
+  <div class="canal-grid rv">
+    <div class="canal-card canal-wa">
+      <span class="canal-icon">💬</span>
+      <div class="canal-role">Dado Reuters Institute 2025</div>
+      <div class="canal-name">52%</div>
+      <div class="canal-desc">dos brasileiros recebem notícias pelo WhatsApp — o segundo canal mais usado no país, atrás apenas do YouTube (55%). É o único que entrega diretamente, sem o leitor precisar abrir nada.</div>
+      <div class="canal-stat">
+        <div class="cstat">Taxa de abertura de mensagens: <strong>60–80%</strong></div>
+        <div class="cstat">vs. newsletter por email: <strong>20–25%</strong></div>
+      </div>
+    </div>
+    <div class="canal-card canal-ig">
+      <span class="canal-icon">📸</span>
+      <div class="canal-role">Dado Reuters Institute 2025</div>
+      <div class="canal-name">39%</div>
+      <div class="canal-desc">dos brasileiros recebem notícias pelo Instagram — o canal que mais cresceu em 2024. Para portais locais, o alcance orgânico de posts sobre a própria cidade chega a 18% dos seguidores.</div>
+      <div class="canal-stat">
+        <div class="cstat">Portais catarinenses locais: <strong>0 a 10k seguidores</strong> em 18 meses</div>
+        <div class="cstat">Apenas com posts orgânicos de notícias locais</div>
+      </div>
+    </div>
+    <div class="canal-card canal-site">
+      <span class="canal-icon">🔍</span>
+      <div class="canal-role">Busca orgânica</div>
+      <div class="canal-name">Google</div>
+      <div class="canal-desc">Em cidades sem portal local, qualquer busca pelo nome da cidade + assunto (obras, câmara, dengue) não tem resultado relevante. O primeiro portal local a existir ocupa automaticamente essa posição — sem concorrência.</div>
+      <div class="canal-stat">
+        <div class="cstat">Zero concorrência local em cidades deserto</div>
+        <div class="cstat">SEO local é o canal de aquisição de <strong>menor custo</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">Press<span>AI</span></div>
+  <div class="ft-meta">Modelo de distribuição · PressAI · 2026</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

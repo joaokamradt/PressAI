@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Documentação Técnica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#070B14; --ink2:#0D1220; --ink3:#141e32;
+  --blue:#1A6EFF; --blue2:#0052CC;
+  --blue-dim:rgba(26,110,255,.1); --blue-b:rgba(26,110,255,.2);
+  --green:#10B981; --amber:#F59E0B; --red:#EF4444;
+  --white:#fff;
+  --t1:#fff;
+  --t2:rgba(255,255,255,.88);
+  --t3:rgba(255,255,255,.72);
+  --t4:rgba(255,255,255,.52);
+  --t5:rgba(255,255,255,.35);
+  --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.05);
+  --d:'Syne',sans-serif;
+  --b:'IBM Plex Sans',system-ui,sans-serif;
+  --m:'IBM Plex Mono',monospace;
+  --sidebar:280px;
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:var(--b);background:var(--ink);color:var(--t2);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:52px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  background:rgba(7,11,20,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.tb-logo{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;color:var(--white);}
+.tb-logo span{color:var(--blue);}
+.tb-doc{font-family:var(--m);font-size:.6rem;color:var(--t4);letter-spacing:.1em;text-transform:uppercase;}
+.tb-badge{font-family:var(--m);font-size:.6rem;padding:4px 12px;border-radius:20px;background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-b);letter-spacing:.06em;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;padding-top:52px;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  position:fixed;top:52px;left:0;bottom:0;
+  background:var(--ink2);border-right:1px solid var(--border);
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent;
+}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);}
+
+.sb-doc-info{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border);}
+.sb-doc-tag{font-family:var(--m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t5);margin-bottom:.35rem;}
+.sb-doc-title{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.3px;color:var(--white);line-height:1.2;}
+.sb-doc-ver{font-family:var(--m);font-size:.55rem;color:var(--t5);margin-top:.3rem;}
+
+.sb-nav{padding:.5rem 0 1rem;}
+.sb-section-label{
+  font-family:var(--m);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t5);padding:.75rem 1.5rem .3rem;
+}
+.sb-link{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.42rem 1.5rem;font-size:.8rem;color:var(--t4);
+  transition:color .14s,background .14s;cursor:pointer;
+  border-left:2px solid transparent;margin-left:.25rem;
+  line-height:1.35;
+}
+.sb-link:hover{color:var(--t2);background:rgba(255,255,255,.03);}
+.sb-link.on{color:var(--white);border-color:var(--blue);background:rgba(26,110,255,.06);}
+.sb-link .sb-num{font-family:var(--m);font-size:.55rem;color:var(--t5);flex-shrink:0;letter-spacing:.04em;margin-top:1px;}
+.sb-link.on .sb-num{color:var(--blue);}
+.sb-link.sub{padding-left:2.25rem;font-size:.75rem;}
+
+/* ── MAIN CONTENT ── */
+.content{
+  margin-left:var(--sidebar);flex:1;
+  max-width:800px;padding:3.5rem 4rem 6rem;
+}
+
+/* ── SECTION ── */
+.doc-section{margin-bottom:4rem;padding-bottom:4rem;border-bottom:1px solid var(--border2);}
+.doc-section:last-child{border-bottom:none;}
+
+.sec-eyebrow{
+  font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:.75rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.sec-eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue);}
+.sec-h1{
+  font-family:var(--d);font-size:clamp(1.75rem,3vw,2.5rem);
+  font-weight:800;letter-spacing:-1.5px;line-height:1.05;
+  color:var(--white);margin-bottom:.75rem;
+}
+.sec-h1 em{font-style:normal;color:var(--blue);}
+.sec-intro{
+  font-size:1rem;color:var(--t2);line-height:1.75;
+  margin-bottom:2rem;max-width:640px;
+  border-left:2px solid rgba(26,110,255,.3);
+  padding-left:1rem;
+}
+
+/* ── TYPOGRAPHY ── */
+h2{font-family:var(--d);font-size:1.2rem;font-weight:700;letter-spacing:-.5px;color:var(--white);margin:2.5rem 0 .75rem;}
+h3{font-family:var(--d);font-size:.98rem;font-weight:700;letter-spacing:-.3px;color:var(--white);margin:2rem 0 .6rem;}
+h4{font-family:var(--m);font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin:1.5rem 0 .5rem;}
+p{font-size:.9rem;color:var(--t3);line-height:1.78;margin-bottom:1.1rem;}
+p strong{color:var(--t2);font-weight:600;}
+p em{color:var(--t2);font-style:italic;}
+
+/* ── LISTS ── */
+ul,ol{margin:.5rem 0 1.1rem;padding-left:1.25rem;}
+li{font-size:.88rem;color:var(--t3);line-height:1.72;margin-bottom:.3rem;}
+li strong{color:var(--t2);}
+
+/* ── CALLOUT BOXES ── */
+.callout{
+  border-radius:8px;padding:1rem 1.25rem;
+  margin:1.5rem 0;border-left:3px solid;
+}
+.callout-blue{background:rgba(26,110,255,.07);border-color:var(--blue);}
+.callout-green{background:rgba(16,185,129,.07);border-color:var(--green);}
+.callout-amber{background:rgba(245,158,11,.07);border-color:var(--amber);}
+.callout-red{background:rgba(239,68,68,.07);border-color:var(--red);}
+.callout-title{font-family:var(--m);font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.callout-blue  .callout-title{color:var(--blue);}
+.callout-green .callout-title{color:var(--green);}
+.callout-amber .callout-title{color:var(--amber);}
+.callout-red   .callout-title{color:var(--red);}
+.callout p{color:var(--t3);margin-bottom:.5rem;font-size:.85rem;}
+.callout p:last-child{margin-bottom:0;}
+.callout ul{margin:.35rem 0;}
+.callout li{font-size:.83rem;}
+
+/* ── CODE / MONO ── */
+code{font-family:var(--m);font-size:.82rem;background:rgba(255,255,255,.07);padding:1px 6px;border-radius:4px;color:rgba(255,255,255,.82);}
+.code-block{
+  background:rgba(0,0,0,.4);border:1px solid var(--border);
+  border-radius:8px;padding:1rem 1.25rem;
+  font-family:var(--m);font-size:.78rem;line-height:1.7;
+  color:rgba(255,255,255,.75);overflow-x:auto;margin:1.25rem 0;
+}
+.code-block .cm{color:rgba(255,255,255,.3);}
+.code-block .ck{color:#79B8FF;}
+.code-block .cv{color:#B392F0;}
+.code-block .cs{color:#9ECBFF;}
+
+/* ── TABELA ── */
+.doc-table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.83rem;}
+.doc-table th{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);padding:.6rem .9rem;text-align:left;border-bottom:1px solid rgba(26,110,255,.2);background:rgba(26,110,255,.04);}
+.doc-table td{padding:.55rem .9rem;color:var(--t3);border-bottom:1px solid var(--border2);vertical-align:top;}
+.doc-table tr:last-child td{border-bottom:none;}
+.doc-table td strong{color:var(--t2);}
+.doc-table td code{font-size:.75rem;}
+
+/* ── SPEC CARDS ── */
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.25rem 0;}
+.spec-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;}
+.spec-card-label{font-family:var(--m);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t5);margin-bottom:.35rem;}
+.spec-card-val{font-size:.88rem;color:var(--t2);font-weight:500;line-height:1.4;}
+.spec-card-sub{font-size:.75rem;color:var(--t4);margin-top:.25rem;}
+
+/* ── PIPELINE VISUAL ── */
+.pipeline{display:flex;flex-direction:column;gap:0;margin:1.5rem 0;}
+.pipe-step-doc{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:.85rem 1rem;background:rgba(255,255,255,.025);
+  border:1px solid var(--border2);border-radius:0;
+  position:relative;
+}
+.pipe-step-doc:first-child{border-radius:8px 8px 0 0;}
+.pipe-step-doc:last-child{border-radius:0 0 8px 8px;}
+.pipe-step-doc+.pipe-step-doc{border-top:none;}
+.pipe-step-doc:hover{background:rgba(26,110,255,.04);}
+.ps-num{font-family:var(--m);font-size:.6rem;font-weight:500;color:var(--blue);flex-shrink:0;padding-top:2px;min-width:22px;}
+.ps-content{flex:1;}
+.ps-title{font-size:.88rem;font-weight:500;color:var(--t2);margin-bottom:.2rem;}
+.ps-desc{font-size:.78rem;color:var(--t4);line-height:1.5;}
+.ps-badge{font-family:var(--m);font-size:.55rem;padding:2px 8px;border-radius:8px;flex-shrink:0;}
+.psb-opus{background:rgba(26,110,255,.12);color:var(--blue);}
+.psb-sonnet{background:rgba(16,185,129,.12);color:var(--green);}
+.psb-n8n{background:rgba(245,158,11,.1);color:var(--amber);}
+
+/* ── SEPARADOR ── */
+.doc-rule{height:1px;background:var(--border2);margin:2.5rem 0;}
+
+/* ── INLINE METRIC ── */
+.metric-inline{display:inline-flex;align-items:baseline;gap:.25rem;font-family:var(--d);font-size:1.1rem;font-weight:800;letter-spacing:-.5px;color:var(--blue);}
+
+/* ── FOOTER ── */
+.doc-footer{
+  margin-left:var(--sidebar);
+  padding:1.25rem 4rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.df-logo{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.5px;color:var(--t4);}
+.df-logo span{color:var(--blue);}
+.df-meta{font-family:var(--m);font-size:.58rem;color:var(--t5);}
+
+@media(max-width:900px){
+  :root{--sidebar:0px;}
+  .sidebar{display:none;}
+  .content,.doc-footer{margin-left:0;padding-left:1.5rem;padding-right:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-logo">Press<span>AI</span></div>
+  <div class="tb-doc">Documentação Técnica</div>
+  <div class="tb-badge">v1.0 · Março 2026</div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-doc-info">
+    <div class="sb-doc-tag">PressAI · Technical Whitepaper</div>
+    <div class="sb-doc-title">Jornal Autônomo com IA</div>
+    <div class="sb-doc-ver">Versão 1.0 · Confidencial · Março 2026</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Visão Geral</div>
+    <a class="sb-link on" href="#resumo" onclick="setActive(this)"><span class="sb-num">01</span>Resumo executivo</a>
+    <a class="sb-link" href="#contexto" onclick="setActive(this)"><span class="sb-num">02</span>Contexto e problema</a>
+    <a class="sb-link" href="#solucao" onclick="setActive(this)"><span class="sb-num">03</span>A solução PressAI</a>
+
+    <div class="sb-section-label">Arquitetura</div>
+    <a class="sb-link" href="#arquitetura" onclick="setActive(this)"><span class="sb-num">04</span>Arquitetura multi-agente</a>
+    <a class="sb-link sub" href="#dept-editorial" onclick="setActive(this)"><span class="sb-num">↳</span>Dept. Editorial</a>
+    <a class="sb-link sub" href="#dept-coleta" onclick="setActive(this)"><span class="sb-num">↳</span>Dept. Coleta</a>
+    <a class="sb-link sub" href="#dept-redacao" onclick="setActive(this)"><span class="sb-num">↳</span>Dept. Redação</a>
+    <a class="sb-link sub" href="#dept-verificacao" onclick="setActive(this)"><span class="sb-num">↳</span>Dept. Verificação</a>
+    <a class="sb-link sub" href="#dept-distribuicao" onclick="setActive(this)"><span class="sb-num">↳</span>Dept. Distribuição</a>
+    <a class="sb-link" href="#pipeline" onclick="setActive(this)"><span class="sb-num">05</span>Pipeline editorial</a>
+    <a class="sb-link" href="#anti-alucinacao" onclick="setActive(this)"><span class="sb-num">06</span>Anti-alucinação</a>
+
+    <div class="sb-section-label">Infraestrutura</div>
+    
+    
+    <a class="sb-link" href="#canais" onclick="setActive(this)"><span class="sb-num">07</span>Canais de distribuição</a>
+
+    <div class="sb-section-label">Mercado</div>
+    <a class="sb-link" href="#mercado" onclick="setActive(this)"><span class="sb-num">08</span>Mercado endereçável</a>
+    
+    
+    
+    <a class="sb-link" href="#piloto" onclick="setActive(this)"><span class="sb-num">09</span>Piloto: Araquari</a>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<main class="content">
+
+<!-- 01 RESUMO EXECUTIVO -->
+<div class="doc-section" id="resumo">
+  <div class="sec-eyebrow">01 — Resumo executivo</div>
+  <h1 class="sec-h1">PressAI:<br><em>jornalismo local</em><br>em escala nacional.</h1>
+  <p class="sec-intro">A PressAI é uma plataforma que opera redações jornalísticas autônomas em municípios brasileiros sem cobertura local. Cada jornal é gerenciado por uma arquitetura de 41 agentes de IA organizados em 9 departamentos, capaz de produzir e publicar jornalismo factual, verificado e distribuído — sem intervenção humana no ciclo de publicação.</p>
+
+  <p>O Brasil tem <strong>4.312 municípios</strong> sem jornalismo local adequado. São 2.504 desertos completos e 1.808 quase-desertos, com apenas um ou dois veículos frágeis. Nesses municípios, licitações irregulares passam sem registro, decisões da câmara ocorrem sem testemunhas e eventos de interesse público somem sem memória.</p>
+
+  <p>O modelo econômico do jornalismo local tradicional nunca fechou para cidades pequenas: custo de redação humana inviável, base de anunciantes insuficiente. A PressAI resolve essa equação com arquitetura de IA que opera com custo marginal decrescente e se torna mais eficiente conforme a rede de jornais cresce.</p>
+
+  <div class="spec-grid">
+    <div class="spec-card"><div class="spec-card-label">Agentes por jornal</div><div class="spec-card-val">41 agentes</div><div class="spec-card-sub">9 departamentos especializados</div></div>
+    <div class="spec-card"><div class="spec-card-label">Tempo médio de publicação</div><div class="spec-card-val">&lt; 3 minutos</div><div class="spec-card-sub">Do evento à matéria no ar</div></div>
+
+    <div class="spec-card"><div class="spec-card-label">Mercado endereçável</div><div class="spec-card-val">4.312 municípios</div><div class="spec-card-sub">Desertos e quase-desertos — Atlas 2025</div></div>
+  </div>
+</div>
+
+<!-- 02 CONTEXTO -->
+<div class="doc-section" id="contexto">
+  <div class="sec-eyebrow">02 — Contexto e problema</div>
+  <h1 class="sec-h1">O silêncio que <em>ninguém resolve.</em></h1>
+  <p class="sec-intro">O Atlas da Notícia 2025, levantamento do Projor/Volt Data Lab, documenta a extensão da crise de jornalismo local brasileiro. Os dados são precisos e graves.</p>
+
+  <h2>O ecossistema de mídia local no Brasil</h2>
+  <p>O Brasil tem <strong>5.570 municípios</strong>. De acordo com o Atlas da Notícia 2025, 7ª edição, 44,9% deles não possuem nenhum veículo jornalístico identificado. São os chamados <strong>desertos de notícia</strong>.</p>
+
+  <table class="doc-table">
+    <thead><tr><th>Categoria</th><th>Municípios</th><th>% do total</th><th>População sem cobertura</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Desertos totais</strong> — zero veículos</td><td>2.504</td><td>44,9%</td><td>20,66 milhões</td></tr>
+      <tr><td><strong>Quase-desertos</strong> — 1–2 veículos</td><td>1.808</td><td>32,5%</td><td>— </td></tr>
+      <tr><td><strong>Não-desertos</strong> — 3+ veículos</td><td>1.258</td><td>22,6%</td><td>— </td></tr>
+      <tr><td><strong>Veículos online fechados desde 2020</strong></td><td>651</td><td>—</td><td>334 só entre 2023–25</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Por que o modelo tradicional falha</h2>
+  <p>O jornalismo local tradicional exige uma estrutura mínima de pessoal que é economicamente inviável para a maioria dos municípios brasileiros. A base de anunciantes disponível em cidades pequenas e médias não sustenta uma redação com cobertura consistente — resultando no fechamento ou não-abertura de veículos.</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-title">A equação que nunca fechou</div>
+    <p>O jornalismo local tradicional exige estrutura mínima de pessoal incompatível com a base de anunciantes disponível em cidades pequenas. O resultado: portais fecham, outros nunca abrem, e a cobertura dessas cidades desaparece.</p>
+  </div>
+
+  <h2>Distribuição geográfica dos desertos</h2>
+  <table class="doc-table">
+    <thead><tr><th>Região</th><th>Desertos</th><th>% dos municípios</th><th>População sem jornal</th></tr></thead>
+    <tbody>
+      <tr><td>Nordeste</td><td>890</td><td>49,6%</td><td>~8,5 milhões</td></tr>
+      <tr><td>Sudeste</td><td>830</td><td>49,8%</td><td>~5,2 milhões</td></tr>
+      <tr><td>Sul</td><td>457</td><td>38,0%</td><td>~2,2 milhões</td></tr>
+      <tr><td>Norte</td><td>193</td><td>42,9%</td><td>~2,8 milhões</td></tr>
+      <tr><td>Centro-Oeste</td><td>134</td><td>28,7%</td><td>~1,9 milhões</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 03 SOLUÇÃO -->
+<div class="doc-section" id="solucao">
+  <div class="sec-eyebrow">03 — A solução PressAI</div>
+  <h1 class="sec-h1">Uma redação autônoma para <em>cada cidade.</em></h1>
+  <p class="sec-intro">A PressAI opera jornais locais completos usando arquitetura de agentes de IA. Cada jornal cobre sua cidade como um veículo real: monitora fontes, decide pautas, produz matérias verificadas, publica e distribui — continuamente, sem equipe editorial humana.</p>
+
+  <h2>Princípios de design do sistema</h2>
+  <ul>
+    <li><strong>Fonte-anchored generation.</strong> Nenhuma palavra publicada sem referência a documento primário verificável — DOM, ata de câmara, nota oficial ou base de dados pública.</li>
+    <li><strong>Separação de responsabilidades.</strong> Cada agente tem uma função editorial específica. Decisão editorial (Editor-chefe), execução (Gestor de Pauta), redação, revisão, verificação e publicação são funções isoladas com interfaces bem definidas.</li>
+    <li><strong>Operação sem supervisão humana.</strong> O sistema V1 opera de forma completamente autônoma. Não há aprovação manual, não há Telegram Bot de confirmação, não há revisão humana obrigatória no fluxo padrão.</li>
+    <li><strong>Arquitetura multi-cidade.</strong> Toda configuração específica de cidade é isolada no objeto <code>CITY_CONFIG</code>. Trocar de cidade = substituir esse objeto. Os 41 agentes e todos os workflows permanecem idênticos.</li>
+    <li><strong>Tolerância a falhas.</strong> Cada etapa do pipeline tem timeout, retry com backoff exponencial e estados persistidos no Supabase. Uma falha num ciclo não perde o contexto editorial anterior.</li>
+  </ul>
+
+  <div class="callout callout-green">
+    <div class="callout-title">V1 — Restrições editoriais da primeira versão</div>
+    <p><strong>Sem colunas de opinião.</strong> Opinião requer persona consolidada e curadoria editorial humana — indisponível no lançamento.</p>
+    <p><strong>Sem reportagens que exijam entrevistas.</strong> Toda matéria é produzida a partir de fontes documentais: DOM, Câmara, portais oficiais, dados públicos, releases de assessoria.</p>
+    <p><strong>Sem tipos proibidos:</strong> perfis pessoais, investigações dependentes de entrevista, conteúdo que não possa ser sustentado por documento primário.</p>
+  </div>
+</div>
+
+<!-- 04 ARQUITETURA -->
+<div class="doc-section" id="arquitetura">
+  <div class="sec-eyebrow">04 — Arquitetura multi-agente</div>
+  <h1 class="sec-h1"><em>41 agentes.</em><br>9 departamentos.</h1>
+  <p class="sec-intro">O sistema é organizado em 9 departamentos funcionais, cada um com agentes especializados, triggers definidos e interfaces de entrada/saída bem especificadas. A comunicação entre agentes ocorre via tabelas Supabase e webhooks n8n.</p>
+
+  <table class="doc-table">
+    <thead><tr><th>#</th><th>Departamento</th><th>Agentes</th><th>Função central</th></tr></thead>
+    <tbody>
+      <tr><td>01</td><td><strong>Direção Editorial</strong></td><td>4</td><td>Decisão editorial, triagem e gestão de pauta</td></tr>
+      <tr><td>02</td><td><strong>Coleta</strong></td><td>5</td><td>Monitoramento de fontes públicas e scraping</td></tr>
+      <tr><td>03</td><td><strong>Verificação e Ranking</strong></td><td>4</td><td>Gatekeeper jornalístico e hierarquização</td></tr>
+      <tr><td>04</td><td><strong>Redação</strong></td><td>7</td><td>Produção de matérias por gênero editorial</td></tr>
+      <tr><td>05</td><td><strong>Revisão e Fact-Check</strong></td><td>5</td><td>Correção linguística e verificação factual</td></tr>
+      <tr><td>06</td><td><strong>Mídia e Visual</strong></td><td>4</td><td>Cards de Instagram, thumbnails e infográficos</td></tr>
+      <tr><td>07</td><td><strong>Distribuição</strong></td><td>5</td><td>SEO, publicação e distribuição multicanal</td></tr>
+      <tr><td>08</td><td><strong>Comercial</strong></td><td>4</td><td>Prospecção de anunciantes e relatórios</td></tr>
+      <tr><td>09</td><td><strong>Infraestrutura</strong></td><td>3</td><td>Monitoramento, backup e gestão de erros</td></tr>
+    </tbody>
+  </table>
+
+  <div class="doc-rule"></div>
+  <h2 id="dept-editorial">Departamento 01 — Direção Editorial</h2>
+  <p>O departamento de direção editorial é o núcleo decisório do sistema. Opera com 4 agentes: <strong>Editor-chefe</strong>, <strong>Gestor de Pauta</strong>, <strong>Curador de Fontes</strong> e <strong>Analista de Performance</strong>.</p>
+
+  <h3>Agente 01 — Editor-chefe</h3>
+  <p>O Editor-chefe é o agente de maior hierarquia do sistema. É o agente de maior hierarquia decisória do sistema, com acesso de leitura ao estado completo da redação. É o único agente com autoridade para definir prioridade editorial e tipo de matéria.</p>
+
+  <p>Executa 7 atividades distintas a cada ciclo: leitura do estado do sistema, decisão de prioridade editorial, atribuição de tipo de matéria, monitoramento de matérias em revisão, decisão sobre breaking news, avaliação de performance e geração de relatório de ciclo.</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-title">Matriz de priorização editorial</div>
+    <p><strong>CRÍTICO (até 15 min):</strong> Evento que afeta segurança, mobilidade ou saúde imediatamente. Alertas de defesa civil, interdições, emergências de saúde pública.</p>
+    <p><strong>ALTA (até 1h):</strong> Sessão da câmara com votação de impacto, decretos publicados no dia, licitações abertas de obras relevantes.</p>
+    <p><strong>MÉDIA (até 3h):</strong> Concursos públicos, atualizações de obras, dados com recorte local, eventos comunitários.</p>
+    <p><strong>PADRÃO (até 6h):</strong> Releases de assessoria, notas de secretarias sem urgência, matérias de contexto documental.</p>
+  </div>
+
+  <h4>Schedule de execução</h4>
+  <table class="doc-table">
+    <thead><tr><th>Período</th><th>Cron</th><th>Ciclos/dia</th></tr></thead>
+    <tbody>
+      <tr><td>Dias úteis (seg–sex)</td><td><code>0 6-23 * * 1-5</code></td><td>18 ciclos</td></tr>
+      <tr><td>Fins de semana</td><td><code>0 7-21/2 * * 0,6</code></td><td>8 ciclos</td></tr>
+      <tr><td>Feriados (tabela Supabase)</td><td>Aplica schedule FDS</td><td>8 ciclos</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Agente 02 — Gestor de Pauta</h3>
+  <p>O Gestor de Pauta é event-driven: dispara imediatamente após o Editor-chefe gravar o <code>ciclo_report</code> no Supabase via webhook n8n. Opera com latência alvo de menos de 90 segundos por ciclo.</p>
+
+  <p>Converte as decisões editoriais do Editor-chefe em <code>pauta_requests</code> completas: enriquece contexto buscando documentos relacionados no Supabase, define fonte primária, sugere ângulo de abordagem e encaminha para o redator adequado.</p>
+
+  <div class="doc-rule"></div>
+  <h2 id="dept-coleta">Departamento 02 — Coleta</h2>
+  <p>O departamento de coleta opera com 5 agentes de monitoramento contínuo. Cada agente é responsável por um conjunto específico de fontes. O ciclo padrão de coleta é a cada <strong>60 minutos</strong> para fontes primárias e a cada <strong>30 minutos</strong> para alertas de defesa civil e segurança pública.</p>
+
+  <h4>Fontes monitoradas — configuração Araquari</h4>
+  <ul>
+    <li>Diário Oficial do Município de SC (DOM/SC) — atos, decretos, licitações, portarias</li>
+    <li>Câmara Municipal de Araquari — pautas de sessão, votações, atas publicadas</li>
+    <li>Portal de Transparência da Prefeitura — contratos, despesas, licitações PNCP</li>
+    <li>Boletins da Polícia Militar SC e Corpo de Bombeiros</li>
+    <li>Portal NSC e A Notícia — cobertura regional com menção a Araquari</li>
+    <li>Perfis públicos de vereadores e secretários municipais</li>
+    <li>Alertas INMET e Defesa Civil SC — webhook de emergência</li>
+  </ul>
+
+  <div class="callout callout-amber">
+    <div class="callout-title">Webhook de emergência</div>
+    <p>Eventos críticos (alertas INMET, Defesa Civil, boletins de acidente em rodovias federais) disparam um webhook separado que bypassa o ciclo normal e aciona diretamente o pipeline de breaking news — independente do schedule horário.</p>
+  </div>
+
+  <div class="doc-rule"></div>
+  <h2 id="dept-redacao">Departamento 04 — Redação</h2>
+  <p>O departamento de redação opera com 7 agentes especializados por gênero editorial. Cada agente tem persona própria, instrução de estilo específica e parâmetros de temperatura calibrados para o tipo de texto que produz.</p>
+
+  <table class="doc-table">
+    <thead><tr><th>Agente</th><th>Extensão típica</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Redator Hard News</strong></td><td>300–500 palavras</td><td>Fato novo, objetivo, fonte documental</td></tr>
+      <tr><td><strong>Redator Breaking News</strong></td><td>100–150 palavras</td><td>Evento em curso, atualizado em ciclos</td></tr>
+      <tr><td><strong>Redator Jornalismo de Dados</strong></td><td>500–1.200 palavras</td><td>Pauta baseada em planilha ou comparação quantitativa</td></tr>
+      <tr><td><strong>Redator de Serviço</strong></td><td>150–300 palavras</td><td>Concursos, calendários, procedimentos</td></tr>
+    </tbody>
+  </table>
+
+  <p>Todos os redatores seguem o princípio de <strong>source-anchored generation</strong>: cada afirmação factual é acompanhada de referência ao documento de origem no <code>pauta_request</code>. Afirmações sem fonte documental disponível são proibidas.</p>
+
+  <div class="doc-rule"></div>
+  <h2 id="dept-verificacao">Departamento 05 — Revisão e Fact-Check</h2>
+  <p>Dois agentes operam em sequência obrigatória antes de qualquer publicação: <strong>Revisor Linguístico</strong> e <strong>Fact Checker</strong>.</p>
+
+  <h3>Revisor Linguístico</h3>
+  <p>Verifica gramática, coerência textual, adequação de estilo ao manual editorial e comprimento. Pode retornar o rascunho ao redator com anotações, mas não tem autoridade para bloquear a publicação — apenas o Fact Checker pode.</p>
+
+  <h3>Fact Checker</h3>
+  <p>É o único agente com autoridade de veto. Verifica dados numéricos, nomes de pessoas e cargos, datas, valores orçamentários e afirmações factuais contra fontes externas via busca web. Atribui <strong>confidence score</strong> a cada dado verificado.</p>
+
+  <div class="callout callout-red">
+    <div class="callout-title">Regra de veto do Fact Checker</div>
+    <p>Se qualquer dado crítico (valor em R$, nome de cargo, resultado de votação, dado epidemiológico) não puder ser verificado com confidence score ≥ 0.85, o Fact Checker emite flag <code>NEEDS_HUMAN_REVIEW</code> e a matéria é pausada. Não é descartada — aguarda em fila de revisão com anotação da dúvida específica.</p>
+  </div>
+
+  <div class="doc-rule"></div>
+  <h2 id="dept-distribuicao">Departamento 07 — Distribuição</h2>
+  <p>Após aprovação do Fact Checker, o pipeline de distribuição é acionado automaticamente com 3 etapas: SEO, publicação no CMS e distribuição multicanal.</p>
+
+  <h3>Agente SEO</h3>
+  <p>Gera slug semântico, meta description (150–160 caracteres), tags temáticas, headline SEO alternativa (quando a editorial não é otimizada para busca) e markup <code>schema.org/NewsArticle</code> completo com <code>datePublished</code>, <code>author</code>, <code>publisher</code> e <code>articleBody</code>.</p>
+
+  <h3>Agente Publicador</h3>
+  <p>Usa Ghost Admin API v3 para publicação no site. Após confirmação do Ghost (status 201), dispara em paralelo: envio ao Canal do WhatsApp (WABA), geração de card para Instagram via Bannerbear e envio para fila da newsletter semanal no Beehiiv.</p>
+</div>
+
+<!-- 05 PIPELINE -->
+<div class="doc-section" id="pipeline">
+  <div class="sec-eyebrow">05 — Pipeline editorial</div>
+  <h1 class="sec-h1">Do evento à<br><em>publicação.</em></h1>
+  <p class="sec-intro">O pipeline completo de produção editorial, do trigger inicial ao conteúdo publicado nos três canais. Tempo médio end-to-end: 90 segundos a 3 minutos para hard news padrão.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step-doc">
+      <div class="ps-num">01</div>
+      <div class="ps-content">
+        <div class="ps-title">Schedule Trigger (n8n cron)</div>
+        <div class="ps-desc">Dispara o ciclo editorial conforme schedule definido. Em emergências, webhook bypassa o cron e aciona breaking news diretamente.</div>
+      </div>
+      <span class="ps-badge psb-n8n">Orquestrador</span>
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">02</div>
+      <div class="ps-content">
+        <div class="ps-title">Agentes de Coleta — varredura de fontes</div>
+        <div class="ps-desc">5 monitores rastreiam fontes públicas em paralelo. Output: <code>raw_items</code> no Supabase com URL, título, data e texto bruto.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">03</div>
+      <div class="ps-content">
+        <div class="ps-title">Gatekeeper Editorial — triagem jornalística</div>
+        <div class="ps-desc">Avalia cada item: tem valor jornalístico? Tem relevância local? Não é duplicata? Output: <code>ranked_queue</code> com score de prioridade.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">04</div>
+      <div class="ps-content">
+        <div class="ps-title">Editor-chefe — decisão editorial</div>
+        <div class="ps-desc">Lê o estado completo do sistema e decide: o que cobrir neste ciclo, qual ângulo, qual tipo de matéria, qual prioridade. Output: <code>editorial_decisions</code>.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">05</div>
+      <div class="ps-content">
+        <div class="ps-title">Gestor de Pauta — construção da pauta</div>
+        <div class="ps-desc">Enriquece a decisão editorial com contexto documental do Supabase, define fonte primária e encaminha <code>pauta_request</code> completa ao redator.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">06</div>
+      <div class="ps-content">
+        <div class="ps-title">Redator — produção do rascunho</div>
+        <div class="ps-desc">Escreve a matéria ancorada nas fontes primárias. Pirâmide invertida, lide no primeiro parágrafo, sem afirmações sem referência documental.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">07</div>
+      <div class="ps-content">
+        <div class="ps-title">Revisor Linguístico — correção de texto</div>
+        <div class="ps-desc">Gramática, estilo, coerência, comprimento adequado ao tipo de matéria. Pode devolver ao redator com anotações específicas.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">08</div>
+      <div class="ps-content">
+        <div class="ps-title">Fact Checker — verificação factual</div>
+        <div class="ps-desc">Verifica dados críticos com busca web. Confidence score obrigatório. Autoridade de veto: flag <code>NEEDS_HUMAN_REVIEW</code> pausa a publicação.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">09</div>
+      <div class="ps-content">
+        <div class="ps-title">Agente SEO — otimização e metadados</div>
+        <div class="ps-desc">Slug semântico, meta description, tags, headline SEO alternativa, schema.org NewsArticle completo.</div>
+      </div>
+      
+    </div>
+    <div class="pipe-step-doc">
+      <div class="ps-num">10</div>
+      <div class="ps-content">
+        <div class="ps-title">Publicador — distribuição simultânea</div>
+        <div class="ps-desc">Ghost Admin API (site) → WhatsApp WABA (canal) → Bannerbear (card Instagram) → Beehiiv (fila de newsletter). Tudo em paralelo após confirmação do CMS.</div>
+      </div>
+      <span class="ps-badge psb-n8n">Paralelo</span>
+    </div>
+  </div>
+</div>
+
+<!-- 06 ANTI-ALUCINAÇÃO -->
+<div class="doc-section" id="anti-alucinacao">
+  <div class="sec-eyebrow">06 — Sistema anti-alucinação</div>
+  <h1 class="sec-h1">5 camadas de<br><em>verificação.</em></h1>
+  <p class="sec-intro">A alucinação é o risco primário de qualquer sistema de geração de texto em produção jornalística. A PressAI implementa 5 camadas independentes de mitigação, projetadas para serem redundantes entre si.</p>
+
+  <h4>Camada 1 — Source-anchored generation</h4>
+  <p>O redator só pode afirmar o que está explicitamente no <code>pauta_request</code>. Cada claim factual é gerado com referência ao documento de origem. O prompt do redator inclui instrução explícita: <em>"Qualquer dado numérico, nome de pessoa ou cargo, resultado de votação ou afirmação factual deve estar presente nas fontes fornecidas. Se não estiver, não inclua."</em></p>
+
+  <h4>Camada 2 — Cross-model verification</h4>
+  <p>O rascunho é revisado por um modelo diferente do que o produziu. O Fact Checker usa Claude Opus 4 para verificar o que o Redator (Claude Sonnet 4) escreveu. Modelos diferentes têm padrões de erro diferentes — a discordância entre eles é um sinal de problema.</p>
+
+  <h4>Camada 3 — Entity database validation</h4>
+  <p>O Supabase mantém uma tabela <code>known_entities</code> com nomes e cargos de figuras públicas de cada cidade (prefeito, vereadores, secretários, lideranças empresariais). O Fact Checker valida automaticamente qualquer nome/cargo mencionado na matéria contra essa tabela.</p>
+
+  <h4>Camada 4 — Confidence scoring</h4>
+  <p>O Fact Checker atribui um <code>confidence_score</code> (0.0–1.0) a cada dado verificado. Dados com score abaixo de 0.85 não podem ser publicados sem flag. O score é calculado com base em: disponibilidade de fonte primária, consistência com publicações anteriores e resultado da busca web.</p>
+
+  <h4>Camada 5 — Post-publication errata canary</h4>
+  <p>Um agente monitor verifica periodicamente as matérias publicadas contra atualizações posteriores das fontes primárias. Se um decreto for revogado ou um número oficial for corrigido, o sistema gera automaticamente uma nota de errata e atualiza a matéria original no CMS.</p>
+</div>
+
+<!-- 07 STACK -->
+<div class="doc-section" id="canais">
+  <div class="sec-eyebrow">07 — Canais de distribuição</div>
+  <h1 class="sec-h1">Site. WhatsApp.<br><em>Instagram.</em></h1>
+  <p class="sec-intro">Cada matéria publicada é distribuída simultaneamente em três canais. O site é o canal principal (SEO, programática, anúncios diretos). WhatsApp e Instagram são canais de alcance e monetização indireta.</p>
+
+  <h2>WhatsApp Business API (Canal de broadcast)</h2>
+  <p><strong>52% dos brasileiros</strong> recebem notícias pelo WhatsApp (Reuters Institute Digital News Report 2025). O Canal do WhatsApp permite envio direto ao celular do leitor sem algoritmo intermediário. Taxas de abertura relatadas por portais locais: <strong>60–80%</strong> por mensagem — contra 20–25% de newsletter por email.</p>
+
+  <p>A monetização no WhatsApp é indireta: patrocínio de canal, patrocínio de disparos temáticos e pacotes integrados que combinam site, WhatsApp e Instagram para anunciantes locais.</p>
+
+  <h2>Instagram — cards automatizados</h2>
+  <p>Para cada matéria publicada, o Agente de Mídia gera via Bannerbear um card visual formatado para o feed do Instagram com manchete, categoria e identidade visual do jornal. O posting é automatizado via Instagram Graph API.</p>
+
+  <table class="doc-table">
+    <thead><tr><th>Canal</th><th>Frequência de publicação</th><th>Requisito mínimo de monetização</th></tr></thead>
+    <tbody>
+      <tr><td>Site (Ghost)</td><td>Toda matéria aprovada</td><td>Imediato (programática)</td></tr>
+      <tr><td>Canal WhatsApp</td><td>Matérias de prioridade alta/crítica</td><td>500+ inscritos para patrocínio</td></tr>
+      <tr><td>Instagram</td><td>1–3 cards/dia (selecionados por SEO)</td><td>1.000+ seguidores para patrocínio</td></tr>
+      <tr><td>Newsletter (Beehiiv)</td><td>Semanal — segunda-feira 7h</td><td>300+ assinantes</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 10 MERCADO -->
+<div class="doc-section" id="mercado">
+  <div class="sec-eyebrow">08 — Mercado endereçável</div>
+  <h1 class="sec-h1">4.312 cidades.<br><em>Mercado virgem.</em></h1>
+  <p class="sec-intro">O mercado endereçável primário da PressAI são os ~850 municípios deserto com 10.000+ habitantes. Nesses casos, a viabilidade publicitária é suficiente para sustentar a operação com margem positiva a partir do mês 9.</p>
+
+  <table class="doc-table">
+    <thead><tr><th>Faixa populacional</th><th>Desertos (est.)</th><th>Viabilidade publicitária</th></tr></thead>
+    <tbody>
+      <tr><td>Até 5 mil hab.</td><td>~900</td><td>Baixa</td></tr>
+      <tr><td>5–10 mil hab.</td><td>~700</td><td>Moderada</td></tr>
+      <tr><td>10–20 mil hab.</td><td>~550</td><td>Boa</td></tr>
+      <tr><td>20–50 mil hab.</td><td>~250</td><td>Alta</td></tr>
+      <tr><td>50–80 mil hab.</td><td>~50</td><td>Muito alta</td></tr>
+      <tr><td>80–200 mil hab.</td><td>~40</td><td>Excelente</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>Mercado-alvo primário</strong> da PressAI: municípios deserto com 10.000+ habitantes — ~850 cidades onde a viabilidade publicitária local sustenta a operação de um portal com cobertura consistente.</p>
+</div>
+
+<!-- 11 RECEITA -->
+<div class="doc-section" id="piloto">
+  <div class="sec-eyebrow">09 — Piloto: Araquari, SC</div>
+  <h1 class="sec-h1">A cidade mais rica<br><em>sem jornal próprio.</em></h1>
+  <p class="sec-intro">Araquari foi selecionada como cidade-piloto após análise rigorosa de municípios catarinenses. O critério central: maior potencial publicitário combinado com ausência comprovada de veículo jornalístico local dedicado.</p>
+
+  <h2>Por que Araquari</h2>
+  <div class="spec-grid">
+    <div class="spec-card"><div class="spec-card-label">PIB per capita (2023)</div><div class="spec-card-val">R$ 218 mil</div><div class="spec-card-sub">1º lugar em Santa Catarina</div></div>
+    <div class="spec-card"><div class="spec-card-label">PIB total (2023)</div><div class="spec-card-val">R$ 9,9 bilhões</div><div class="spec-card-sub">12º em SC — economia industrial</div></div>
+    <div class="spec-card"><div class="spec-card-label">Empresas ativas</div><div class="spec-card-val">9.202</div><div class="spec-card-sub">Alta densidade para 52 mil hab.</div></div>
+    <div class="spec-card"><div class="spec-card-label">Receita municipal (2024)</div><div class="spec-card-val">R$ 475 mi</div><div class="spec-card-sub">Base sólida para anúncio institucional</div></div>
+  </div>
+
+  <p>A economia de Araquari é ancorada em grandes indústrias: <strong>BMW</strong> (maior planta da América do Sul), complexo multimodal portuário avaliado em US$&nbsp;13 bilhões, multinacionais de metal-mecânico e logística. Empresas com orçamentos de marketing incompatíveis com o tamanho demográfico da cidade — e sem canal local para atingir o consumidor e tomador de decisão de Araquari.</p>
+
+  <h2>Estado atual do projeto</h2>
+  <p>A arquitetura multi-agente está desenhada e implementada. Os fluxos editoriais foram modelados, os 41 agentes foram construídos com suas personas e system prompts, os departamentos foram estruturados e os workflows n8n estão configurados. Os testes de homologação do pipeline completo estão em andamento.</p>
+
+  <div class="callout callout-green">
+    <div class="callout-title">Próximos passos do piloto</div>
+    <ul>
+      <li>Conclusão dos testes de pipeline (homologação end-to-end)</li>
+      <li>Registro do CNPJ e abertura de conta bancária para recebimento de anúncios</li>
+      <li>Definição do domínio e configuração do Ghost em produção</li>
+      <li>Cadastro das entidades locais na tabela <code>known_entities</code> do Supabase</li>
+      <li>Lançamento público do Canal do WhatsApp</li>
+      <li>Início da prospecção digital de anunciantes locais (mês 3+)</li>
+    </ul>
+  </div>
+
+  <div class="doc-rule"></div>
+  <p style="font-size:.82rem;color:var(--t5);font-family:var(--m);letter-spacing:.04em;">Documentação técnica PressAI · Versão 1.0 · Março 2026 · Confidencial · Dados operacionais baseados em Atlas da Notícia 2025 (Projor/Volt Data Lab), Reuters Institute Digital News Report 2025, ServerDo.in e dados internos PressAI.</p>
+</div>
+
+</main>
+</div><!-- /layout -->
+
+<footer class="doc-footer">
+  <div class="df-logo">Press<span>AI</span></div>
+  <div class="df-meta">Documentação técnica v1.0 · Março 2026 · Confidencial</div>
+</footer>
+
+<script>
+function setActive(el){
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// Scroll spy
+const sections = document.querySelectorAll('.doc-section');
+const links = document.querySelectorAll('.sb-link');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      links.forEach(l=>{
+        l.classList.toggle('on', l.getAttribute('href')==='#'+id);
+      });
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
