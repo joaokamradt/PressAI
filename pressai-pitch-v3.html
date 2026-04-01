@@ -94,43 +94,76 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.2s!important;}html{scroll-behavior:auto;}}
 
 @media(max-width:600px){
-  /* S02 — O Problema: colapsar grid, reduzir 45% */
-  .s02-grid{
+
+  /* ── S02: O Problema ── */
+  #s02-grid{
     grid-template-columns:1fr!important;
-    gap:1.5rem!important;
+    gap:1.2rem!important;
     height:auto!important;
-    padding:1rem 0;
     overflow-y:auto;
+    padding:1rem 0;
   }
-  .s02-grid > div:first-child span[style*="4.5rem"]{
-    font-size:clamp(3rem,18vw,5rem)!important;
+  /* 45% menor para caber */
+  #s02-grid span[style*="4.5rem"]{
+    font-size:clamp(3.5rem,20vw,5rem)!important;
     letter-spacing:-3px!important;
   }
+  /* Texto da coluna direita não vaza */
+  #s02-grid > div:last-child{
+    overflow:hidden;
+  }
+  #s02-grid h2{
+    font-size:clamp(.9rem,3.5vw,1.2rem)!important;
+  }
+  #s02-grid p{
+    font-size:clamp(.7rem,2.8vw,.85rem)!important;
+    line-height:1.55!important;
+  }
 
-  /* S03 — Mercado: coluna única, mapa some */
-  .s03-sc{
+  /* ── S03: O Mercado ── */
+  #s03-row{
     flex-direction:column!important;
     overflow-y:auto;
-    padding:1rem!important;
-    gap:1rem!important;
-    justify-content:flex-start!important;
     align-items:flex-start!important;
+    padding:1rem!important;
+    gap:.8rem!important;
+    height:auto!important;
   }
-  /* Ocultar o mapa SVG no mobile — informação está nos cards */
-  .s03-sc > div:last-child{
+  /* Mapa — ocultar no mobile, info está nos cards */
+  #s03-row > div:last-child{
     display:none!important;
   }
-  /* Cards de dados em 2 colunas */
-  .s03-sc div[style*="grid-template-columns:1fr 1fr"]{
-    gap:.4rem!important;
+  /* Cards de dados ficam em grid 2×2 */
+  #s03-row .sc-n{
+    font-size:clamp(1.1rem,5vw,1.5rem)!important;
+    letter-spacing:-.5px!important;
   }
-  .sc-n{font-size:clamp(1.2rem,5vw,1.8rem)!important;}
-  .sc-l{font-size:.65rem!important;}
+  #s03-row .sc-l{
+    font-size:.62rem!important;
+    line-height:1.3!important;
+  }
+  /* TAM block */
+  #s03-row div[style*="border-radius:6px"]{
+    flex-direction:column!important;
+    gap:.5rem!important;
+    align-items:flex-start!important;
+  }
+  #s03-row div[style*="1px;height:40px"]{
+    display:none!important;
+  }
+
+  /* ── Outros slides com grid 2 col ── */
+  /* Slides com .sc que têm flex-direction:row e grid interno */
+  .slide .sc > div[style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
+  }
+
 }
+
 </style>
 </head>
 <body>
-<a href="index.html" style="position:fixed;top:1rem;left:1.25rem;z-index:200;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1);text-decoration:none;transition:all .14s;backdrop-filter:blur(8px);background:rgba(7,11,20,.6);" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.3)'" onmouseout="this.style.color='rgba(255,255,255,.4)';this.style.borderColor='rgba(255,255,255,.1)'">← Início</a>
+<a href="index.html" style="position:fixed;top:1rem;left:1.25rem;z-index:200;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1);text-decoration:none;backdrop-filter:blur(8px);background:rgba(7,11,20,.6);">← Início</a>
 <div id="prog"></div>
 <div class="nav" id="nav"></div>
 <div id="ctr"></div>
@@ -151,7 +184,7 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 <!-- S02 O PROBLEMA -->
 <section class="slide gbg" id="s02">
 <div class="sc" style="z-index:1;">
-  <div class="s02-grid" style="display:grid;grid-template-columns:1fr .9fr;gap:clamp(2rem,5vw,5rem);align-items:center;height:100%;">
+  <div id="s02-grid" style="display:grid;grid-template-columns:1fr .9fr;gap:clamp(2rem,5vw,5rem);align-items:center;height:100%;">
     <div>
       <div class="ey r"><span class="dot"></span>O problema</div>
       <div style="font-family:var(--display);font-weight:800;line-height:.9;" class="r">
@@ -171,7 +204,7 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 
 <!-- S03 OS NÚMEROS + MAPA -->
 <section class="slide gbg" id="s03">
-<div class="sc" class="s03-sc" style="z-index:1;flex-direction:row;align-items:center;gap:clamp(1.5rem,3vw,3rem);padding-top:clamp(1.5rem,3vh,3rem);padding-bottom:clamp(1.5rem,3vh,3rem);">
+<div class="sc" id="s03-row" style="z-index:1;flex-direction:row;align-items:center;gap:clamp(1.5rem,3vw,3rem);padding-top:clamp(1.5rem,3vh,3rem);padding-bottom:clamp(1.5rem,3vh,3rem);">
   <div style="flex:1;min-width:0;">
     <div class="ey r"><span class="dot"></span>O mercado</div>
     <h2 style="font-family:var(--display);font-size:var(--t2);font-weight:800;letter-spacing:-.5px;color:#fff;margin-bottom:clamp(.5rem,1.5vh,1.2rem);" class="r">Atlas da Notícia 2025.<br><em style="font-style:normal;color:var(--blue);">Os números são brutais.</em></h2>

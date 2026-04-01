@@ -372,41 +372,69 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;ali
 }
 
 @media(max-width:600px){
+  /* Nav */
   nav{padding:0 1rem;}
+
+  /* Hero */
   .hero{padding:7rem 1rem 4rem;}
   .hero-h1{font-size:clamp(2rem,9vw,3rem);letter-spacing:-2px;}
   .hero-sub{font-size:.88rem;}
+  .hero-tags{flex-wrap:wrap;gap:.4rem;}
 
-  /* Desativar animação sticky — substitui por layout estático */
+  /* Scroll-machine: desativar sticky, deixar canvas fluir normalmente */
   #sticky{
-    position:static!important;
+    position:relative!important;
     height:auto!important;
-    display:none!important;
+    top:auto!important;
   }
-  /* Espaçador da animação some */
-  #spacer{display:none!important;}
+  /* Canvas menor, scrollável */
+  #canvas{
+    width:100%!important;
+    height:340px!important;
+    overflow:hidden;
+  }
+  /* Agentes — reduzir fonte e tamanho */
+  .ag{
+    width:54px!important;
+    height:54px!important;
+  }
+  .ag-name{font-size:.42rem!important;}
+  .ag-role{font-size:.35rem!important;}
+  /* Separadores verticais — esconder */
+  .c-sep{display:none;}
+  /* Painel de contexto — compactar */
+  #ctx-panel{
+    flex-direction:column!important;
+    gap:.4rem!important;
+    padding:.6rem .8rem!important;
+  }
+  #ctx-panel > *{font-size:.65rem!important;}
+  .c-phase{font-size:.6rem!important;}
+  .c-pnum{font-size:.55rem!important;top:auto!important;bottom:.5rem!important;right:.75rem!important;}
 
-  /* Mostrar os departamentos em lista normal */
+  /* Departamentos */
   .dept-grid{grid-template-columns:1fr;}
-  .dept-header{padding:2rem 1rem 1rem;}
-  .dept-h{font-size:1.8rem;}
-  .dept-totals{flex-wrap:wrap;gap:.5rem;}
+  .dept-header{padding:1.5rem 1rem 1rem;}
+  .dept-h{font-size:1.6rem;}
+  .dept-totals{flex-wrap:wrap;gap:.4rem;}
   .dt-sep{display:none;}
-  .dt-item{padding:.75rem 1rem;}
+  .dt-item{padding:.6rem .9rem;}
   .ag-list{padding:.5rem 1rem 1rem;}
 
-  /* Stats finais */
+  /* Resultados */
   .rstats{grid-template-columns:1fr 1fr;}
   .result-sub{font-size:.85rem;}
 
-  /* Hero */
-  .hero-tags{flex-wrap:wrap;gap:.4rem;}
+  /* Pipeline */
+  .pipe-bar{overflow-x:auto;}
+  .ps-name{display:none;}
 }
 
 @media(max-width:400px){
   .rstats{grid-template-columns:1fr;}
-  .dept-h{font-size:1.5rem;}
+  #canvas{height:280px!important;}
 }
+
 </style>
 </head>
 <body>
