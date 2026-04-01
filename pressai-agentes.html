@@ -363,56 +363,27 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;ali
 .db-text{font-family:var(--m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);}
 .db-arrow{color:rgba(255,255,255,.25);animation:nudge 2.5s ease infinite;}
 
-
+@media(max-width:860px){.dept-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:560px){.dept-grid{grid-template-columns:1fr;}.dept-totals{flex-wrap:wrap;}.dt-sep{display:none;}}
 
 @media(max-width:860px){
   .dept-grid{grid-template-columns:1fr 1fr;}
   .rstats{grid-template-columns:1fr 1fr;}
 }
-
 @media(max-width:600px){
-  /* Nav */
   nav{padding:0 1rem;}
-
-  /* Hero */
   .hero{padding:7rem 1rem 4rem;}
   .hero-h1{font-size:clamp(2rem,9vw,3rem);letter-spacing:-2px;}
   .hero-sub{font-size:.88rem;}
   .hero-tags{flex-wrap:wrap;gap:.4rem;}
 
-  /* Scroll-machine: desativar sticky, deixar canvas fluir normalmente */
-  #sticky{
-    position:relative!important;
-    height:auto!important;
-    top:auto!important;
-  }
-  /* Canvas menor, scrollável */
-  #canvas{
-    width:100%!important;
-    height:340px!important;
-    overflow:hidden;
-  }
-  /* Agentes — reduzir fonte e tamanho */
-  .ag{
-    width:54px!important;
-    height:54px!important;
-  }
-  .ag-name{font-size:.42rem!important;}
-  .ag-role{font-size:.35rem!important;}
-  /* Separadores verticais — esconder */
-  .c-sep{display:none;}
-  /* Painel de contexto — compactar */
-  #ctx-panel{
-    flex-direction:column!important;
-    gap:.4rem!important;
-    padding:.6rem .8rem!important;
-  }
-  #ctx-panel > *{font-size:.65rem!important;}
-  .c-phase{font-size:.6rem!important;}
-  .c-pnum{font-size:.55rem!important;top:auto!important;bottom:.5rem!important;right:.75rem!important;}
+  /* Ocultar scroll-machine inteiro no mobile */
+  #scroll-machine{display:none!important;}
 
-  /* Departamentos */
+  /* Mostrar carrossel mobile (adicionado via JS) */
+  #mobile-phases{display:block;}
+
+  /* Departamentos em coluna única */
   .dept-grid{grid-template-columns:1fr;}
   .dept-header{padding:1.5rem 1rem 1rem;}
   .dept-h{font-size:1.6rem;}
@@ -420,20 +391,32 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;ali
   .dt-sep{display:none;}
   .dt-item{padding:.6rem .9rem;}
   .ag-list{padding:.5rem 1rem 1rem;}
-
-  /* Resultados */
   .rstats{grid-template-columns:1fr 1fr;}
   .result-sub{font-size:.85rem;}
-
-  /* Pipeline */
   .pipe-bar{overflow-x:auto;}
   .ps-name{display:none;}
 }
-
 @media(max-width:400px){
   .rstats{grid-template-columns:1fr;}
-  #canvas{height:280px!important;}
 }
+
+/* Carrossel mobile — escondido no desktop */
+#mobile-phases{display:none;}
+.mp-card{
+  background:#0d1525;border:1px solid rgba(26,110,255,.2);
+  border-radius:12px;padding:1.25rem;margin:0 1rem;
+}
+.mp-phase-num{font-family:var(--m);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem;}
+.mp-title{font-family:var(--d);font-size:1.1rem;font-weight:800;letter-spacing:-.3px;color:#fff;margin-bottom:.5rem;}
+.mp-desc{font-size:.85rem;color:rgba(255,255,255,.72);line-height:1.65;margin-bottom:.9rem;}
+.mp-items{display:flex;flex-direction:column;gap:.35rem;}
+.mp-item{font-family:var(--m);font-size:.65rem;color:rgba(255,255,255,.55);padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.mp-item:last-child{border-bottom:none;}
+.mp-nav{display:flex;align-items:center;justify-content:space-between;margin:1rem 1rem 0;}
+.mp-btn{font-family:var(--m);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);padding:6px 14px;border:1px solid rgba(255,255,255,.15);border-radius:20px;background:none;cursor:pointer;transition:all .14s;}
+.mp-btn:hover{color:#fff;border-color:rgba(255,255,255,.35);}
+.mp-btn:disabled{opacity:.25;cursor:default;}
+.mp-counter{font-family:var(--m);font-size:.65rem;color:rgba(255,255,255,.4);}
 
 </style>
 </head>
@@ -838,6 +821,21 @@ footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;ali
 
   <!-- Spacer DEPOIS do sticky — empurra o conteúdo e mantém o sticky ativo -->
 </div><!-- /scroll-machine -->
+
+<!-- CARROSSEL MOBILE — visível apenas abaixo de 600px -->
+<div id="mobile-phases" style="padding:2rem 0 3rem;">
+  <div style="padding:0 1rem 1rem;">
+    <div style="font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem;">Pipeline editorial</div>
+    <div style="font-family:var(--d);font-size:1.4rem;font-weight:800;letter-spacing:-.5px;color:#fff;">As 6 fases do ciclo</div>
+  </div>
+  <div id="mp-content"></div>
+  <div class="mp-nav">
+    <button class="mp-btn" id="mp-prev" onclick="mpNav(-1)">← Anterior</button>
+    <span class="mp-counter" id="mp-counter">1 / 6</span>
+    <button class="mp-btn" id="mp-next" onclick="mpNav(1)">Próxima →</button>
+  </div>
+</div>
+
 
 <!-- RESULTADO -->
 <section class="result">
