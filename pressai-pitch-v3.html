@@ -93,28 +93,19 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 @media(max-height:600px){.nav,.nd{display:none;}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.2s!important;}html{scroll-behavior:auto;}}
 
-@media(max-width:600px){
-  /* S02 — garantir que texto não vaze */
-  .slide#s02 .sc > div > div{overflow:hidden;min-width:0;}
-  .slide#s02 h2{font-size:clamp(.85rem,3.5vw,1.1rem)!important;}
-  .slide#s02 p{font-size:clamp(.68rem,2.5vw,.82rem)!important;line-height:1.5!important;}
+@media(max-width:560px){
+  /* S02 — fonte do 45% menor */
+  #s02 [style*="4.5rem"]{font-size:clamp(3rem,18vw,5rem)!important;letter-spacing:-3px!important;}
+  #s02 h2{font-size:clamp(.85rem,3.8vw,1.1rem)!important;}
+  #s02 p{font-size:clamp(.7rem,2.8vw,.82rem)!important;line-height:1.5!important;}
 
-  /* S03 — mapa vai para baixo do texto com flex-wrap */
-  .slide#s03 .sc > div:last-child{
-    width:100%!important;
-    max-height:180px;
+  /* S03 — grid de 1 coluna, mapa embaixo */
+  #s03 .sc[style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
   }
-  .slide#s03 .sc > div:last-child > div{
-    border-radius:6px;overflow:hidden;
+  #s03 [style*="border-radius:8px"]{
+    max-height:200px;overflow:hidden;
   }
-  .slide#s03 .sc > div:last-child svg{
-    display:block;height:160px!important;
-  }
-  /* TAM block compacto */
-  .slide#s03 div[style*="border-radius:6px"]{
-    flex-direction:column!important;gap:.4rem!important;
-  }
-  .slide#s03 div[style*="1px;height:40px"]{display:none!important;}
 }
 
 </style>
@@ -141,7 +132,7 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 <!-- S02 O PROBLEMA -->
 <section class="slide gbg" id="s02">
 <div class="sc" style="z-index:1;">
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:clamp(1rem,4vw,4rem);align-items:center;height:100%;overflow-y:auto;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(1.5rem,4vw,4rem);align-items:start;height:100%;overflow-y:auto;padding-top:clamp(.5rem,2vh,1.5rem);">
     <div>
       <div class="ey r"><span class="dot"></span>O problema</div>
       <div style="font-family:var(--display);font-weight:800;line-height:.9;" class="r">
@@ -161,7 +152,7 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
 
 <!-- S03 OS NÚMEROS + MAPA -->
 <section class="slide gbg" id="s03">
-<div class="sc" style="z-index:1;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:clamp(1rem,2.5vw,2.5rem);padding-top:clamp(1rem,2vh,2rem);padding-bottom:clamp(1rem,2vh,2rem);overflow-y:auto;">
+<div class="sc" style="z-index:1;display:grid;grid-template-columns:1fr clamp(140px,25vw,280px);align-items:start;gap:clamp(1rem,2.5vw,2.5rem);padding-top:clamp(1rem,2vh,2rem);padding-bottom:clamp(1rem,2vh,2rem);overflow-y:auto;">
   <div style="flex:1;min-width:0;">
     <div class="ey r"><span class="dot"></span>O mercado</div>
     <h2 style="font-family:var(--display);font-size:var(--t2);font-weight:800;letter-spacing:-.5px;color:#fff;margin-bottom:clamp(.5rem,1.5vh,1.2rem);" class="r">Atlas da Notícia 2025.<br><em style="font-style:normal;color:var(--blue);">Os números são brutais.</em></h2>
@@ -181,7 +172,7 @@ body{font-family:var(--body);background:var(--ink);color:#fff;-webkit-font-smoot
       <div style="font-size:var(--ts);color:var(--dim);">~850 cidades deserto com 10k+ habitantes<br>receita média R$ 3,8 mil/mês por jornal maduro</div>
     </div>
   </div>
-  <div class="r" style="flex-shrink:0;width:clamp(160px,28vw,300px);max-width:100%;">
+  <div class="r" style="width:100%;min-width:0;">
     <div style="background:#08101e;border-radius:8px;overflow:hidden;border:1px solid rgba(26,110,255,.15);">
       <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
         <path d="M20.0,127.5L61.0,147.8L66.7,151.6L66.3,151.8L65.9,152.1L65.4,152.8L65.1,153.0L64.8,153.2L64.3,153.8L64.1,154.3L63.5,154.5L62.8,154.8L62.4,154.8L62.1,155.3L61.6,155.3L61.2,156.0L60.5,156.4L60.0,157.3L59.3,158.1L58.9,157.8L58.4,157.6L57.9,157.7L57.3,157.9L56.9,158.3L56.8,159.0L56.3,159.6L55.9,160.4L55.3,160.8L54.8,161.1L54.1,161.5L52.5,161.3L52.4,160.7L52.0,160.7L51.4,160.8L51.0,160.8L50.6,160.6L50.1,160.6L49.6,160.3L49.1,160.3L48.6,160.3L48.2,160.2L47.8,160.3L47.2,160.3L46.6,160.4L45.9,160.4L45.1,160.1L44.5,160.1L44.2,160.4L43.8,160.7L43.4,160.8L42.7,161.2L42.2,161.3L41.4,161.2L40.9,160.4L40.0,151.4L40.6,149.9L40.4,149.0L40.2,148.2L40.4,147.9L40.7,147.6L40.8,147.1L40.5,147.0L40.0,147.4L39.6,147.9L39.2,148.2L38.8,148.8L38.3,149.2L37.7,149.8L36.9,150.5L35.9,151.7L35.1,151.9L29.8,151.1L29.6,150.1L29.0,149.5L28.8,148.5L28.4,147.6L27.8,147.5L27.2,147.4L26.7,147.2L26.1,147.1L22.7,146.9L23.4,145.9L23.9,145.2L24.5,144.1L24.3,143.1L23.7,142.0L23.1,140.6L22.3,140.0L22.2,138.6L21.3,138.2L20.6,137.7L20.3,136.5L19.8,135.1L19.2,134.2L18.9,133.7L19.4,133.0L18.8,132.1L18.0,131.3L17.4,130.6L17.6,129.1L18.2,129.1L18.9,128.7L19.3,128.0L18.7,126.9L20.0,127.5Z" fill="#0d1628" stroke="#1e3a6a" stroke-width="0.4"/>
