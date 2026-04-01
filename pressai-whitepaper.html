@@ -212,6 +212,27 @@ code{font-family:var(--m);font-size:.82rem;background:rgba(255,255,255,.07);padd
   .sidebar{display:none;}
   .content,.doc-footer{margin-left:0;padding-left:1.5rem;padding-right:1.5rem;}
 }
+
+@media(max-width:900px){
+  :root{--sidebar:0px;}
+  .sidebar{display:none;}
+  .content,.doc-footer{margin-left:0;padding-left:1.5rem;padding-right:1.5rem;}
+  .topbar{left:0;}
+}
+@media(max-width:600px){
+  .content{padding:2rem 1rem 4rem;}
+  .sec-h1{font-size:1.6rem;}
+  h2{font-size:1rem;}
+  .spec-grid{grid-template-columns:1fr;}
+  .doc-table{font-size:.75rem;}
+  .doc-table th,.doc-table td{padding:.45rem .5rem;}
+  .pipeline{font-size:.8rem;}
+  .pipe-step-doc{padding:.7rem .75rem;}
+  .rstats{grid-template-columns:1fr;}
+  .topbar{padding:0 1rem;}
+  .tb-doc{display:none;}
+  .doc-footer{padding:1rem;}
+}
 </style>
 </head>
 <body>

@@ -818,6 +818,20 @@ footer {
   .ml-source { width: 100%; }
 }
 
+
+@media(max-width:600px){
+  .nav-back-site{display:none;}
+  .nav-links{display:none;}
+  .nav{padding:0 1rem;}
+  .hero-text h1{font-size:2.4rem;letter-spacing:-2px;}
+  .hero-sub{font-size:.9rem;}
+  .hero-actions{flex-direction:column;gap:.6rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .features-grid,.how-grid,.cities-grid{grid-template-columns:1fr;}
+  .section{padding:4rem 1rem;}
+  .section-header h2{font-size:2rem;}
+  .cta-buttons{flex-direction:column;gap:.6rem;}
+}
 </style>
 </head>
 <body>
@@ -831,7 +845,7 @@ footer {
     <li><a href="#como">Como funciona</a></li>
     <li><a href="#entrega">O que entregamos</a></li>
     <li><a href="#paraquem">Para quem</a></li>
-    <li><a href="mailto:joaokamradt@gmail.com" class="nav-cta">Entrar em contato</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#177d7876787c767a6576736357707a767e7b3974787a" class="nav-cta">Entrar em contato</a></li>
   </ul>
 </nav>
 
@@ -847,7 +861,7 @@ footer {
       A PressAI leva jornalismo local de qualidade para as cidades brasileiras que vivem sem cobertura. De forma autônoma, contínua e escalável.
     </p>
     <div class="hero-actions">
-      <a href="mailto:joaokamradt@gmail.com" class="btn-primary">Entrar em contato →</a>
+      <a href="/cdn-cgi/l/email-protection#afc5c0cec0c4cec2ddcecbdbefc8c2cec6c381ccc0c2" class="btn-primary">Entrar em contato →</a>
       <a href="#como" class="btn-ghost">Como funciona</a>
     </div>
   </div>
@@ -6660,7 +6674,7 @@ footer {
     </h2>
     <p class="cta-sub reveal">Entre em contato para saber mais sobre a PressAI.</p>
     <div class="cta-actions reveal">
-      <a href="mailto:joaokamradt@gmail.com" class="btn-dark">Entrar em contato →</a>
+      <a href="/cdn-cgi/l/email-protection#afc5c0cec0c4cec2ddcecbdbefc8c2cec6c381ccc0c2" class="btn-dark">Entrar em contato →</a>
       <a href="#" class="btn-outline">Ver materiais</a>
     </div>
   </div>
@@ -6675,19 +6689,8 @@ footer {
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Reveal on scroll
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
-reveals.forEach(el => observer.observe(el));
-</script>
-
-</body>
-</html>
+  entries.forEa
