@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jornal de Araquari — Canal WhatsApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0D1B2E;--ink2:#162035;--ink3:#1c2840;
+  --blue:#0057D9;--blue2:#003fa3;
+  --green:#25D366;--green2:#128C7E;
+  --paper:#FAFAF8;--paper2:#F2F0EB;--paper3:#E8E5DF;
+  --t1:#0D1B2E;--t2:#2C3E55;--t3:#4A5568;--t4:#8A9BAB;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --r:8px;
+}
+html{font-size:15px;}
+body{font-family:var(--body);background:var(--paper);color:var(--t1);-webkit-font-smoothing:antialiased;}
+
+/* HEADER */
+.hd{background:var(--paper);border-bottom:2px solid var(--t1);}
+.hd-top{max-width:960px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.hd-back{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:4px 10px;border-radius:20px;border:1px solid var(--paper3);text-decoration:none;transition:all .14s;}
+.hd-back:hover{color:var(--blue);border-color:var(--blue);}
+.hd-logo{display:flex;align-items:center;gap:.6rem;}
+.hd-logo-svg{width:28px;height:28px;}
+.hd-logo-text{}
+.hd-name{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;line-height:1.1;}
+.hd-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4);}
+.hd-badge{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;padding:4px 10px;border-radius:20px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:var(--green2);}
+.hd-ticker{height:3px;background:var(--blue);}
+
+/* HERO */
+.hero{background:var(--ink);padding:5rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 50%,rgba(37,211,102,.06),transparent 65%);pointer-events:none;}
+.hero-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;}
+.hero-kicker{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.hero-kicker::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);}
+.hero-h{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.5px;line-height:1.05;color:#fff;margin-bottom:.9rem;}
+.hero-sub{font-size:.92rem;color:rgba(255,255,255,.7);line-height:1.75;max-width:480px;}
+.hero-stat{text-align:right;flex-shrink:0;}
+.hero-n{font-family:var(--serif);font-size:3rem;font-weight:800;letter-spacing:-2px;color:var(--green);line-height:1;}
+.hero-nl{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.3rem;}
+
+/* WRAP */
+.wrap{max-width:960px;margin:0 auto;padding:4rem 2rem;}
+.sec-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green2);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;}
+.sec-label::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;}
+.sec-h{font-family:var(--serif);font-size:clamp(1.4rem,2.8vw,2rem);font-weight:700;letter-spacing:-.3px;color:var(--t1);margin-bottom:.6rem;}
+.sec-sub{font-size:.88rem;color:var(--t3);line-height:1.72;margin-bottom:2.5rem;max-width:560px;}
+.rule{height:1px;background:var(--paper3);max-width:960px;margin:0 auto;}
+
+/* ── PHONE MOCKUP ── */
+.phone-section{display:grid;grid-template-columns:auto 1fr;gap:4rem;align-items:start;}
+.phone-wrap{position:sticky;top:2rem;}
+.phone{width:280px;background:#1c1c1e;border-radius:42px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.07);}
+.phone-notch{width:95px;height:26px;background:#1c1c1e;border-radius:0 0 18px 18px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;}
+.phone-screen{background:#000;border-radius:30px;overflow:hidden;position:relative;}
+
+/* WA Interface */
+.wa{background:#0b141a;}
+.wa-statusbar{height:14px;background:#0b141a;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;gap:4px;}
+.wa-statusbar span{font-size:7px;color:rgba(255,255,255,.5);}
+.wa-topbar{background:#1f2c34;padding:8px 12px;display:flex;align-items:center;gap:8px;}
+.wa-back{font-size:14px;color:#53bdeb;}
+.wa-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.wa-info-top{flex:1;}
+.wa-canal-name{font-size:11px;font-weight:700;color:#e9edef;line-height:1.2;}
+.wa-canal-sub{font-size:8.5px;color:var(--green);font-weight:500;}
+.wa-actions{display:flex;gap:12px;font-size:14px;color:#8696a0;}
+
+/* Chat bg */
+.wa-chat{padding:8px;background:#0b141a;min-height:500px;display:flex;flex-direction:column;gap:7px;position:relative;}
+.wa-chat::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='8' fill='none' stroke='rgba(255,255,255,.015)' stroke-width='1'/%3E%3C/svg%3E");opacity:.5;}
+
+.wa-date-sep{text-align:center;}
+.wa-date-sep span{font-size:8px;color:#8696a0;background:#1f2c34;padding:2px 10px;border-radius:7px;display:inline-block;}
+
+/* Mensagem: card com imagem */
+.msg{background:#1f2c34;border-radius:8px;padding:9px 10px;position:relative;z-index:1;}
+.msg-sender-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.msg-sender-av{width:18px;height:18px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;}
+.msg-sender-av svg{width:10px;height:10px;}
+.msg-sender-name{font-size:9px;font-weight:700;color:#53bdeb;}
+.msg-img{width:100%;height:90px;border-radius:5px;margin-bottom:7px;overflow:hidden;position:relative;}
+.msg-img-bg{width:100%;height:100%;object-fit:cover;}
+.msg-img-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:6px;}
+.msg-img-cat{font-family:var(--mono);font-size:6.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#fff;background:var(--blue);padding:2px 6px;border-radius:3px;}
+.msg-headline{font-size:11px;font-weight:700;color:#e9edef;line-height:1.3;margin-bottom:4px;}
+.msg-lede{font-size:9px;color:#8696a0;line-height:1.45;margin-bottom:6px;}
+.msg-link{font-size:8.5px;color:#53bdeb;display:flex;align-items:center;gap:3px;margin-bottom:5px;}
+.msg-link::before{content:'→';font-size:8px;}
+.msg-footer{display:flex;align-items:center;justify-content:space-between;}
+.msg-time{font-size:7.5px;color:#8696a0;}
+.msg-ticks{font-size:9px;color:var(--green);}
+
+/* Mensagem: breaking */
+.msg-breaking{background:#1f2c34;border-radius:8px;padding:8px 10px;position:relative;z-index:1;}
+.msg-breaking-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#f87171;border-radius:4px;font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:.8px;padding:2px 6px;margin-bottom:5px;}
+.msg-breaking-text{font-size:10.5px;font-weight:600;color:#e9edef;line-height:1.4;margin-bottom:4px;}
+.msg-breaking-link{font-size:8.5px;color:#53bdeb;display:flex;align-items:center;gap:3px;}
+.msg-breaking-link::before{content:'→';}
+
+/* Mensagem: resumo */
+.msg-resumo{background:#1f2c34;border-radius:8px;padding:9px 10px;position:relative;z-index:1;}
+.msg-resumo-header{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.06);}
+.msg-resumo-icon{font-size:14px;}
+.msg-resumo-title{font-size:9.5px;font-weight:700;color:#e9edef;}
+.msg-resumo-sub{font-size:8px;color:#8696a0;}
+.msg-resumo-item{display:flex;gap:5px;margin-bottom:4px;font-size:9px;color:#8696a0;line-height:1.4;}
+.msg-resumo-item::before{content:'·';color:var(--green);font-size:10px;flex-shrink:0;line-height:1.3;}
+.msg-resumo-footer{margin-top:5px;padding-top:4px;border-top:1px solid rgba(255,255,255,.06);font-size:8px;color:#53bdeb;display:flex;align-items:center;gap:3px;}
+.msg-resumo-footer::before{content:'→';}
+
+/* Input bar */
+.wa-inputbar{background:#1f2c34;height:48px;display:flex;align-items:center;gap:8px;padding:0 10px;}
+.wa-emoji{font-size:16px;color:#8696a0;}
+.wa-field{flex:1;height:30px;background:#2a3942;border-radius:15px;display:flex;align-items:center;padding:0 12px;}
+.wa-placeholder{font-size:9px;color:#8696a0;}
+.wa-mic{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+/* INFO CARDS */
+.info-grid{display:flex;flex-direction:column;gap:1.5rem;}
+.info-card{background:#fff;border:1px solid var(--paper3);border-radius:10px;padding:1.5rem;border-left:3px solid var(--green);}
+.ic-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green2);margin-bottom:.5rem;}
+.ic-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--t1);margin-bottom:.4rem;}
+.ic-desc{font-size:.84rem;color:var(--t2);line-height:1.68;}
+.ic-stat{display:flex;align-items:baseline;gap:.4rem;margin-top:.75rem;}
+.ic-n{font-family:var(--serif);font-size:1.4rem;font-weight:800;color:var(--green2);}
+.ic-l{font-size:.75rem;color:var(--t4);}
+
+/* Footer editorial */
+.ed-footer{background:var(--ink);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.ef-logo{font-family:var(--serif);font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
+.ef-meta{font-family:var(--mono);font-size:.55rem;color:rgba(255,255,255,.4);letter-spacing:.06em;}
+
+/* Reveal */
+.rv{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:760px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-stat{display:none;}
+  .phone-section{grid-template-columns:1fr;}
+  .phone-wrap{position:static;}
+  .phone-wrap,.info-grid{max-width:none;}
+  .phone{width:100%;max-width:280px;margin:0 auto;}
+}
+@media(max-width:600px){
+  .hd-top,.wrap{padding-left:1rem;padding-right:1rem;}
+  .hero{padding:4rem 1rem 3rem;}
+  .hero-h{font-size:1.8rem;}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-top">
+    <a href="index.html" class="hd-back">← Jornal</a>
+    <div class="hd-logo">
+      <svg class="hd-logo-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="17" cy="18" r="3" fill="#0057D9"/>
+      </svg>
+      <div class="hd-logo-text">
+        <div class="hd-name">Jornal de Araquari</div>
+        <span class="hd-tag">A cidade em tempo real</span>
+      </div>
+    </div>
+    <div class="hd-badge">💬 Canal WhatsApp</div>
+  </div>
+  <div class="hd-ticker"></div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-kicker">Canal do WhatsApp</div>
+      <h1 class="hero-h">A notícia chega.<br>O leitor não precisa ir buscar.</h1>
+      <p class="hero-sub">O Canal do WhatsApp entrega manchetes, alertas de breaking news e o resumo do dia diretamente no celular — sem algoritmo, sem feed, sem precisar abrir nenhum app.</p>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-n">60–80%</div>
+      <div class="hero-nl">Taxa de abertura<br>por mensagem</div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<div class="wrap">
+  <div class="phone-section rv">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="wa">
+            <div class="wa-statusbar">
+              <span>9:41</span><span>●●●</span><span>▶</span>
+            </div>
+            <div class="wa-topbar">
+              <div class="wa-back">‹</div>
+              <div class="wa-av">📰</div>
+              <div class="wa-info-top">
+                <div class="wa-canal-name">Jornal de Araquari</div>
+                <div class="wa-canal-sub">● Canal · 4.280 inscritos</div>
+              </div>
+              <div class="wa-actions"><span>🔍</span><span>⋮</span></div>
+            </div>
+
+            <div class="wa-chat">
+              <div class="wa-date-sep"><span>Hoje</span></div>
+
+              <!-- Mensagem 1: matéria com imagem -->
+              <div class="msg">
+                <div class="msg-sender-row">
+                  <div class="msg-sender-av">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M4 10 Q6 6 8 10 Q10 14 12 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="10" r="2" fill="white"/></svg>
+                  </div>
+                  <span class="msg-sender-name">Jornal de Araquari</span>
+                </div>
+                <div class="msg-img">
+                  <div class="msg-img-bg" style="background:linear-gradient(135deg,#0D2B5E 0%,#0057D9 60%,#1a6eff 100%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:28px;opacity:.3;">🏭</span>
+                  </div>
+                  <div class="msg-img-overlay">
+                    <span class="msg-img-cat">Economia</span>
+                  </div>
+                </div>
+                <div class="msg-headline">BMW anuncia 200 vagas para linha de produção do novo SUV elétrico em Araquari</div>
+                <div class="msg-lede">Unidade catarinense da montadora abrirá processo seletivo em março para técnicos e operadores. Salários entre R$ 3.200 e R$ 5.800.</div>
+                <div class="msg-link">Leia a matéria completa em jornaldearaquari.com.br</div>
+                <div class="msg-footer">
+                  <span class="msg-time">08:14</span>
+                  <span class="msg-ticks">✓✓</span>
+                </div>
+              </div>
+
+              <!-- Mensagem 2: breaking -->
+              <div class="msg-breaking">
+                <div class="msg-breaking-badge">⚡ Breaking news</div>
+                <div class="msg-breaking-text">Câmara de Araquari aprova por 7 a 2 o projeto de ampliação do Centro de Eventos. Obra prevista para começar em junho com investimento de R$ 4,2 milhões.</div>
+                <div class="msg-breaking-link">Acompanhe ao vivo no site</div>
+                <div style="font-size:7.5px;color:#8696a0;text-align:right;margin-top:4px;">14:32 ✓✓</div>
+              </div>
+
+              <!-- Mensagem 3: resumo -->
+              <div class="msg-resumo">
+                <div class="msg-resumo-header">
+                  <span class="msg-resumo-icon">🌙</span>
+                  <div>
+                    <div class="msg-resumo-title">Resumo da tarde · Araquari</div>
+                    <div class="msg-resumo-sub">As principais notícias do dia</div>
+                  </div>
+                </div>
+                <div class="msg-resumo-item">BMW abre 200 vagas — seleção começa em março</div>
+                <div class="msg-resumo-item">Câmara aprova ampliação do Centro de Eventos por 7×2</div>
+                <div class="msg-resumo-item">Defesa Civil emite alerta para chuvas fortes no fim de semana</div>
+                <div class="msg-resumo-footer">jornaldearaquari.com.br · edição das 18h</div>
+                <div style="font-size:7.5px;color:#8696a0;text-align:right;margin-top:4px;">18:01 ✓✓</div>
+              </div>
+            </div>
+
+            <div class="wa-inputbar">
+              <div class="wa-emoji">😊</div>
+              <div class="wa-field"><span class="wa-placeholder">Mensagem</span></div>
+              <div class="wa-mic">🎤</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card rv">
+        <div class="ic-label">Formato 1 — Matéria</div>
+        <div class="ic-title">Card com imagem, manchete e link</div>
+        <div class="ic-desc">Cada matéria publicada no site gera automaticamente uma mensagem formatada: categoria, foto, título, dois parágrafos de contexto e link direto para a matéria completa. Produzida pelo Agente Publicador via WhatsApp Business API.</div>
+      </div>
+      <div class="info-card rv">
+        <div class="ic-label">Formato 2 — Breaking news</div>
+        <div class="ic-title">Alerta imediato sem imagem</div>
+        <div class="ic-desc">Quando o sistema detecta um evento de alta relevância — votação aprovada, decreto publicado, acidente — um alerta é disparado em menos de 3 minutos. Sem imagem, para entrega mais rápida. O badge vermelho sinaliza urgência.</div>
+        <div class="ic-stat">
+          <div class="ic-n">&lt;3min</div>
+          <div class="ic-l">do evento ao alerta no celular</div>
+        </div>
+      </div>
+      <div class="info-card rv">
+        <div class="ic-label">Formato 3 — Resumo editorial</div>
+        <div class="ic-title">Duas edições diárias</div>
+        <div class="ic-desc">Às 8h e às 18h, o sistema envia um resumo com as três principais notícias do período. Leitores que seguem em todos os canais visitam o site 4–6 vezes mais por semana que leitores de canal único.</div>
+        <div class="ic-stat">
+          <div class="ic-n">2×</div>
+          <div class="ic-l">por dia — manhã e tarde</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="ed-footer">
+  <div class="ef-logo">Jornal de Araquari</div>
+  <div class="ef-meta">Canal WhatsApp · PressAI 2026</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')});},{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

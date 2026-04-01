@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jornal de Araquari — Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#0D1B2E;--ink2:#162035;
+  --blue:#0057D9;--pink:#E1306C;--pink2:#b02456;
+  --paper:#FAFAF8;--paper2:#F2F0EB;--paper3:#E8E5DF;
+  --t1:#0D1B2E;--t2:#2C3E55;--t3:#4A5568;--t4:#8A9BAB;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{font-size:15px;}
+body{font-family:var(--body);background:var(--paper);color:var(--t1);-webkit-font-smoothing:antialiased;}
+
+.hd{background:var(--paper);border-bottom:2px solid var(--t1);}
+.hd-top{max-width:960px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.hd-back{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:4px 10px;border-radius:20px;border:1px solid var(--paper3);text-decoration:none;transition:all .14s;}
+.hd-back:hover{color:var(--pink);border-color:var(--pink);}
+.hd-logo{display:flex;align-items:center;gap:.6rem;}
+.hd-logo-svg{width:28px;height:28px;}
+.hd-name{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;line-height:1.1;}
+.hd-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4);}
+.hd-badge{font-family:var(--mono);font-size:.58rem;padding:4px 10px;border-radius:20px;background:rgba(225,48,108,.08);border:1px solid rgba(225,48,108,.25);color:var(--pink2);}
+.hd-ticker{height:3px;background:linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+
+.hero{background:var(--ink);padding:5rem 2rem 4rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 50%,rgba(225,48,108,.05),transparent 65%);pointer-events:none;}
+.hero-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;}
+.hero-kicker{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.hero-kicker::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--pink);}
+.hero-h{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.5px;line-height:1.05;color:#fff;margin-bottom:.9rem;}
+.hero-sub{font-size:.92rem;color:rgba(255,255,255,.7);line-height:1.75;max-width:480px;}
+.hero-stat{text-align:right;flex-shrink:0;}
+.hero-n{font-family:var(--serif);font-size:3rem;font-weight:800;letter-spacing:-2px;color:var(--pink);line-height:1;}
+.hero-nl{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.3rem;}
+
+.wrap{max-width:960px;margin:0 auto;padding:4rem 2rem;}
+.rule{height:1px;background:var(--paper3);max-width:960px;margin:0 auto;}
+
+/* Phone */
+.phone-section{display:grid;grid-template-columns:auto 1fr;gap:4rem;align-items:start;}
+.phone-wrap{position:sticky;top:2rem;}
+.phone{width:280px;background:#1c1c1e;border-radius:42px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.07);}
+.phone-notch{width:95px;height:26px;background:#1c1c1e;border-radius:0 0 18px 18px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;}
+.phone-screen{background:#000;border-radius:30px;overflow:hidden;position:relative;}
+
+/* IG interface */
+.ig{background:#000;}
+.ig-statusbar{height:14px;background:#000;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;gap:4px;}
+.ig-statusbar span{font-size:7px;color:rgba(255,255,255,.5);}
+.ig-topbar{background:#000;height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #1a1a1a;}
+.ig-handle{font-size:12px;font-weight:800;color:#fff;display:flex;align-items:center;gap:4px;}
+.ig-verified{width:13px;height:13px;background:#3897f0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700;}
+.ig-nav-icons{display:flex;gap:14px;font-size:16px;color:#fff;}
+
+/* Stories */
+.ig-stories{display:flex;gap:9px;padding:8px 12px 6px;border-bottom:1px solid #1a1a1a;overflow:hidden;}
+.story{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
+.story-ring{width:46px;height:46px;border-radius:50%;padding:2px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.story-ring.seen{background:#333;}
+.story-inner{width:100%;height:100%;border-radius:50%;background:#111;border:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.story-lbl{font-size:8px;color:#fff;text-align:center;max-width:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* Post 1: card notícia */
+.post{background:#000;border-bottom:4px solid #0a0a0a;}
+.post-hd{display:flex;align-items:center;gap:8px;padding:8px 12px;}
+.post-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0047b3,#0057D9);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.post-av svg{width:16px;height:16px;}
+.post-user{font-size:10.5px;font-weight:700;color:#fff;}
+.post-loc{font-size:8.5px;color:#8e8e8e;}
+.post-more{margin-left:auto;color:#8e8e8e;font-size:16px;}
+
+/* Card visual principal */
+.post-card{width:100%;aspect-ratio:1/1;background:linear-gradient(155deg,#021436 0%,#0a2860 45%,#0057D9 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.pc-bg-n{position:absolute;bottom:-20px;right:-10px;font-family:'Playfair Display',serif;font-size:90px;font-weight:800;color:rgba(255,255,255,.04);line-height:1;pointer-events:none;}
+.pc-top{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 12px 0;}
+.pc-cat{font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;background:var(--blue);padding:3px 8px;border-radius:3px;}
+.pc-logo{font-family:'Playfair Display',serif;font-size:10px;font-weight:700;color:rgba(255,255,255,.35);}
+.pc-bottom{margin-top:auto;padding:0 12px 12px;background:linear-gradient(0deg,rgba(0,0,0,.75) 0%,transparent 100%);padding-top:40px;}
+.pc-tag{font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:rgba(255,255,255,.45);margin-bottom:4px;}
+.pc-headline{font-family:'Playfair Display',serif;font-size:13.5px;font-weight:800;letter-spacing:-.3px;line-height:1.2;color:#fff;margin-bottom:4px;}
+.pc-source{font-family:var(--mono);font-size:7px;color:rgba(255,255,255,.35);}
+
+/* Ações */
+.post-actions{display:flex;align-items:center;gap:14px;padding:8px 12px 4px;}
+.pact{font-size:20px;color:#fff;}
+.pact.save{margin-left:auto;}
+.post-likes{font-size:10.5px;font-weight:700;color:#fff;padding:0 12px;margin-bottom:3px;}
+.post-cap{font-size:10px;color:#fff;padding:0 12px 4px;line-height:1.4;}
+.post-cap b{font-weight:700;}
+.post-comments{font-size:9.5px;color:#8e8e8e;padding:0 12px 4px;}
+.post-time{font-size:8.5px;color:#8e8e8e;letter-spacing:.03em;text-transform:uppercase;padding:0 12px 8px;}
+
+/* Post 2: carrossel de dados */
+.carousel-slide{aspect-ratio:1/1;background:linear-gradient(135deg,#0a1628 0%,#1a3a6e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.cs-label{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;text-align:center;}
+.cs-placar{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:12px 20px;text-align:center;margin-bottom:10px;width:100%;}
+.cs-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#4ade80;letter-spacing:-1.5px;}
+.cs-nl{font-size:8px;color:rgba(255,255,255,.5);margin-top:2px;line-height:1.3;}
+.cs-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:800;color:#fff;letter-spacing:-.3px;text-align:center;line-height:1.25;margin-bottom:5px;}
+.cs-sub{font-size:8.5px;color:rgba(255,255,255,.55);text-align:center;line-height:1.4;}
+.carousel-dots{display:flex;gap:3px;justify-content:center;padding:4px 0;}
+.dot{width:5px;height:5px;border-radius:50%;background:#3897f0;}
+.dot.off{background:#333;}
+
+/* Info cards */
+.info-grid{display:flex;flex-direction:column;gap:1.5rem;}
+.info-card{background:#fff;border:1px solid var(--paper3);border-radius:10px;padding:1.5rem;border-left:3px solid var(--pink);}
+.ic-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink2);margin-bottom:.5rem;}
+.ic-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--t1);margin-bottom:.4rem;}
+.ic-desc{font-size:.84rem;color:var(--t2);line-height:1.68;}
+.ic-stat{display:flex;align-items:baseline;gap:.4rem;margin-top:.75rem;}
+.ic-n{font-family:var(--serif);font-size:1.4rem;font-weight:800;color:var(--pink2);}
+.ic-l{font-size:.75rem;color:var(--t4);}
+
+/* Formatos grid */
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.25rem;}
+.fmt{background:var(--paper2);border-radius:7px;padding:.75rem;border:1px solid var(--paper3);}
+.fmt-icon{font-size:1.1rem;margin-bottom:.3rem;display:block;}
+.fmt-name{font-size:.82rem;font-weight:600;color:var(--t1);margin-bottom:.2rem;}
+.fmt-desc{font-size:.72rem;color:var(--t3);line-height:1.5;}
+
+.ed-footer{background:var(--ink);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.ef-logo{font-family:var(--serif);font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
+.ef-meta{font-family:var(--mono);font-size:.55rem;color:rgba(255,255,255,.4);letter-spacing:.06em;}
+
+.rv{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:760px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-stat{display:none;}
+  .phone-section{grid-template-columns:1fr;}
+  .phone-wrap{position:static;}
+  .phone{width:100%;max-width:280px;margin:0 auto;}
+  .fmt-grid{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .hd-top,.wrap{padding-left:1rem;padding-right:1rem;}
+  .hero{padding:4rem 1rem 3rem;}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-top">
+    <a href="index.html" class="hd-back">← Jornal</a>
+    <div class="hd-logo">
+      <svg class="hd-logo-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18 Q13 8 17 18 Q21 28 25 18" fill="none" stroke="#0057D9" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="17" cy="18" r="3" fill="#0057D9"/>
+      </svg>
+      <div>
+        <div class="hd-name">Jornal de Araquari</div>
+        <span class="hd-tag">A cidade em tempo real</span>
+      </div>
+    </div>
+    <div class="hd-badge">📸 Instagram</div>
+  </div>
+  <div class="hd-ticker"></div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-kicker">Instagram</div>
+      <h1 class="hero-h">Onde novos leitores<br>encontram o jornal.</h1>
+      <p class="hero-sub">O Instagram não é para fidelização — é para descoberta. Cards visuais sobre vagas da BMW, votações da Câmara e alertas da Defesa Civil são compartilhados organicamente pelos moradores. Um leitor novo que vê um card vira assinante do Canal do WhatsApp.</p>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-n">39%</div>
+      <div class="hero-nl">dos brasileiros recebem<br>notícias pelo Instagram<br><span style="font-size:.5rem;opacity:.5;">Reuters Institute 2025</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<div class="wrap">
+  <div class="phone-section rv">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ig">
+            <div class="ig-statusbar"><span>9:41</span><span>●●●</span><span>▶</span></div>
+            <div class="ig-topbar">
+              <div class="ig-handle">jornalaraquari <span class="ig-verified">✓</span></div>
+              <div class="ig-nav-icons"><span>+</span><span>☰</span></div>
+            </div>
+
+            <!-- Stories -->
+            <div class="ig-stories">
+              <div class="story">
+                <div class="story-ring"><div class="story-inner">⚡</div></div>
+                <div class="story-lbl">breaking</div>
+              </div>
+              <div class="story">
+                <div class="story-ring"><div class="story-inner">🏛️</div></div>
+                <div class="story-lbl">câmara</div>
+              </div>
+              <div class="story">
+                <div class="story-ring"><div class="story-inner">💼</div></div>
+                <div class="story-lbl">vagas</div>
+              </div>
+              <div class="story">
+                <div class="story-ring seen"><div class="story-inner">🌧️</div></div>
+                <div class="story-lbl">clima</div>
+              </div>
+            </div>
+
+            <!-- Post 1: card de notícia -->
+            <div class="post">
+              <div class="post-hd">
+                <div class="post-av">
+                  <svg viewBox="0 0 20 20" fill="none"><path d="M4 10 Q6 6 8 10 Q10 14 12 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="10" r="2" fill="white"/></svg>
+                </div>
+                <div>
+                  <div class="post-user">jornalaraquari</div>
+                  <div class="post-loc">Araquari, Santa Catarina</div>
+                </div>
+                <div class="post-more">···</div>
+              </div>
+              <div class="post-card">
+                <div class="pc-bg-n">BMW</div>
+                <div class="pc-top">
+                  <div class="pc-cat">Economia</div>
+                  <div class="pc-logo">JA</div>
+                </div>
+                <div class="pc-bottom">
+                  <div class="pc-tag">Jornal de Araquari · Hoje, 08:14</div>
+                  <div class="pc-headline">BMW abre 200 vagas em Araquari para novo SUV elétrico</div>
+                  <div class="pc-source">jornaldearaquari.com.br</div>
+                </div>
+              </div>
+              <div class="post-actions">
+                <span class="pact">♡</span><span class="pact">💬</span><span class="pact">↗</span>
+                <span class="pact save">🔖</span>
+              </div>
+              <div class="post-likes">1.247 curtidas</div>
+              <div class="post-cap"><b>jornalaraquari</b> BMW anuncia abertura de 200 vagas para a linha de produção do novo SUV elétrico em Araquari. Seleção começa em março.</div>
+              <div class="post-comments">Ver todos os 83 comentários</div>
+              <div class="post-time">3 horas atrás</div>
+            </div>
+
+            <!-- Post 2: carrossel de votação -->
+            <div class="post">
+              <div class="post-hd">
+                <div class="post-av">
+                  <svg viewBox="0 0 20 20" fill="none"><path d="M4 10 Q6 6 8 10 Q10 14 12 10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="10" r="2" fill="white"/></svg>
+                </div>
+                <div class="post-user">jornalaraquari</div>
+                <div class="post-more" style="margin-left:auto;">···</div>
+              </div>
+              <div class="carousel-slide">
+                <div class="cs-label">Sessão · Câmara Municipal de Araquari</div>
+                <div class="cs-placar">
+                  <div class="cs-n">7 × 2</div>
+                  <div class="cs-nl">Placar da votação</div>
+                </div>
+                <div class="cs-title">Câmara aprova ampliação do Centro de Eventos</div>
+                <div class="cs-sub">Deslize para ver como votou cada vereador →</div>
+              </div>
+              <div class="carousel-dots">
+                <div class="dot"></div><div class="dot off"></div><div class="dot off"></div>
+              </div>
+              <div class="post-actions">
+                <span class="pact">♡</span><span class="pact">💬</span><span class="pact">↗</span>
+                <span class="pact save">🔖</span>
+              </div>
+              <div class="post-likes">892 curtidas</div>
+              <div class="post-time">6 horas atrás</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card rv">
+        <div class="ic-label">Formato 1 — Card de notícia</div>
+        <div class="ic-title">Post 1:1 com identidade visual</div>
+        <div class="ic-desc">Cada matéria publicada no site gera automaticamente um card com a identidade visual do jornal — categoria, manchete, fonte e data. Produzido pelo Bannerbear via template parametrizado e publicado pelo Agente de Mídia Social via Instagram Graph API.</div>
+      </div>
+      <div class="info-card rv">
+        <div class="ic-label">Formato 2 — Carrossel de dados</div>
+        <div class="ic-title">Votações, placar, licitações</div>
+        <div class="ic-desc">Matérias com dados públicos relevantes — placar de votações da câmara, resultado de licitações, indicadores econômicos — viram carrosséis com múltiplos slides. Maior tempo de visualização e taxa de compartilhamento orgânico.</div>
+        <div class="ic-stat">
+          <div class="ic-n">3–10×</div>
+          <div class="ic-l">mais shares que post único</div>
+        </div>
+      </div>
+      <div class="info-card rv">
+        <div class="ic-label">Formato 3 — Stories e Reels</div>
+        <div class="ic-title">Breaking news e eventos ao vivo</div>
+        <div class="ic-desc">Eventos urgentes, alertas da Defesa Civil e sessões da câmara em andamento viram Stories com link para a matéria. Arquivados em destaques por categoria (câmara, vagas, clima, breaking) para acesso posterior.</div>
+      </div>
+
+      <div class="info-card rv">
+        <div class="ic-label">Todos os formatos gerados automaticamente</div>
+        <div class="ic-title">Quatro formatos, custo marginal zero</div>
+        <div class="fmt-grid">
+          <div class="fmt"><span class="fmt-icon">🖼️</span><div class="fmt-name">Card 1:1</div><div class="fmt-desc">Notícias, vagas, notas oficiais</div></div>
+          <div class="fmt"><span class="fmt-icon">📋</span><div class="fmt-name">Carrossel</div><div class="fmt-desc">Votações, dados, licitações</div></div>
+          <div class="fmt"><span class="fmt-icon">⚡</span><div class="fmt-name">Stories</div><div class="fmt-desc">Breaking, alertas, ao vivo</div></div>
+          <div class="fmt"><span class="fmt-icon">🎥</span><div class="fmt-name">Reels</div><div class="fmt-desc">Eventos, obras, inaugurações</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="ed-footer">
+  <div class="ef-logo">Jornal de Araquari</div>
+  <div class="ef-meta">Instagram · PressAI 2026</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')});},{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
