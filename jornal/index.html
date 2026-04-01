@@ -81,6 +81,10 @@ main::before{
 
 /* CARDS */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border-radius:12px;overflow:hidden;}
+.card:nth-child(1){border-radius:12px 0 0 0!important;}
+.card:nth-child(2){border-radius:0 12px 0 0!important;}
+.card:nth-child(3){border-radius:0 0 0 12px!important;}
+.card:last-child{border-radius:0 0 12px 0!important;}
 
 .card{
   background:#0F1525;
@@ -91,8 +95,8 @@ main::before{
 .card:hover{background:#151d30;}
 .card:hover .c-arrow{color:var(--blue);transform:translateX(4px);}
 .card:hover .c-title{color:var(--blue);}
-.card:first-child{border-radius:12px 0 0 12px;}
-.card:last-child{border-radius:0 12px 12px 0;}
+
+
 
 /* MINI PREVIEW */
 .c-preview{
@@ -144,6 +148,46 @@ main::before{
 .mart-aside-t{height:2.5px;border-radius:2px;background:rgba(13,27,46,.13);}
 .mart-aside-t.s{width:70%;}
 
+
+/* ── WA PREVIEW ── */
+.mprev-wa{position:absolute;inset:0;display:flex;flex-direction:column;background:#0b141a;}
+.mwa-top{height:20px;background:#1f2c34;display:flex;align-items:center;gap:5px;padding:0 7px;flex-shrink:0;}
+.mwa-avatar{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#128C7E,#25D366);}
+.mwa-name{font-size:5px;font-weight:600;color:#e9edef;}
+.mwa-sub{font-size:4px;color:#8696a0;margin-left:auto;}
+.mwa-msgs{flex:1;padding:5px 6px;display:flex;flex-direction:column;gap:4px;overflow:hidden;}
+.mwa-msg{background:#1f2c34;border-radius:5px;padding:5px 6px;}
+.mwa-msg-cat{font-size:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#53bdeb;margin-bottom:2px;}
+.mwa-msg-img{width:100%;height:32px;border-radius:2px;background:linear-gradient(135deg,#0D2B5E,#0057D9);margin-bottom:3px;}
+.mwa-msg-h{font-size:5px;font-weight:600;color:#e9edef;line-height:1.3;margin-bottom:2px;}
+.mwa-msg-l{font-size:4px;color:#8696a0;line-height:1.3;}
+.mwa-breaking{background:#1f2c34;border-radius:5px;padding:4px 6px;}
+.mwa-breaking-badge{display:inline-block;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171;border-radius:2px;font-size:3.5px;font-weight:700;padding:1px 4px;letter-spacing:.5px;margin-bottom:2px;}
+.mwa-breaking-t{font-size:4.5px;color:#e9edef;line-height:1.3;}
+
+/* ── IG PREVIEW ── */
+.mprev-ig{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;}
+.mig-top{height:18px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 7px;border-bottom:1px solid #1a1a1a;flex-shrink:0;}
+.mig-handle{font-size:5.5px;font-weight:700;color:#fff;}
+.mig-icons{font-size:9px;color:#fff;display:flex;gap:5px;}
+.mig-stories{display:flex;gap:5px;padding:5px 7px;border-bottom:1px solid #1a1a1a;flex-shrink:0;}
+.mig-story{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.mig-story-ring{width:22px;height:22px;border-radius:50%;padding:1px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366);}
+.mig-story-inner{width:100%;height:100%;border-radius:50%;background:#1a1a1a;border:1.5px solid #000;display:flex;align-items:center;justify-content:center;font-size:8px;}
+.mig-story-label{font-size:3.5px;color:#fff;text-align:center;}
+.mig-post{flex:1;display:flex;flex-direction:column;}
+.mig-post-header{display:flex;align-items:center;gap:4px;padding:4px 6px;flex-shrink:0;}
+.mig-avatar{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#0057D9,#1A6EFF);}
+.mig-user{font-size:5px;font-weight:700;color:#fff;}
+.mig-card{flex:1;background:linear-gradient(155deg,#021436 0%,#0a2860 40%,#0057D9 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:7px;}
+.mig-card::before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.65) 0%,transparent 55%);}
+.mig-card-cat{position:absolute;top:6px;left:6px;font-size:3.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:#0057D9;padding:1.5px 4px;border-radius:2px;z-index:1;}
+.mig-card-logo{position:absolute;top:6px;right:6px;font-size:4px;font-weight:800;color:rgba(255,255,255,.4);z-index:1;}
+.mig-card-content{position:relative;z-index:1;}
+.mig-card-h{font-size:6px;font-weight:800;letter-spacing:-.2px;line-height:1.2;color:#fff;}
+.mig-post-actions{display:flex;gap:6px;padding:4px 6px 2px;font-size:10px;color:#fff;flex-shrink:0;}
+.mig-likes{font-size:4.5px;font-weight:600;color:#fff;padding:0 6px 3px;}
+
 /* CARD BODY */
 .c-body{padding:1.5rem 1.75rem 1.75rem;flex:1;display:flex;flex-direction:column;}
 .c-num{font-family:var(--m);font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem;}
@@ -166,8 +210,10 @@ footer{
 
 @media(max-width:600px){
   .grid{grid-template-columns:1fr;}
-  .card:first-child{border-radius:12px 12px 0 0;}
-  .card:last-child{border-radius:0 0 12px 12px;}
+  .card:nth-child(1){border-radius:12px 12px 0 0!important;}
+  .card:nth-child(2){border-radius:0!important;}
+  .card:nth-child(3){border-radius:0!important;}
+  .card:last-child{border-radius:0 0 12px 12px!important;}
   nav{padding:0 1.25rem;}
   main{padding:2.5rem 1.25rem 3rem;}
 }
@@ -297,6 +343,91 @@ footer{
           <div class="c-desc">Layout editorial com drop cap, blockquote, cards de dados, canais e matérias relacionadas.</div>
           <div class="c-footer">
             <span class="c-tag">Responsivo</span>
+            <span class="c-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+
+      <!-- CARD WHATSAPP -->
+      <a class="card" href="whatsapp.html">
+        <div class="c-preview">
+          <div class="mprev-wa">
+            <div class="mwa-top">
+              <div class="mwa-avatar"></div>
+              <div class="mwa-name">Jornal de Araquari</div>
+              <div class="mwa-sub">4.280 inscritos</div>
+            </div>
+            <div class="mwa-msgs">
+              <div class="mwa-msg">
+                <div class="mwa-msg-cat">Economia</div>
+                <div class="mwa-msg-img"></div>
+                <div class="mwa-msg-h">BMW abre 200 vagas para linha do novo SUV elétrico em Araquari</div>
+                <div class="mwa-msg-l">Seleção começa em março. Salários entre R$ 3.200 e R$ 5.800.</div>
+              </div>
+              <div class="mwa-breaking">
+                <div class="mwa-breaking-badge">⚡ BREAKING</div>
+                <div class="mwa-breaking-t">Câmara aprova por 7×2 ampliação do Centro de Eventos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="c-body">
+          <div class="c-num">Canal 01</div>
+          <div class="c-title">Canal do WhatsApp</div>
+          <div class="c-desc">Manchetes, breaking news e resumo diário diretamente no celular do leitor. Sem algoritmo.</div>
+          <div class="c-footer">
+            <span class="c-tag" style="color:rgba(37,211,102,.7);">💬 WhatsApp</span>
+            <span class="c-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- CARD INSTAGRAM -->
+      <a class="card" href="instagram.html">
+        <div class="c-preview">
+          <div class="mprev-ig">
+            <div class="mig-top">
+              <div class="mig-handle">jornalaraquari</div>
+              <div class="mig-icons"><span>+</span><span>☰</span></div>
+            </div>
+            <div class="mig-stories">
+              <div class="mig-story">
+                <div class="mig-story-ring"><div class="mig-story-inner">⚡</div></div>
+                <div class="mig-story-label">breaking</div>
+              </div>
+              <div class="mig-story">
+                <div class="mig-story-ring"><div class="mig-story-inner">🏛️</div></div>
+                <div class="mig-story-label">câmara</div>
+              </div>
+              <div class="mig-story">
+                <div class="mig-story-ring"><div class="mig-story-inner">💼</div></div>
+                <div class="mig-story-label">vagas</div>
+              </div>
+            </div>
+            <div class="mig-post">
+              <div class="mig-post-header">
+                <div class="mig-avatar"></div>
+                <div class="mig-user">jornalaraquari</div>
+              </div>
+              <div class="mig-card">
+                <div class="mig-card-cat">Economia</div>
+                <div class="mig-card-logo">JA</div>
+                <div class="mig-card-content">
+                  <div class="mig-card-h">BMW abre 200 vagas em Araquari para novo SUV elétrico</div>
+                </div>
+              </div>
+              <div class="mig-post-actions"><span>♡</span><span>💬</span><span>↗</span></div>
+              <div class="mig-likes">1.247 curtidas</div>
+            </div>
+          </div>
+        </div>
+        <div class="c-body">
+          <div class="c-num">Canal 02</div>
+          <div class="c-title">Instagram</div>
+          <div class="c-desc">Cards visuais, carrosséis de dados e stories. O canal de descoberta — onde novos leitores encontram o jornal.</div>
+          <div class="c-footer">
+            <span class="c-tag" style="color:rgba(225,48,108,.7);">📸 Instagram</span>
             <span class="c-arrow">→</span>
           </div>
         </div>
