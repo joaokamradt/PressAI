@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PressAI — Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#070B14;--ink2:#0D1220;--ink3:#111a2c;
+  --blue:#1A6EFF;--green:#10B981;--amber:#F59E0B;--violet:#8B5CF6;--pink:#EC4899;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.05);
+  --t1:#fff;--t2:rgba(255,255,255,.92);--t3:rgba(255,255,255,.82);--t4:rgba(255,255,255,.62);--t5:rgba(255,255,255,.38);
+  --d:'Syne',sans-serif;--b:'IBM Plex Sans',system-ui,sans-serif;--m:'IBM Plex Mono',monospace;
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:var(--b);background:var(--ink);color:var(--t3);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(7,11,20,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);}
+.nav-logo span{color:var(--blue);}
+.nav-tag{font-family:var(--m);font-size:.6rem;color:var(--t5);letter-spacing:.1em;text-transform:uppercase;}
+.nav-back{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);padding:5px 12px;border-radius:20px;border:1px solid var(--border);text-decoration:none;transition:all .14s;}
+.nav-back:hover{color:var(--t1);border-color:rgba(255,255,255,.2);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2.5rem 5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(26,110,255,.06),transparent 65%),radial-gradient(ellipse 40% 40% at 85% 70%,rgba(139,92,246,.04),transparent 65%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(26,110,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(26,110,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.hero-inner{max-width:680px;position:relative;z-index:1;}
+.hero-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;gap:.6rem;}
+.hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);}
+.hero-h{font-family:var(--d);font-size:clamp(2.2rem,5vw,4rem);font-weight:800;letter-spacing:-3px;line-height:1;color:var(--t1);margin-bottom:1.1rem;}
+.hero-h em{font-style:normal;color:var(--blue);}
+.hero-sub{font-size:.98rem;color:var(--t2);line-height:1.78;margin-bottom:2.5rem;max-width:540px;margin-left:auto;margin-right:auto;}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;max-width:640px;margin:0 auto;}
+.hkpi{background:var(--ink2);padding:1.1rem;text-align:center;}
+.hkpi-n{font-family:var(--d);font-size:1.3rem;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:.25rem;}
+.hkpi:nth-child(1) .hkpi-n{color:var(--amber);}
+.hkpi:nth-child(2) .hkpi-n{color:var(--blue);}
+.hkpi:nth-child(3) .hkpi-n{color:var(--green);}
+.hkpi:nth-child(4) .hkpi-n{color:var(--violet);}
+.hkpi-l{font-family:var(--m);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);}
+
+/* WRAP */
+.wrap{max-width:960px;margin:0 auto;padding:5rem 2.5rem;}
+.rule{height:1px;background:var(--border2);max-width:960px;margin:0 auto;}
+.sec-kicker{font-family:var(--m);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+.sec-kicker::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.sec-h{font-family:var(--d);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;letter-spacing:-2px;line-height:1.04;color:var(--t1);margin-bottom:.8rem;}
+.sec-sub{font-size:.95rem;color:var(--t2);line-height:1.78;max-width:620px;margin-bottom:2.75rem;}
+
+/* PRINCÍPIOS */
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;}
+.principle{background:var(--ink2);padding:1.5rem;}
+.pr-icon{font-size:1.4rem;margin-bottom:.75rem;display:block;}
+.pr-title{font-size:.95rem;font-weight:600;color:var(--t1);margin-bottom:.4rem;}
+.pr-desc{font-size:.84rem;color:var(--t2);line-height:1.68;}
+
+/* FASES */
+.phases{display:flex;flex-direction:column;}
+.phase{display:grid;grid-template-columns:180px 40px 1fr;gap:0 1.5rem;padding:2.5rem 0;border-bottom:1px solid var(--border2);}
+.phase:last-child{border-bottom:none;}
+.ph-left{display:flex;flex-direction:column;align-items:flex-end;padding-top:.15rem;}
+.ph-period{font-family:var(--d);font-size:.98rem;font-weight:800;letter-spacing:-.3px;color:var(--t1);text-align:right;line-height:1.25;}
+.ph-label{font-family:var(--m);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t5);text-align:right;margin-top:.3rem;}
+.ph-track{display:flex;flex-direction:column;align-items:center;}
+.ph-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:.1rem;z-index:1;border:2px solid;}
+.ph-line{flex:1;width:2px;margin-top:5px;}
+.phase:last-child .ph-line{display:none;}
+.f0 .ph-dot{background:rgba(245,158,11,.25);border-color:var(--amber);}
+.f0 .ph-line{background:linear-gradient(var(--amber),var(--blue));}
+.f1 .ph-dot{background:var(--blue);border-color:var(--blue);box-shadow:0 0 12px rgba(26,110,255,.5);}
+.f1 .ph-line{background:linear-gradient(var(--blue),var(--green));}
+.f2 .ph-dot{background:var(--green);border-color:var(--green);box-shadow:0 0 12px rgba(16,185,129,.5);}
+.f2 .ph-line{background:linear-gradient(var(--green),var(--violet));}
+.f3 .ph-dot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 12px rgba(139,92,246,.5);}
+.f3 .ph-line{background:linear-gradient(var(--violet),var(--pink));}
+.f4 .ph-dot{background:var(--pink);border-color:var(--pink);box-shadow:0 0 16px rgba(236,72,153,.6);}
+.ph-right{}
+.ph-phase{font-family:var(--m);font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem;}
+.f0 .ph-phase{color:rgba(245,158,11,.85);}
+.f1 .ph-phase{color:rgba(26,110,255,.95);}
+.f2 .ph-phase{color:rgba(16,185,129,.95);}
+.f3 .ph-phase{color:rgba(139,92,246,.95);}
+.f4 .ph-phase{color:rgba(236,72,153,.95);}
+.ph-title{font-family:var(--d);font-size:1.15rem;font-weight:700;letter-spacing:-.4px;color:var(--t1);margin-bottom:.5rem;}
+.ph-desc{font-size:.9rem;color:var(--t2);line-height:1.75;margin-bottom:1rem;}
+.ph-items{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem;}
+.ph-item{display:flex;align-items:flex-start;gap:.65rem;font-size:.86rem;color:var(--t2);line-height:1.6;}
+.ph-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:.4rem;}
+.f0 .ph-item-dot{background:var(--amber);}
+.f1 .ph-item-dot{background:var(--blue);}
+.f2 .ph-item-dot{background:var(--green);}
+.f3 .ph-item-dot{background:var(--violet);}
+.f4 .ph-item-dot{background:var(--pink);}
+.ph-item strong{color:var(--t1);}
+.ph-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+.tag{font-family:var(--m);font-size:.6rem;padding:3px 10px;border-radius:5px;border:1px solid;font-weight:400;}
+.f0 .tag{border-color:rgba(245,158,11,.3);color:rgba(245,158,11,.85);background:rgba(245,158,11,.06);}
+.f1 .tag{border-color:rgba(26,110,255,.3);color:rgba(26,110,255,.95);background:rgba(26,110,255,.06);}
+.f2 .tag{border-color:rgba(16,185,129,.3);color:rgba(16,185,129,.95);background:rgba(16,185,129,.06);}
+.f3 .tag{border-color:rgba(139,92,246,.3);color:rgba(139,92,246,.95);background:rgba(139,92,246,.06);}
+.f4 .tag{border-color:rgba(236,72,153,.3);color:rgba(236,72,153,.95);background:rgba(236,72,153,.06);}
+.milestone{display:inline-flex;align-items:center;gap:.5rem;border-radius:6px;padding:.55rem 1rem;font-family:var(--m);font-size:.72rem;font-weight:500;margin-top:.9rem;}
+.milestone::before{content:'◆';font-size:.6rem;}
+.f0 .milestone{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fbbf24;}
+.f1 .milestone{background:rgba(26,110,255,.1);border:1px solid rgba(26,110,255,.3);color:#7ab5ff;}
+.f2 .milestone{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;}
+.f3 .milestone{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;}
+.f4 .milestone{background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.3);color:#f9a8d4;}
+
+/* STACK — versão fechada */
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;}
+.stack-card{background:var(--ink2);padding:1.5rem;}
+.sk-phase{font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.sk-phase.p0{color:rgba(245,158,11,.85);}
+.sk-phase.p1{color:rgba(26,110,255,.95);}
+.sk-phase.p2{color:rgba(16,185,129,.95);}
+.sk-period{font-family:var(--d);font-size:.95rem;font-weight:800;letter-spacing:-.3px;color:var(--t1);margin-bottom:.6rem;}
+.sk-items{display:flex;flex-direction:column;gap:.45rem;}
+.sk-item{font-size:.83rem;color:var(--t2);line-height:1.55;display:flex;align-items:flex-start;gap:.5rem;}
+.sk-item::before{content:'→';color:var(--t5);font-size:.75rem;flex-shrink:0;margin-top:.15rem;}
+
+footer{border-top:1px solid var(--border);padding:1.5rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
+.ft-logo{font-family:var(--d);font-size:.88rem;font-weight:800;letter-spacing:-.5px;color:var(--t5);}
+.ft-logo span{color:var(--blue);}
+.ft-meta{font-family:var(--m);font-size:.58rem;color:var(--t5);}
+
+.rv{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+
+@media(max-width:760px){
+  .hero-kpis{grid-template-columns:1fr 1fr;}
+  .principles{grid-template-columns:1fr;}
+  .stack-grid{grid-template-columns:1fr;}
+  .phase{grid-template-columns:100px 28px 1fr;gap:0 1rem;}
+  .ph-period{font-size:.88rem;}
+}
+@media(max-width:600px){
+  nav{padding:0 1rem;}
+  .hero,.wrap{padding-left:1.25rem;padding-right:1.25rem;}
+  .phase{grid-template-columns:80px 24px 1fr;gap:0 .75rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Início</a>
+  <div class="nav-logo">Press<span>AI</span></div>
+  <div class="nav-tag">Roadmap de produto</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">Produto · Tecnologia · Escala</div>
+    <h1 class="hero-h">O que construímos.<br><em>O que vem a seguir.</em></h1>
+    <p class="hero-sub">Um plano de 36 meses — do primeiro jornal em operação até uma rede com presença em dezenas de municípios brasileiros. Cada fase tem entregáveis concretos e um marco que autoriza o avanço.</p>
+    <div class="hero-kpis">
+      <div class="hkpi">
+        <div class="hkpi-n">Jun</div>
+        <div class="hkpi-l">início do piloto editorial</div>
+      </div>
+      <div class="hkpi">
+        <div class="hkpi-n">12m+</div>
+        <div class="hkpi-l">para o primeiro contrato sólido</div>
+      </div>
+      <div class="hkpi">
+        <div class="hkpi-n">5+</div>
+        <div class="hkpi-l">cidades ainda no ano 1</div>
+      </div>
+      <div class="hkpi">
+        <div class="hkpi-n">20+</div>
+        <div class="hkpi-l">cidades no ano 3</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule rv"></div>
+
+<div class="wrap">
+  <div class="sec-kicker rv">Princípios de desenvolvimento</div>
+  <h2 class="sec-h rv">Como tomamos<br>decisões de produto.</h2>
+  <div class="principles rv">
+    <div class="principle">
+      <span class="pr-icon">🧱</span>
+      <div class="pr-title">Infraestrutura antes de escala</div>
+      <div class="pr-desc">Cada novo jornal só entra em operação quando o sistema anterior está estável. A velocidade de expansão é determinada pela qualidade operacional — não pela ambição.</div>
+    </div>
+    <div class="principle">
+      <span class="pr-icon">🔁</span>
+      <div class="pr-title">Ciclo curto de validação</div>
+      <div class="pr-desc">Nenhuma funcionalidade é construída sem hipótese testável. Cada entrega tem métricas de sucesso definidas antes de começar — pageviews, inscritos no canal, contratos fechados.</div>
+    </div>
+    <div class="principle">
+      <span class="pr-icon">📐</span>
+      <div class="pr-title">Replicabilidade como requisito</div>
+      <div class="pr-desc">Todo componente é construído para funcionar em N cidades. O que serve para o primeiro jornal serve para o décimo — sem reescrita, sem retrabalho de infraestrutura.</div>
+    </div>
+  </div>
+</div>
+
+<div class="rule rv"></div>
+
+<div class="wrap">
+  <div class="sec-kicker rv">Fases de desenvolvimento</div>
+  <h2 class="sec-h rv">36 meses.<br>Cinco fases.</h2>
+  <p class="sec-sub rv">A linha do tempo começa em março de 2026 com a fase de testes e infraestrutura. O piloto editorial entra em operação em junho. A partir daí, cada fase tem um objetivo central e um marco claro de passagem.</p>
+
+  <div class="phases rv">
+
+    <!-- FASE 0 -->
+    <div class="phase f0">
+      <div class="ph-left">
+        <div class="ph-period">Mar–Mai<br>2026</div>
+        <div class="ph-label">Meses 1–3</div>
+      </div>
+      <div class="ph-track"><div class="ph-dot"></div><div class="ph-line"></div></div>
+      <div class="ph-right">
+        <div class="ph-phase">Fase 0 — Testes e infraestrutura</div>
+        <div class="ph-title">Construir e validar antes de publicar</div>
+        <div class="ph-desc">A fase zero não produz jornalismo público — produz a fundação que permite fazer jornalismo de qualidade. Toda a infraestrutura técnica é montada, testada e ajustada em ambiente controlado antes da primeira matéria chegar ao leitor. O objetivo é garantir que o pipeline editorial funcione de ponta a ponta com consistência antes de qualquer exposição pública.</div>
+        <div class="ph-items">
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Infraestrutura completa:</strong> orquestração de agentes, banco de dados, CMS editorial, integrações com fontes públicas.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Pipeline editorial testado:</strong> monitoramento de fontes → triagem → redação → verificação factual → publicação → distribuição. Ciclo autônomo do início ao fim.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Sistema de agentes:</strong> todos os 41 agentes dos 9 departamentos configurados e testados em ambiente de homologação.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Canais de distribuição:</strong> site, Canal do WhatsApp e Instagram configurados — prontos para receberem conteúdo na fase seguinte.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Formalização legal:</strong> CNPJ, registro de domínio, conta PJ operacional.</div></div>
+        </div>
+        <div class="ph-tags">
+          <span class="tag">41 agentes configurados</span>
+          <span class="tag">Pipeline editorial</span>
+          <span class="tag">Canais prontos</span>
+          <span class="tag">CNPJ + domínio</span>
+        </div>
+        <div class="milestone">Marco: pipeline funcionando de ponta a ponta em homologação — pronto para publicação real</div>
+      </div>
+    </div>
+
+    <!-- FASE 1 -->
+    <div class="phase f1">
+      <div class="ph-left">
+        <div class="ph-period">Jun–Mar<br>2027</div>
+        <div class="ph-label">Meses 4–12</div>
+      </div>
+      <div class="ph-track"><div class="ph-dot"></div><div class="ph-line"></div></div>
+      <div class="ph-right">
+        <div class="ph-phase">Fase 1 — Piloto editorial</div>
+        <div class="ph-title">Jornalismo real. Audiência real. Primeiros contratos.</div>
+        <div class="ph-desc">O Jornal de Araquari entra em operação pública. O foco dos primeiros meses é construir audiência e credibilidade editorial — sem pressa comercial. A prospecção de anunciantes começa somente quando há audiência documentada para mostrar. Os primeiros contratos são esperados a partir do nono mês de operação, quando o jornal já tem histórico, tráfego estabelecido e referência local consolidada.</div>
+        <div class="ph-items">
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Publicação diária consistente:</strong> mínimo de 5 a 10 matérias por dia, sete dias por semana, cobrindo Diário Oficial, Câmara Municipal, economia local e cotidiano.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Crescimento de audiência:</strong> SEO local, Canal do WhatsApp e Instagram como canais de distribuição orgânica desde o primeiro dia.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Media kit editorial:</strong> documento com dados de audiência, perfil do leitor e formatos disponíveis — base para toda a abordagem comercial.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Primeiras abordagens comerciais (mês 9+):</strong> oferta de período de teste gratuito para os primeiros anunciantes locais, com conversão para contrato a partir de dados reais.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Arquitetura multi-jornal:</strong> sistema preparado para replicação — configuração de cidade isolada, pronta para ser duplicada sem reescrita de código.</div></div>
+        </div>
+        <div class="ph-tags">
+          <span class="tag">Operação editorial pública</span>
+          <span class="tag">SEO local</span>
+          <span class="tag">Media kit</span>
+          <span class="tag">Primeiros anunciantes</span>
+          <span class="tag">Arquitetura multi-jornal</span>
+        </div>
+        <div class="milestone">Marco: primeiro contrato de publicidade fechado + arquitetura multi-jornal validada e documentada</div>
+      </div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="phase f2">
+      <div class="ph-left">
+        <div class="ph-period">Set 2026–<br>Mar 2027</div>
+        <div class="ph-label">Meses 4–9</div>
+      </div>
+      <div class="ph-track"><div class="ph-dot"></div><div class="ph-line"></div></div>
+      <div class="ph-right">
+        <div class="ph-phase">Fase 2 — Expansão inicial</div>
+        <div class="ph-title">Novos jornais antes de completar o primeiro ano</div>
+        <div class="ph-desc">Assim que Araquari demonstrar funcionamento estável e audiência mínima estabelecida — o que deve ocorrer entre o terceiro e quarto mês de operação pública — o lançamento de novos jornais começa em paralelo. Não é necessário esperar o breakeven comercial: o sistema já estará provado editorialmente. A partir daí, um novo jornal entra em operação a cada mês, com aprendizados de Araquari aplicados diretamente desde o dia um. A velocidade é limitada pela qualidade, não pelo calendário.</div>
+        <div class="ph-items">
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Lançamento cadenciado:</strong> um novo jornal por mês em municípios selecionados do Sul do Brasil — priorizando cidades com alta atividade econômica e zero cobertura local.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Painel de rede:</strong> ferramenta centralizada para monitorar saúde editorial, audiência e receita de todos os jornais ativos simultaneamente.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Runbook de lançamento:</strong> processo documentado para ir de zero a jornal em operação em menos de 30 dias — incluindo configuração, fontes locais, canais e primeiras matérias.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Refinamento de modelos por região:</strong> ajuste dos agentes com base nos dados de produção acumulados — qualidade editorial melhora com escala.</div></div>
+        </div>
+        <div class="ph-tags">
+          <span class="tag">1 jornal por mês</span>
+          <span class="tag">Painel de rede</span>
+          <span class="tag">Runbook de lançamento</span>
+          <span class="tag">Refinamento regional</span>
+        </div>
+        <div class="milestone">Marco: 3+ jornais em operação antes do primeiro ano completo — modelo de replicação validado em campo</div>
+      </div>
+    </div>
+
+    <!-- FASE 3 -->
+    <div class="phase f3">
+      <div class="ph-left">
+        <div class="ph-period">Abr 2027–<br>Dez 2028</div>
+        <div class="ph-label">Meses 10–30</div>
+      </div>
+      <div class="ph-track"><div class="ph-dot"></div><div class="ph-line"></div></div>
+      <div class="ph-right">
+        <div class="ph-phase">Fase 3 — Rede regional</div>
+        <div class="ph-title">De 10 a 20 cidades. Novos produtos.</div>
+        <div class="ph-desc">A PressAI se consolida como rede jornalística regional com cobertura sistemática do interior do Brasil. O produto evolui além do jornalismo editorial — novos serviços de dados e inteligência local são lançados, abrindo fontes de receita complementares à publicidade.</div>
+        <div class="ph-items">
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Expansão acelerada:</strong> cobertura de 10 a 20 municípios, priorizando SC, PR e RS — os estados com maior concentração de cidades sem jornalismo local e atividade econômica relevante.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Inteligência local como produto:</strong> relatórios mensais de dados municipais (licitações, votações, indicadores econômicos) para prefeituras, câmaras e empresas da região.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Serviços de marketing local:</strong> gestão de mídia digital para pequenas e médias empresas que anunciam nos jornais da rede — aproveitando audiência e credibilidade já construídas.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Estruturação para captação:</strong> com múltiplos jornais em operação e dados de receita consolidados, preparar apresentação para investidores de impacto e mídia.</div></div>
+        </div>
+        <div class="ph-tags">
+          <span class="tag">10–20 jornais</span>
+          <span class="tag">Inteligência local</span>
+          <span class="tag">Marketing para PMEs</span>
+          <span class="tag">Preparação para rodada</span>
+        </div>
+        <div class="milestone">Marco: 10+ jornais com margem positiva — modelo de rede validado em múltiplos estados</div>
+      </div>
+    </div>
+
+    <!-- FASE 4 -->
+    <div class="phase f4">
+      <div class="ph-left">
+        <div class="ph-period">2029<br>em diante</div>
+        <div class="ph-label">Meses 37+</div>
+      </div>
+      <div class="ph-track"><div class="ph-dot"></div><div class="ph-line"></div></div>
+      <div class="ph-right">
+        <div class="ph-phase">Fase 4 — Plataforma nacional</div>
+        <div class="ph-title">Infraestrutura de jornalismo local para o Brasil</div>
+        <div class="ph-desc">A PressAI deixa de ser apenas uma operadora de jornais e se torna uma plataforma — habilitando terceiros a criar e operar jornais locais com a tecnologia e metodologia PressAI. O mercado-alvo são os 2.504 municípios brasileiros atualmente sem nenhuma cobertura jornalística.</div>
+        <div class="ph-items">
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Modelo de licenciamento:</strong> empreendedores e cooperativas locais operam jornais PressAI com suporte técnico e comercial da plataforma.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Cobertura nacional:</strong> presença em municípios das 5 regiões do Brasil — o maior banco de dados jornalísticos municipais do país como consequência natural da operação.</div></div>
+          <div class="ph-item"><div class="ph-item-dot"></div><div><strong>Parcerias institucionais:</strong> organizações de transparência pública, universidades e fundações de jornalismo como parceiros de distribuição e legitimação.</div></div>
+        </div>
+        <div class="ph-tags">
+          <span class="tag">Modelo de licenciamento</span>
+          <span class="tag">Cobertura nacional</span>
+          <span class="tag">Parcerias institucionais</span>
+          <span class="tag">2.504 municípios endereçáveis</span>
+        </div>
+        <div class="milestone">Visão: a PressAI como infraestrutura de jornalismo local para os municípios brasileiros sem cobertura</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="rule rv"></div>
+
+<!-- STACK — versão fechada -->
+<div class="wrap">
+  <div class="sec-kicker rv">Construção técnica</div>
+  <h2 class="sec-h rv">Tecnologia adicionada<br>conforme a necessidade.</h2>
+  <p class="sec-sub rv">O princípio é evitar complexidade desnecessária nas fases iniciais. Cada camada técnica entra apenas quando o estágio de produto justifica — não antes.</p>
+
+  <div class="stack-grid rv">
+    <div class="stack-card">
+      <div class="sk-phase p0">Fases 0–1 · 2026</div>
+      <div class="sk-period">Base operacional</div>
+      <div class="sk-items">
+        <div class="sk-item">Orquestração de agentes e workflows editoriais</div>
+        <div class="sk-item">Banco de dados estruturado e busca semântica</div>
+        <div class="sk-item">CMS editorial com API para publicação automatizada</div>
+        <div class="sk-item">Geração automatizada de cards visuais para os canais</div>
+        <div class="sk-item">Integrações com fontes públicas (DOM, Câmara, portais)</div>
+        <div class="sk-item">Distribuição simultânea: site, WhatsApp e Instagram</div>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="sk-phase p1">Fase 2 · 2027</div>
+      <div class="sk-period">Escala e gestão</div>
+      <div class="sk-items">
+        <div class="sk-item">Painel de rede para gestão de múltiplos jornais</div>
+        <div class="sk-item">Sistema de anúncios e gestão de contratos comerciais</div>
+        <div class="sk-item">Geração automatizada de media kit por jornal</div>
+        <div class="sk-item">Refinamento dos modelos de linguagem com dados reais acumulados</div>
+        <div class="sk-item">Runbook de lançamento — processo de onboarding de nova cidade</div>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="sk-phase p2">Fases 3–4 · 2027–2028</div>
+      <div class="sk-period">Plataforma</div>
+      <div class="sk-items">
+        <div class="sk-item">API de dados municipais para acesso externo</div>
+        <div class="sk-item">Produtos de inteligência local sob demanda</div>
+        <div class="sk-item">Plataforma de licenciamento para operadores terceiros</div>
+        <div class="sk-item">Infraestrutura de parceria com organizações de transparência</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-logo">Press<span>AI</span></div>
+  <div class="ft-meta">Roadmap de produto · v1 · Abr 2026</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')});},{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
